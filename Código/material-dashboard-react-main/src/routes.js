@@ -36,11 +36,21 @@ Coded by www.creative-tim.com
 */
 
 // Material Dashboard 2 React layouts
-import Dashboard from "layouts/dashboard";
-import Tables from "layouts/tables";
-import Billing from "layouts/billing";
-import RTL from "layouts/rtl";
-import Clientes from "layouts/Catalogos/Clientes";
+import Dashboard from "layouts/dashboard/dashboard";
+import Menucatalogos from "layouts/Catalogos/menucatalogos/menucatalogos";
+import Menureportes from "layouts/Reportes/menureportes/menureportes";
+import Clientes from "layouts/Catalogos/Clientes/Clientes";
+import Empleados from "layouts/Catalogos/Empleados";
+import Inventarios from "layouts/Catalogos/Inventarios";
+import Mantenimiento from "layouts/Catalogos/Mantenimiento";
+import Seguros from "layouts/Catalogos/Seguros";
+import TipoReparaciones from "layouts/Catalogos/TipoReparaciones";
+import TipoVehiculos from "layouts/Catalogos/TipoVehiculos";
+import Vehiculos from "layouts/Catalogos/Vehiculos";
+import REntradas from "layouts/Reportes/Entradas";
+import RInventario from "layouts/Reportes/Inventario";
+import RMantenimientos from "layouts/Reportes/Mantenimientos";
+import RSalidas from "layouts/Reportes/Salidas";
 
 // @mui icons
 import Icon from "@mui/material/Icon";
@@ -60,7 +70,7 @@ const routes = [
     key: "catalogos",
     icon: <Icon fontSize="small">table_view</Icon>,
     route: "/catalogos",
-    component: <Tables />,
+    component: <Menucatalogos />,
   },
   {
     type: "collapse",
@@ -68,7 +78,7 @@ const routes = [
     key: "operaciones",
     icon: <Icon fontSize="small">receipt_long</Icon>,
     route: "/operaciones",
-    component: <Billing />,
+    // component: <Billing />,
   },
   {
     type: "collapse",
@@ -76,7 +86,7 @@ const routes = [
     key: "reportes",
     icon: <Icon fontSize="small">format_textdirection_r_to_l</Icon>,
     route: "/reportes",
-    component: <RTL />,
+    component: <Menureportes />,
   },
   {
     type: "title",
@@ -85,6 +95,94 @@ const routes = [
     icon: <Icon fontSize="small">format_textdirection_r_to_l</Icon>,
     route: "/catalogos/clientes",
     component: <Clientes />,
+  },
+  {
+    type: "title",
+    name: "Empleados",
+    key: "empleados",
+    icon: <Icon fontSize="small">format_textdirection_r_to_l</Icon>,
+    route: "/catalogos/empleados",
+    component: <Empleados />,
+  },
+  {
+    type: "title",
+    name: "Inventarios",
+    key: "inventarios",
+    icon: <Icon fontSize="small">format_textdirection_r_to_l</Icon>,
+    route: "/catalogos/inventarios",
+    component: <Inventarios />,
+  },
+  {
+    type: "title",
+    name: "Mantenimiento",
+    key: "mantenimiento",
+    icon: <Icon fontSize="small">format_textdirection_r_to_l</Icon>,
+    route: "/catalogos/mantenimiento",
+    component: <Mantenimiento />,
+  },
+  {
+    type: "title",
+    name: "Seguros",
+    key: "seguros",
+    icon: <Icon fontSize="small">format_textdirection_r_to_l</Icon>,
+    route: "/catalogos/seguros",
+    component: <Seguros />,
+  },
+  {
+    type: "title",
+    name: "TipoReparaciones",
+    key: "tiporeparaciones",
+    icon: <Icon fontSize="small">format_textdirection_r_to_l</Icon>,
+    route: "/catalogos/tiporeparaciones",
+    component: <TipoReparaciones />,
+  },
+  {
+    type: "title",
+    name: "TipoVehiculos",
+    key: "tipovehiculos",
+    icon: <Icon fontSize="small">format_textdirection_r_to_l</Icon>,
+    route: "/catalogos/tipovehiculos",
+    component: <TipoVehiculos />,
+  },
+  {
+    type: "title",
+    name: "Vehiculos",
+    key: "vehiculos",
+    icon: <Icon fontSize="small">format_textdirection_r_to_l</Icon>,
+    route: "/catalogos/vehiculos",
+    component: <Vehiculos />,
+  },
+  {
+    type: "title",
+    name: "REntradas",
+    key: "rentradas",
+    icon: <Icon fontSize="small">format_textdirection_r_to_l</Icon>,
+    route: "/reportes/rentradas",
+    component: <REntradas />,
+  },
+  {
+    type: "title",
+    name: "RInventario",
+    key: "rinventario",
+    icon: <Icon fontSize="small">format_textdirection_r_to_l</Icon>,
+    route: "/reportes/rinventario",
+    component: <RInventario />,
+  },
+  {
+    type: "title",
+    name: "RMantenimientos",
+    key: "rmantenimientos",
+    icon: <Icon fontSize="small">format_textdirection_r_to_l</Icon>,
+    route: "/reportes/rmantenimientos",
+    component: <RMantenimientos />,
+  },
+  {
+    type: "title",
+    name: "RSalidas",
+    key: "rsalidas",
+    icon: <Icon fontSize="small">format_textdirection_r_to_l</Icon>,
+    route: "/reportes/rsalidas",
+    component: <RSalidas />,
   },
 ];
 

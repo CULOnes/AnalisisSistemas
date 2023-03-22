@@ -148,7 +148,7 @@ material-dashboard-react
     │   │   ├── notifications
     │   │   ├── profile
     │   │   ├── rtl
-    │   │   └── tables
+    │   │   └── Menucatalogos
     │   ├── App.js
     │   ├── index.js
     │   └── routes.js

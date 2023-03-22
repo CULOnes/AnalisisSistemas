@@ -26,10 +26,10 @@ import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 import { NavLink } from "react-router-dom";
 
-function ComplexStatisticsCard({ color, title, /* count, */ /* percentage, */ icon }) {
+function ComplexStatisticsCard({ color, title, /* count, */ /* percentage, */ icon, route }) {
   return (
     <Card sx={{ cursor: "pointer" }}>
-      <NavLink to="clientes">
+      <NavLink to={route}>
         <MDBox display="flex" justifyContent="space-between" pt={1} px={2}>
           <MDBox
             variant="gradient"
@@ -78,6 +78,7 @@ function ComplexStatisticsCard({ color, title, /* count, */ /* percentage, */ ic
 // Setting default values for the props of ComplexStatisticsCard
 ComplexStatisticsCard.defaultProps = {
   color: "info",
+  // route: "",
   // percentage: {
   //   color: "success",
   //   text: "",
@@ -114,6 +115,17 @@ ComplexStatisticsCard.propTypes = {
   //   label: PropTypes.string,
   // }),
   icon: PropTypes.node.isRequired,
+  // route: PropTypes.PropTypes.oneOf([
+  //   "Clientes",
+  //   "Mantenimiento",
+  //   "Vehiculos",
+  //   "Seguros",
+  //   "Empleados",
+  //   "Tipo Vehiculos",
+  //   "Tipo Reparaciones",
+  //   "Inventarios",
+  // ]),
+  route: PropTypes.string.isRequired,
 };
 
 export default ComplexStatisticsCard;
