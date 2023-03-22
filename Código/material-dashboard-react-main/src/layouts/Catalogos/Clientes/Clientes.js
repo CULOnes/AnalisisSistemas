@@ -10,6 +10,7 @@ import Card from "@mui/material/Card";
 import MDBox from "components/MDBox";
 import MDInput from "components/MDInput";
 import MDTypography from "components/MDTypography";
+import MDButton from "components/MDButton";
 
 // Material Dashboard 2 React example components
 import DataTable from "examples/Tables/DataTable";
@@ -88,6 +89,13 @@ function Clientes() {
               <MDBox mb={2}>
                 <MDInput type="textarea" label="Direccion" fullWidth />
               </MDBox>
+            </Grid>
+          </Grid>
+          <Grid container spacing={3} justifyContent="center">
+            <Grid item xs={12} md={4} lg={2}>
+              <MDButton variant="gradient" color="info" fullWidth>
+                Crear
+              </MDButton>
             </Grid>
           </Grid>
         </MDBox>
