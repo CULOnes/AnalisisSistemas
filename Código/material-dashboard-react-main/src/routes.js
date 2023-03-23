@@ -51,7 +51,7 @@ import Vehiculos from "layouts/Catalogos/Vehiculos";
 import REntradas from "layouts/Reportes/Entradas";
 import RInventario from "layouts/Reportes/Inventario";
 import RMantenimientos from "layouts/Reportes/Mantenimientos";
-import RSalidas from "layouts/Reportes/Salidas";
+import RSalidas from "layouts/Reportes/salidas/Salidas";
 
 // @mui icons
 import Icon from "@mui/material/Icon";
