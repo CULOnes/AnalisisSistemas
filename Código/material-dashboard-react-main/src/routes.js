@@ -36,6 +36,7 @@ Coded by www.creative-tim.com
 */
 
 // Material Dashboard 2 React layouts
+import Login from "layouts/Login/Login";
 import Dashboard from "layouts/dashboard/dashboard";
 import Menucatalogos from "layouts/Catalogos/menucatalogos/menucatalogos";
 import Menureportes from "layouts/Reportes/menureportes/menureportes";
@@ -56,6 +57,14 @@ import RSalidas from "layouts/Reportes/Salidas";
 import Icon from "@mui/material/Icon";
 
 const routes = [
+  {
+    type: "title",
+    name: "Login",
+    key: "Login",
+    icon: <Icon fontSize="small">format_textdirection_r_to_l</Icon>,
+    route: "/Login/Login",
+    component: <Login />,
+  },
   {
     type: "collapse",
     name: "Dashboard",
