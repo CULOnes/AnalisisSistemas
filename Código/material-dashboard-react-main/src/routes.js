@@ -43,12 +43,12 @@ import Menureportes from "layouts/Reportes/menureportes/menureportes";
 import Clientes from "layouts/Catalogos/Clientes/Clientes";
 import Empleados from "layouts/Catalogos/Empleados";
 import Inventarios from "layouts/Catalogos/Inventarios";
-import Mantenimiento from "layouts/Catalogos/Mantenimiento";
+import Mantenimiento from "layouts/Catalogos/Mantenimiento/Mantenimiento";
 import Seguros from "layouts/Catalogos/Seguros";
 import TipoReparaciones from "layouts/Catalogos/TipoReparaciones";
 import TipoVehiculos from "layouts/Catalogos/TipoVehiculos";
-import Vehiculos from "layouts/Catalogos/Vehiculos";
-import REntradas from "layouts/Reportes/Entradas";
+import Vehiculos from "layouts/Catalogos/Vehiculos/Vehiculos";
+import REntradas from "layouts/Reportes/Entradas/Entradas";
 import RInventario from "layouts/Reportes/Inventario";
 import RMantenimientos from "layouts/Reportes/Mantenimientos";
 import RSalidas from "layouts/Reportes/salidas/Salidas";
@@ -61,7 +61,7 @@ const routes = [
     type: "title",
     name: "Login",
     key: "Login",
-    icon: <Icon fontSize="small">format_textdirection_r_to_l</Icon>,
+    icon: <Icon fontSize="small">Login</Icon>,
     route: "/Login/Login",
     component: <Login />,
   },

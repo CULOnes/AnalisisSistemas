@@ -50,19 +50,19 @@ function Footer({ light }) {
             color={light ? "white" : "text"}
             fontSize={size.sm}
           >
-            &copy; {new Date().getFullYear()}, made with
+            &copy; {new Date().getFullYear()}, hecho
             <MDBox fontSize={size.md} color={light ? "white" : "dark"} mb={-0.5} mx={0.25}>
               <Icon color="inherit" fontSize="inherit">
                 favorite
               </Icon>
             </MDBox>
-            by
-            <Link href="https://www.creative-tim.com/" target="_blank">
+            por
+            <Link href="https://www.google.com/" target="_blank">
               <MDTypography variant="button" fontWeight="medium" color={light ? "white" : "dark"}>
-                &nbsp;Creative Tim&nbsp;
+                &nbsp;RoadMaster&nbsp;
               </MDTypography>
             </Link>
-            for a better web.
+            Flotilla de vehiculos.
           </MDBox>
           <MDBox
             component="ul"
@@ -82,17 +82,17 @@ function Footer({ light }) {
             })}
           >
             <MDBox component="li" pr={2} lineHeight={1}>
-              <Link href="https://www.creative-tim.com/" target="_blank">
+              <Link href="https://google.com/" target="_blank">
                 <MDTypography
                   variant="button"
                   fontWeight="regular"
                   color={light ? "white" : "dark"}
                 >
-                  Creative Tim
+                  RoadMaster
                 </MDTypography>
               </Link>
             </MDBox>
-            <MDBox component="li" px={2} lineHeight={1}>
+            {/* <MDBox component="li" px={2} lineHeight={1}>
               <Link href="https://www.creative-tim.com/presentation" target="_blank">
                 <MDTypography
                   variant="button"
@@ -124,7 +124,7 @@ function Footer({ light }) {
                   License
                 </MDTypography>
               </Link>
-            </MDBox>
+            </MDBox> */}
           </MDBox>
         </MDBox>
       </Container>
