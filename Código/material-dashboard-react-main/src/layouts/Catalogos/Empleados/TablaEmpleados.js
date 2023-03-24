@@ -24,6 +24,14 @@ import MDTypography from "components/MDTypography";
 import MDBadge from "components/MDBadge";
 
 export default function data() {
+  const Codigo = ({ cod }) => (
+    <MDBox lineHeight={1} textAlign="left">
+      <MDTypography display="block" variant="caption" color="text" fontWeight="medium">
+        {cod}
+      </MDTypography>
+    </MDBox>
+  );
+
   const Emp = ({ nombre, dpi }) => (
     <MDBox alignItems="center" lineHeight={1}>
       <MDBox ml={2} lineHeight={1}>
@@ -54,6 +62,7 @@ export default function data() {
 
   return {
     columns: [
+      { Header: "codigoEmpleado", accessor: "codigoEmpleado", align: "left" },
       { Header: "empleado", accessor: "empleado", align: "left" },
       { Header: "contacto", accessor: "contacto", align: "left" },
       { Header: "puesto", accessor: "puesto", align: "left" },
@@ -63,6 +72,7 @@ export default function data() {
 
     rows: [
       {
+        codigoEmpleado: <Codigo cod="001" />,
         empleado: <Emp nombre="Axel Estrada" dpi="3421 34598 2121" />,
         contacto: <Info telefono="2365-8907" direction="Ciudad" />,
         puesto: <Puesto puesto="Analista" />,
@@ -80,6 +90,7 @@ export default function data() {
         ),
       },
       {
+        codigoEmpleado: <Codigo cod="001" />,
         empleado: <Emp nombre="Carlos Morales" dpi="2345 78654 0101" />,
         contacto: <Info telefono="3489-3256" direction="Ciudad" />,
         puesto: <Puesto puesto="Facturador" />,
@@ -97,6 +108,7 @@ export default function data() {
         ),
       },
       {
+        codigoEmpleado: <Codigo cod="001" />,
         empleado: <Emp nombre="Gustavo Herrera" dpi="2134 43567 2323" />,
         contacto: <Info telefono="2145-3456" direction="Ciudad" />,
         puesto: <Puesto puesto="Administrador" />,
@@ -114,6 +126,7 @@ export default function data() {
         ),
       },
       {
+        codigoEmpleado: <Codigo cod="001" />,
         empleado: <Emp nombre="Wesley Morales" dpi="6754 12890 6767" />,
         contacto: <Info telefono="2345-6590" direction="Ciudad" />,
         puesto: <Puesto puesto="Bases de Datos" />,
@@ -131,6 +144,7 @@ export default function data() {
         ),
       },
       {
+        codigoEmpleado: <Codigo cod="001" />,
         empleado: <Emp nombre="Leonel Najarro" dpi="2365 65789 1212" />,
         contacto: <Info telefono="3456-8790" direction="Ciudad" />,
         puesto: <Puesto puesto="Desarrollador" />,
@@ -148,6 +162,7 @@ export default function data() {
         ),
       },
       {
+        codigoEmpleado: <Codigo cod="001" />,
         empleado: <Emp nombre="Daniela Valle" dpi="4367 32567 1010" />,
         contacto: <Info telefono="3498-0923" direction="Ciudad" />,
         puesto: <Puesto puesto="Contador" />,

@@ -50,7 +50,7 @@ import TipoVehiculos from "layouts/Catalogos/TiposdeVehiculos/TipoVehiculos";
 import Vehiculos from "layouts/Catalogos/Vehiculos";
 import REntradas from "layouts/Reportes/Entradas";
 import RInventario from "layouts/Reportes/Inventario";
-import RMantenimientos from "layouts/Reportes/Mantenimientos";
+import RMantenimientos from "layouts/Reportes/mantenimiento/Mantenimientos";
 import RSalidas from "layouts/Reportes/salidas/Salidas";
 
 // @mui icons
