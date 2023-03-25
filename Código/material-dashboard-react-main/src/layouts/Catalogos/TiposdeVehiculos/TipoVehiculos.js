@@ -28,16 +28,6 @@ function TipoVehiculos() {
           <Grid container spacing={3} justifyContent="center">
             <Grid item xs={12} md={4} lg={2}>
               <MDBox mb={2}>
-                <MDTypography variant="h6">Id Tipo Vehiculo:</MDTypography>
-              </MDBox>
-            </Grid>
-            <Grid item xs={12} md={6} lg={3}>
-              <MDBox mb={2}>
-                <MDInput type="number" label="Id Tipo Vehiculo" fullWidth />
-              </MDBox>
-            </Grid>
-            <Grid item xs={12} md={4} lg={2}>
-              <MDBox mb={2}>
                 <MDTypography variant="h6">Nombre Tipo de Vehiculo:</MDTypography>
               </MDBox>
             </Grid>
@@ -46,8 +36,6 @@ function TipoVehiculos() {
                 <MDInput type="text" label="Nombre Tipo Vehiculo" fullWidth />
               </MDBox>
             </Grid>
-          </Grid>
-          <Grid container spacing={3} justifyContent="center">
             <Grid item xs={12} md={4} lg={2}>
               <MDBox mb={2}>
                 <MDTypography variant="h6">Capacidad de Carga:</MDTypography>
@@ -56,6 +44,18 @@ function TipoVehiculos() {
             <Grid item xs={12} md={6} lg={3}>
               <MDBox mb={2}>
                 <MDInput type="number" label="Capacidad de Carga" fullWidth />
+              </MDBox>
+            </Grid>
+          </Grid>
+          <Grid container spacing={3} justifyContent="center">
+            <Grid item xs={12} md={4} lg={2}>
+              <MDBox mb={2}>
+                <MDTypography variant="h6">Marca:</MDTypography>
+              </MDBox>
+            </Grid>
+            <Grid item xs={12} md={6} lg={3}>
+              <MDBox mb={2}>
+                <MDInput type="text" label="Marca" fullWidth />
               </MDBox>
             </Grid>
             <Grid item xs={12} md={4} lg={2}>
@@ -80,16 +80,7 @@ function TipoVehiculos() {
                 <MDInput type="text" label="Descripcion" fullWidth />
               </MDBox>
             </Grid>
-            <Grid item xs={12} md={4} lg={2}>
-              <MDBox mb={2}>
-                <MDTypography variant="h6">Marca:</MDTypography>
-              </MDBox>
-            </Grid>
-            <Grid item xs={12} md={6} lg={3}>
-              <MDBox mb={2}>
-                <MDInput type="text" label="Marca" fullWidth />
-              </MDBox>
-            </Grid>
+            <Grid item xs={12} md={6} lg={5} />
           </Grid>
           <Grid container spacing={3} justifyContent="center">
             <Grid item xs={12} md={4} lg={2}>

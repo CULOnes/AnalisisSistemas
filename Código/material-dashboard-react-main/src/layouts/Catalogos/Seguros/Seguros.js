@@ -15,10 +15,10 @@ import MDButton from "components/MDButton";
 import DataTable from "examples/Tables/DataTable";
 
 // Data
-import TablaTiposDeReparaciones from "layouts/Catalogos/TiposdeReparaciones/TablaTiposDeReparaciones";
+import TablaSeguros from "layouts/Catalogos/Seguros/TablaSeguros";
 
-function TipoReparaciones() {
-  const { columns, rows } = TablaTiposDeReparaciones();
+function Seguros() {
+  const { columns, rows } = TablaSeguros();
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -27,59 +27,68 @@ function TipoReparaciones() {
           <Grid container spacing={3} justifyContent="center">
             <Grid item xs={12} md={4} lg={2}>
               <MDBox mb={2}>
-                <MDTypography variant="h6">Nombre Reparacion:</MDTypography>
+                <MDTypography variant="h6">Numero de poliza</MDTypography>
               </MDBox>
             </Grid>
             <Grid item xs={12} md={6} lg={3}>
               <MDBox mb={2}>
-                <MDInput type="text" label="Nombre Reparacion" fullWidth />
+                <MDInput type="number" label="Numero de poliza" fullWidth />
               </MDBox>
             </Grid>
             <Grid item xs={12} md={4} lg={2}>
               <MDBox mb={2}>
-                <MDTypography variant="h6">Costo:</MDTypography>
+                <MDTypography variant="h6">Compañia</MDTypography>
               </MDBox>
             </Grid>
             <Grid item xs={12} md={6} lg={3}>
               <MDBox mb={2}>
-                <MDInput type="number" label="Costo" fullWidth />
+                <MDInput type="text" label="Compañia" fullWidth />
               </MDBox>
             </Grid>
           </Grid>
           <Grid container spacing={3} justifyContent="center">
             <Grid item xs={12} md={4} lg={2}>
               <MDBox mb={2}>
-                <MDTypography variant="h6">Tiempo Reparacion:</MDTypography>
+                <MDTypography variant="h6">Tipo de seguro</MDTypography>
               </MDBox>
             </Grid>
             <Grid item xs={12} md={6} lg={3}>
               <MDBox mb={2}>
-                <MDInput type="number" label="Tiempo Reparacion" fullWidth />
+                <MDInput type="text" label="Tipo de seguro" fullWidth />
               </MDBox>
             </Grid>
             <Grid item xs={12} md={4} lg={2}>
               <MDBox mb={2}>
-                <MDTypography variant="h6">Piezas para Reparacion:</MDTypography>
+                <MDTypography variant="h6">Telefono</MDTypography>
               </MDBox>
             </Grid>
             <Grid item xs={12} md={6} lg={3}>
               <MDBox mb={2}>
-                <MDInput type="text" label="Piezas para Reparacion" fullWidth />
+                <MDInput type="number" label="Telefono" fullWidth />
               </MDBox>
             </Grid>
           </Grid>
           <Grid container spacing={3} justifyContent="center">
             <Grid item xs={12} md={4} lg={2}>
               <MDBox mb={2}>
-                <MDTypography variant="h6">Descripcion:</MDTypography>
+                <MDTypography variant="h6">Cobertura</MDTypography>
               </MDBox>
             </Grid>
             <Grid item xs={12} md={6} lg={3}>
               <MDBox mb={2}>
-                <MDInput type="text" label="Descripcion" fullWidth />
+                <MDInput type="text" label="Cobertura" fullWidth />
               </MDBox>
             </Grid>
-            <Grid item xs={12} md={6} lg={5} />
+            <Grid item xs={12} md={4} lg={2}>
+              <MDBox mb={2}>
+                <MDTypography variant="h6">Vigencia</MDTypography>
+              </MDBox>
+            </Grid>
+            <Grid item xs={12} md={6} lg={3}>
+              <MDBox mb={2}>
+                <MDInput type="number" label="Vigencia" fullWidth />
+              </MDBox>
+            </Grid>
           </Grid>
           <Grid container spacing={3} justifyContent="center">
             <Grid item xs={12} md={4} lg={2}>
@@ -111,4 +120,4 @@ function TipoReparaciones() {
   );
 }
 
-export default TipoReparaciones;
+export default Seguros;

@@ -1,3 +1,4 @@
+// import PropTypes from 'prop-types'
 import React from "react";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
@@ -15,10 +16,10 @@ import MDButton from "components/MDButton";
 import DataTable from "examples/Tables/DataTable";
 
 // Data
-import TablaTiposDeReparaciones from "layouts/Catalogos/TiposdeReparaciones/TablaTiposDeReparaciones";
+import TablaUsuarios from "layouts/Catalogos/Usuarios/TablaUsuarios";
 
-function TipoReparaciones() {
-  const { columns, rows } = TablaTiposDeReparaciones();
+function Usuarios() {
+  const { columns, rows } = TablaUsuarios();
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -27,59 +28,46 @@ function TipoReparaciones() {
           <Grid container spacing={3} justifyContent="center">
             <Grid item xs={12} md={4} lg={2}>
               <MDBox mb={2}>
-                <MDTypography variant="h6">Nombre Reparacion:</MDTypography>
+                <MDTypography variant="h6">Nombre</MDTypography>
               </MDBox>
             </Grid>
             <Grid item xs={12} md={6} lg={3}>
               <MDBox mb={2}>
-                <MDInput type="text" label="Nombre Reparacion" fullWidth />
+                <MDInput type="text" label="Nombre" fullWidth />
               </MDBox>
             </Grid>
             <Grid item xs={12} md={4} lg={2}>
               <MDBox mb={2}>
-                <MDTypography variant="h6">Costo:</MDTypography>
+                <MDTypography variant="h6">Apellido</MDTypography>
               </MDBox>
             </Grid>
             <Grid item xs={12} md={6} lg={3}>
               <MDBox mb={2}>
-                <MDInput type="number" label="Costo" fullWidth />
+                <MDInput type="text" label="Apellido" fullWidth />
               </MDBox>
             </Grid>
           </Grid>
           <Grid container spacing={3} justifyContent="center">
             <Grid item xs={12} md={4} lg={2}>
               <MDBox mb={2}>
-                <MDTypography variant="h6">Tiempo Reparacion:</MDTypography>
+                <MDTypography variant="h6">Correo</MDTypography>
               </MDBox>
             </Grid>
             <Grid item xs={12} md={6} lg={3}>
               <MDBox mb={2}>
-                <MDInput type="number" label="Tiempo Reparacion" fullWidth />
+                <MDInput type="email" label="Correo" fullWidth />
               </MDBox>
             </Grid>
             <Grid item xs={12} md={4} lg={2}>
               <MDBox mb={2}>
-                <MDTypography variant="h6">Piezas para Reparacion:</MDTypography>
+                <MDTypography variant="h6">Nombre de Usuario</MDTypography>
               </MDBox>
             </Grid>
             <Grid item xs={12} md={6} lg={3}>
               <MDBox mb={2}>
-                <MDInput type="text" label="Piezas para Reparacion" fullWidth />
+                <MDInput type="text" label="Nombre de Usuario" fullWidth />
               </MDBox>
             </Grid>
-          </Grid>
-          <Grid container spacing={3} justifyContent="center">
-            <Grid item xs={12} md={4} lg={2}>
-              <MDBox mb={2}>
-                <MDTypography variant="h6">Descripcion:</MDTypography>
-              </MDBox>
-            </Grid>
-            <Grid item xs={12} md={6} lg={3}>
-              <MDBox mb={2}>
-                <MDInput type="text" label="Descripcion" fullWidth />
-              </MDBox>
-            </Grid>
-            <Grid item xs={12} md={6} lg={5} />
           </Grid>
           <Grid container spacing={3} justifyContent="center">
             <Grid item xs={12} md={4} lg={2}>
@@ -111,4 +99,4 @@ function TipoReparaciones() {
   );
 }
 
-export default TipoReparaciones;
+export default Usuarios;

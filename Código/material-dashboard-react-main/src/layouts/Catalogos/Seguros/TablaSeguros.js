@@ -24,58 +24,47 @@ import MDTypography from "components/MDTypography";
 import MDBadge from "components/MDBadge";
 
 export default function data() {
-  const Codigo = ({ cod }) => (
-    <MDBox lineHeight={1} textAlign="left">
-      <MDTypography display="block" variant="caption" color="text" fontWeight="medium">
-        {cod}
-      </MDTypography>
-    </MDBox>
-  );
-
-  const Emp = ({ nombre, dpi }) => (
+  const Author = ({ name, seguro }) => (
     <MDBox alignItems="center" lineHeight={1}>
       <MDBox ml={2} lineHeight={1}>
         <MDTypography display="block" variant="button" fontWeight="medium">
-          {nombre}
+          {name}
         </MDTypography>
-        <MDTypography variant="caption">{dpi}</MDTypography>
+        <MDTypography variant="caption">{seguro}</MDTypography>
       </MDBox>
     </MDBox>
   );
 
-  const Info = ({ telefono, direction }) => (
+  const Job = ({ npoliza }) => (
     <MDBox lineHeight={1} textAlign="left">
       <MDTypography display="block" variant="caption" color="text" fontWeight="medium">
-        {telefono}
+        {npoliza}
       </MDTypography>
-      <MDTypography variant="caption">{direction}</MDTypography>
     </MDBox>
   );
 
-  const Puesto = ({ puesto }) => (
+  const Tel = ({ telefono }) => (
     <MDBox lineHeight={1} textAlign="left">
       <MDTypography display="block" variant="caption" color="text" fontWeight="medium">
-        {puesto}
+        {telefono}
       </MDTypography>
     </MDBox>
   );
 
   return {
     columns: [
-      { Header: "codigoEmpleado", accessor: "codigoEmpleado", align: "left" },
-      { Header: "empleado", accessor: "empleado", align: "left" },
-      { Header: "contacto", accessor: "contacto", align: "left" },
-      { Header: "puesto", accessor: "puesto", align: "left" },
+      { Header: "Empresa", accessor: "empresa", align: "left" },
+      { Header: "Poliza", accessor: "poliza", align: "left" },
+      { Header: "Telefono", accessor: "telefono", align: "center" },
       { Header: "status", accessor: "status", align: "center" },
       { Header: "action", accessor: "action", align: "center" },
     ],
 
     rows: [
       {
-        codigoEmpleado: <Codigo cod="001" />,
-        empleado: <Emp nombre="Axel Estrada" dpi="3421 34598 2121" />,
-        contacto: <Info telefono="2365-8907" direction="Ciudad" />,
-        puesto: <Puesto puesto="Analista" />,
+        empresa: <Author name="Seguros el roble" seguro="Asistencia en carretera" />,
+        poliza: <Job npoliza="61798245" />,
+        telefono: <Tel telefono="64829348" phone2="92384016" />,
         status: (
           <MDBox ml={-1} sx={{ cursor: "pointer" }}>
             <MDBadge badgeContent="Activo" color="success" variant="gradient" size="sm" />
@@ -90,10 +79,9 @@ export default function data() {
         ),
       },
       {
-        codigoEmpleado: <Codigo cod="001" />,
-        empleado: <Emp nombre="Carlos Morales" dpi="2345 78654 0101" />,
-        contacto: <Info telefono="3489-3256" direction="Ciudad" />,
-        puesto: <Puesto puesto="Facturador" />,
+        empresa: <Author name="Aseguradora General" seguro="Seguro completo" />,
+        poliza: <Job npoliza="61798245" />,
+        telefono: <Tel telefono="37594039" phone2="47384950" />,
         status: (
           <MDBox ml={-1} sx={{ cursor: "pointer" }}>
             <MDBadge badgeContent="Inactivo" color="dark" variant="gradient" size="sm" />
@@ -108,10 +96,9 @@ export default function data() {
         ),
       },
       {
-        codigoEmpleado: <Codigo cod="001" />,
-        empleado: <Emp nombre="Gustavo Herrera" dpi="2134 43567 2323" />,
-        contacto: <Info telefono="2145-3456" direction="Ciudad" />,
-        puesto: <Puesto puesto="Administrador" />,
+        empresa: <Author name="Seguros G&T" seguro="Seguro por reparaciones" />,
+        poliza: <Job npoliza="34485948" />,
+        telefono: <Tel telefono="38495037" phone2="39504859" />,
         status: (
           <MDBox ml={-1} sx={{ cursor: "pointer" }}>
             <MDBadge badgeContent="Activo" color="success" variant="gradient" size="sm" />
@@ -126,10 +113,9 @@ export default function data() {
         ),
       },
       {
-        codigoEmpleado: <Codigo cod="001" />,
-        empleado: <Emp nombre="Wesley Morales" dpi="6754 12890 6767" />,
-        contacto: <Info telefono="2345-6590" direction="Ciudad" />,
-        puesto: <Puesto puesto="Bases de Datos" />,
+        empresa: <Author name="Seguros Universales" seguro="Seguro por daño a la propiedad" />,
+        poliza: <Job npoliza="59483759" />,
+        telefono: <Tel telefono="36273940" phone2="49503758" />,
         status: (
           <MDBox ml={-1} sx={{ cursor: "pointer" }}>
             <MDBadge badgeContent="Activo" color="success" variant="gradient" size="sm" />
@@ -144,10 +130,9 @@ export default function data() {
         ),
       },
       {
-        codigoEmpleado: <Codigo cod="001" />,
-        empleado: <Emp nombre="Leonel Najarro" dpi="2365 65789 1212" />,
-        contacto: <Info telefono="3456-8790" direction="Ciudad" />,
-        puesto: <Puesto puesto="Desarrollador" />,
+        empresa: <Author name="Seguros Universales" seguro="Seguro por fallecimiento" />,
+        poliza: <Job npoliza="48593058" />,
+        telefono: <Tel telefono="39503857" phone2="38495837" />,
         status: (
           <MDBox ml={-1} sx={{ cursor: "pointer" }}>
             <MDBadge badgeContent="Inactivo" color="dark" variant="gradient" size="sm" />
@@ -162,10 +147,9 @@ export default function data() {
         ),
       },
       {
-        codigoEmpleado: <Codigo cod="001" />,
-        empleado: <Emp nombre="Daniela Valle" dpi="4367 32567 1010" />,
-        contacto: <Info telefono="3498-0923" direction="Ciudad" />,
-        puesto: <Puesto puesto="Contador" />,
+        empresa: <Author name="Aseguradora General" seguro="Seguro de vida" />,
+        poliza: <Job npoliza="63940348" />,
+        telefono: <Tel telefono="37584930" phone2="39503849" />,
         status: (
           <MDBox ml={-1} sx={{ cursor: "pointer" }}>
             <MDBadge badgeContent="Inactivo" color="dark" variant="gradient" size="sm" />

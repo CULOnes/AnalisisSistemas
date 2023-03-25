@@ -15,10 +15,10 @@ import MDButton from "components/MDButton";
 import DataTable from "examples/Tables/DataTable";
 
 // Data
-import TablaTiposDeReparaciones from "layouts/Catalogos/TiposdeReparaciones/TablaTiposDeReparaciones";
+import TablaInventarios from "layouts/Reportes/Inventarios/TablaInventarios";
 
-function TipoReparaciones() {
-  const { columns, rows } = TablaTiposDeReparaciones();
+function RInventario() {
+  const { columns, rows } = TablaInventarios();
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -27,59 +27,68 @@ function TipoReparaciones() {
           <Grid container spacing={3} justifyContent="center">
             <Grid item xs={12} md={4} lg={2}>
               <MDBox mb={2}>
-                <MDTypography variant="h6">Nombre Reparacion:</MDTypography>
+                <MDTypography variant="h6">Nombre</MDTypography>
               </MDBox>
             </Grid>
             <Grid item xs={12} md={6} lg={3}>
               <MDBox mb={2}>
-                <MDInput type="text" label="Nombre Reparacion" fullWidth />
+                <MDInput type="text" label="Nombre" fullWidth />
               </MDBox>
             </Grid>
             <Grid item xs={12} md={4} lg={2}>
               <MDBox mb={2}>
-                <MDTypography variant="h6">Costo:</MDTypography>
+                <MDTypography variant="h6">Existencia</MDTypography>
               </MDBox>
             </Grid>
             <Grid item xs={12} md={6} lg={3}>
               <MDBox mb={2}>
-                <MDInput type="number" label="Costo" fullWidth />
+                <MDInput type="number" label="Existencia" fullWidth />
               </MDBox>
             </Grid>
           </Grid>
           <Grid container spacing={3} justifyContent="center">
             <Grid item xs={12} md={4} lg={2}>
               <MDBox mb={2}>
-                <MDTypography variant="h6">Tiempo Reparacion:</MDTypography>
+                <MDTypography variant="h6">Fecha de entrada</MDTypography>
               </MDBox>
             </Grid>
             <Grid item xs={12} md={6} lg={3}>
               <MDBox mb={2}>
-                <MDInput type="number" label="Tiempo Reparacion" fullWidth />
+                <MDInput type="date" fullWidth />
               </MDBox>
             </Grid>
             <Grid item xs={12} md={4} lg={2}>
               <MDBox mb={2}>
-                <MDTypography variant="h6">Piezas para Reparacion:</MDTypography>
+                <MDTypography variant="h6">Estado de herramienta</MDTypography>
               </MDBox>
             </Grid>
             <Grid item xs={12} md={6} lg={3}>
               <MDBox mb={2}>
-                <MDInput type="text" label="Piezas para Reparacion" fullWidth />
+                <MDInput type="text" label="Estado de herramienta" fullWidth />
               </MDBox>
             </Grid>
           </Grid>
           <Grid container spacing={3} justifyContent="center">
             <Grid item xs={12} md={4} lg={2}>
               <MDBox mb={2}>
-                <MDTypography variant="h6">Descripcion:</MDTypography>
+                <MDTypography variant="h6">Numero de herramienta</MDTypography>
               </MDBox>
             </Grid>
             <Grid item xs={12} md={6} lg={3}>
               <MDBox mb={2}>
-                <MDInput type="text" label="Descripcion" fullWidth />
+                <MDInput type="number" label="Numero de herramienta" fullWidth />
               </MDBox>
             </Grid>
-            <Grid item xs={12} md={6} lg={5} />
+            <Grid item xs={12} md={4} lg={2}>
+              <MDBox mb={2}>
+                <MDTypography variant="h6">Ubicacion</MDTypography>
+              </MDBox>
+            </Grid>
+            <Grid item xs={12} md={6} lg={3}>
+              <MDBox mb={2}>
+                <MDInput type="text" label="Ubicacion" fullWidth />
+              </MDBox>
+            </Grid>
           </Grid>
           <Grid container spacing={3} justifyContent="center">
             <Grid item xs={12} md={4} lg={2}>
@@ -111,4 +120,4 @@ function TipoReparaciones() {
   );
 }
 
-export default TipoReparaciones;
+export default RInventario;

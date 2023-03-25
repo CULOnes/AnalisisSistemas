@@ -41,16 +41,17 @@ import Dashboard from "layouts/dashboard/dashboard";
 import Menucatalogos from "layouts/Catalogos/menucatalogos/menucatalogos";
 import Menureportes from "layouts/Reportes/menureportes/menureportes";
 import Clientes from "layouts/Catalogos/Clientes/Clientes";
+import Inventarios from "layouts/Catalogos/Inventarios/Inventarios";
+import Seguros from "layouts/Catalogos/Seguros/Seguros";
+import Usuarios from "layouts/Catalogos/Usuarios/Usuarios";
+import RInventario from "layouts/Reportes/Inventarios/Inventario";
 import Empleados from "layouts/Catalogos/Empleados/Empleados";
-import Inventarios from "layouts/Catalogos/Inventarios";
 import Mantenimiento from "layouts/Catalogos/Mantenimiento/Mantenimiento";
-import Seguros from "layouts/Catalogos/Seguros";
 import Vehiculos from "layouts/Catalogos/Vehiculos/Vehiculos";
 import REntradas from "layouts/Reportes/Entradas/Entradas";
 import TipoReparaciones from "layouts/Catalogos/TiposdeReparaciones/TipoReparaciones";
 import TipoVehiculos from "layouts/Catalogos/TiposdeVehiculos/TipoVehiculos";
-import RInventario from "layouts/Reportes/Inventario";
-import RMantenimientos from "layouts/Reportes/Mantenimientos";
+import RMantenimientos from "layouts/Reportes/mantenimiento/Mantenimientos";
 import RSalidas from "layouts/Reportes/salidas/Salidas";
 
 // @mui icons
@@ -160,6 +161,14 @@ const routes = [
     icon: <Icon fontSize="small">format_textdirection_r_to_l</Icon>,
     route: "/catalogos/vehiculos",
     component: <Vehiculos />,
+  },
+  {
+    type: "title",
+    name: "Usuarios",
+    key: "usuarios",
+    icon: <Icon fontSize="small">format_textdirection_r_to_l</Icon>,
+    route: "/catalogos/usuarios",
+    component: <Usuarios />,
   },
   {
     type: "title",
