@@ -41,14 +41,15 @@ import Menucatalogos from "layouts/Catalogos/menucatalogos/menucatalogos";
 import Menureportes from "layouts/Reportes/menureportes/menureportes";
 import Clientes from "layouts/Catalogos/Clientes/Clientes";
 import Empleados from "layouts/Catalogos/Empleados";
-import Inventarios from "layouts/Catalogos/Inventarios";
+import Inventarios from "layouts/Catalogos/Inventarios/Inventarios";
 import Mantenimiento from "layouts/Catalogos/Mantenimiento";
-import Seguros from "layouts/Catalogos/Seguros";
+import Seguros from "layouts/Catalogos/Seguros/Seguros";
+import Usuarios from "layouts/Catalogos/Usuarios/Usuarios";
 import TipoReparaciones from "layouts/Catalogos/TipoReparaciones";
 import TipoVehiculos from "layouts/Catalogos/TipoVehiculos";
 import Vehiculos from "layouts/Catalogos/Vehiculos";
 import REntradas from "layouts/Reportes/Entradas";
-import RInventario from "layouts/Reportes/Inventario";
+import RInventario from "layouts/Reportes/Inventarios/Inventario";
 import RMantenimientos from "layouts/Reportes/Mantenimientos";
 import RSalidas from "layouts/Reportes/Salidas";
 
@@ -151,6 +152,14 @@ const routes = [
     icon: <Icon fontSize="small">format_textdirection_r_to_l</Icon>,
     route: "/catalogos/vehiculos",
     component: <Vehiculos />,
+  },
+  {
+    type: "title",
+    name: "Usuarios",
+    key: "usuarios",
+    icon: <Icon fontSize="small">format_textdirection_r_to_l</Icon>,
+    route: "/catalogos/usuarios",
+    component: <Usuarios />,
   },
   {
     type: "title",
