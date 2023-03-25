@@ -17,8 +17,26 @@ import DataTable from "examples/Tables/DataTable";
 // Data
 import TablaMantenimiento from "layouts/Catalogos/Mantenimiento/TablaMantenimiento";
 
+import TextField from "@mui/material/TextField";
+import Autocomplete from "@mui/material/Autocomplete";
+
 function Mantenimiento() {
   const { columns, rows } = TablaMantenimiento();
+  const listadovehiculos = [
+    { label: "Vehiculo 1" },
+    { label: "Vehiculo 2" },
+    { label: "Vehiculo 3" },
+    { label: "Vehiculo 4" },
+    { label: "Vehiculo 5" },
+  ];
+  const listatipom = [
+    { label: "Tipo 1" },
+    { label: "Tipo 2" },
+    { label: "Tipo 3" },
+    { label: "Tipo 4" },
+    { label: "Tipo 5" },
+  ];
+
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -27,12 +45,18 @@ function Mantenimiento() {
           <Grid container spacing={3} justifyContent="center">
             <Grid item xs={12} md={4} lg={2}>
               <MDBox mb={2}>
-                <MDTypography variant="h6">Nombre del vehiculo:</MDTypography>
+                <MDTypography variant="h6">Vehiculo:</MDTypography>
               </MDBox>
             </Grid>
             <Grid item xs={12} md={6} lg={3}>
               <MDBox mb={2}>
-                <MDInput type="text" label="Ingresar vehiculo" fullWidth />
+                <Autocomplete
+                  disablePortal
+                  id="combo-box-demo"
+                  options={listadovehiculos}
+                  fullWidth
+                  renderInput={(params) => <TextField {...params} label="Vehiculo" />}
+                />
               </MDBox>
             </Grid>
             <Grid item xs={12} md={4} lg={2}>
@@ -54,7 +78,13 @@ function Mantenimiento() {
             </Grid>
             <Grid item xs={12} md={6} lg={3}>
               <MDBox mb={2}>
-                <MDInput type="text" label="Ingresar tipo" fullWidth />
+                <Autocomplete
+                  disablePortal
+                  id="combo-box-demo"
+                  options={listatipom}
+                  fullWidth
+                  renderInput={(params) => <TextField {...params} label="Tipo de Mantenimiento" />}
+                />
               </MDBox>
             </Grid>
             <Grid item xs={12} md={4} lg={2}>
@@ -64,19 +94,19 @@ function Mantenimiento() {
             </Grid>
             <Grid item xs={12} md={6} lg={3}>
               <MDBox mb={2}>
-                <MDInput type="number" label="ingresar kilometraje" fullWidth />
+                <MDInput type="number" label="Kilometraje del Vehiculo" fullWidth />
               </MDBox>
             </Grid>
           </Grid>
           <Grid container spacing={3} justifyContent="center">
             <Grid item xs={12} md={4} lg={2}>
               <MDBox mb={2}>
-                <MDTypography variant="h6">Estado del Mantenimiento</MDTypography>
+                <MDTypography variant="h6">Fecha Estimada Salida:</MDTypography>
               </MDBox>
             </Grid>
             <Grid item xs={12} md={6} lg={3}>
               <MDBox mb={2}>
-                <MDInput type="text" label="ingresar estado" fullWidth />
+                <MDInput type="date" fullWidth />
               </MDBox>
             </Grid>
             <Grid item xs={12} md={4} lg={2}>
@@ -86,7 +116,7 @@ function Mantenimiento() {
             </Grid>
             <Grid item xs={12} md={6} lg={3}>
               <MDBox mb={2}>
-                <MDInput type="textarea" label="ingresar descripcion" fullWidth />
+                <MDInput type="text" label="Descripcion del Mantenimiento" fullWidth />
               </MDBox>
             </Grid>
           </Grid>

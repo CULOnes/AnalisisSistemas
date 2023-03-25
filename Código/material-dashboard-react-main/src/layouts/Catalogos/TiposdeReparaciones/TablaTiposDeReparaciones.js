@@ -41,10 +41,10 @@ export default function data() {
     </MDBox>
   );
 
-  const Costo = ({ costo }) => (
+  const Descripcion = ({ descripcion }) => (
     <MDBox lineHeight={1} textAlign="left">
       <MDTypography display="block" variant="caption" color="text" fontWeight="medium">
-        {costo}
+        {descripcion}
       </MDTypography>
     </MDBox>
   );
@@ -52,16 +52,16 @@ export default function data() {
   return {
     columns: [
       { Header: "idReparacion", accessor: "idReparacion", align: "left" },
-      { Header: "NombreReparacion", accessor: "NombreReparacion", align: "left" },
-      { Header: "Costo", accessor: "Costo", align: "left" },
+      { Header: "nombre", accessor: "nombre", align: "left" },
+      { Header: "descripcion", accessor: "descripcion", align: "left" },
       { Header: "action", accessor: "action", align: "center" },
     ],
 
     rows: [
       {
         idReparacion: <Numero id="001" />,
-        NombreReparacion: <Nombre nombreRep="Cambio de Llantas" />,
-        Costo: <Costo costo="1,000.00" />,
+        nombre: <Nombre nombreRep="Cambio de Llantas" />,
+        descripcion: <Descripcion descripcion="Cambio de llantas del vehiculo" />,
         action: (
           <MDTypography component="a" href="#" color="text">
             <Icon>visibility</Icon>&nbsp;
@@ -72,8 +72,8 @@ export default function data() {
       },
       {
         idReparacion: <Numero id="001" />,
-        NombreReparacion: <Nombre nombreRep="Cambio de Llantas" />,
-        Costo: <Costo costo="1,000.00" />,
+        nombre: <Nombre nombreRep="Cambio de Llantas" />,
+        descripcion: <Descripcion descripcion="Cambio de Llantas del Vehiculo" />,
         action: (
           <MDTypography component="a" href="#" color="text">
             <Icon>visibility</Icon>&nbsp;
@@ -84,8 +84,8 @@ export default function data() {
       },
       {
         idReparacion: <Numero id="001" />,
-        NombreReparacion: <Nombre nombreRep="Cambio de Llantas" />,
-        Costo: <Costo costo="1,000.00" />,
+        nombre: <Nombre nombreRep="Cambio de Llantas" />,
+        descripcion: <Descripcion descripcion="Cambio de Llantas del Vehiculo" />,
         action: (
           <MDTypography component="a" href="#" color="text">
             <Icon>visibility</Icon>&nbsp;
@@ -96,8 +96,8 @@ export default function data() {
       },
       {
         idReparacion: <Numero id="001" />,
-        NombreReparacion: <Nombre nombreRep="Cambio de Llantas" />,
-        Costo: <Costo costo="1,000.00" />,
+        nombre: <Nombre nombreRep="Cambio de Llantas" />,
+        descripcion: <Descripcion descripcion="Cambio de Llantas del Vehiculo" />,
         action: (
           <MDTypography component="a" href="#" color="text">
             <Icon>visibility</Icon>&nbsp;
@@ -108,8 +108,8 @@ export default function data() {
       },
       {
         idReparacion: <Numero id="001" />,
-        NombreReparacion: <Nombre nombreRep="Cambio de Llantas" />,
-        Costo: <Costo costo="1,000.00" />,
+        nombre: <Nombre nombreRep="Cambio de Llantas" />,
+        descripcion: <Descripcion descripcion="Cambio de Llantas del Vehiculo" />,
         action: (
           <MDTypography component="a" href="#" color="text">
             <Icon>visibility</Icon>&nbsp;
@@ -120,8 +120,8 @@ export default function data() {
       },
       {
         idReparacion: <Numero id="001" />,
-        NombreReparacion: <Nombre nombreRep="Cambio de Llantas" />,
-        Costo: <Costo costo="1,000.00" />,
+        nombre: <Nombre nombreRep="Cambio de Llantas" />,
+        descripcion: <Descripcion descripcion="Cambio de Llantas del Vehiculo" />,
         action: (
           <MDTypography component="a" href="#" color="text">
             <Icon>visibility</Icon>&nbsp;

@@ -17,7 +17,11 @@ import DataTable from "examples/Tables/DataTable";
 // Data
 import TablaInventarios from "layouts/Reportes/Inventarios/TablaInventarios";
 
+import Autocomplete from "@mui/material/Autocomplete";
+import TextField from "@mui/material/TextField";
+
 function RInventario() {
+  const listamovimientos = [{ label: "Entrada" }, { label: "Salida" }];
   const { columns, rows } = TablaInventarios();
   return (
     <DashboardLayout>
@@ -27,7 +31,7 @@ function RInventario() {
           <Grid container spacing={3} justifyContent="center">
             <Grid item xs={12} md={4} lg={2}>
               <MDBox mb={2}>
-                <MDTypography variant="h6">Nombre</MDTypography>
+                <MDTypography variant="h6">Nombre:</MDTypography>
               </MDBox>
             </Grid>
             <Grid item xs={12} md={6} lg={3}>
@@ -37,19 +41,7 @@ function RInventario() {
             </Grid>
             <Grid item xs={12} md={4} lg={2}>
               <MDBox mb={2}>
-                <MDTypography variant="h6">Existencia</MDTypography>
-              </MDBox>
-            </Grid>
-            <Grid item xs={12} md={6} lg={3}>
-              <MDBox mb={2}>
-                <MDInput type="number" label="Existencia" fullWidth />
-              </MDBox>
-            </Grid>
-          </Grid>
-          <Grid container spacing={3} justifyContent="center">
-            <Grid item xs={12} md={4} lg={2}>
-              <MDBox mb={2}>
-                <MDTypography variant="h6">Fecha de entrada</MDTypography>
+                <MDTypography variant="h6">Fecha de Entrada:</MDTypography>
               </MDBox>
             </Grid>
             <Grid item xs={12} md={6} lg={3}>
@@ -57,43 +49,30 @@ function RInventario() {
                 <MDInput type="date" fullWidth />
               </MDBox>
             </Grid>
-            <Grid item xs={12} md={4} lg={2}>
-              <MDBox mb={2}>
-                <MDTypography variant="h6">Estado de herramienta</MDTypography>
-              </MDBox>
-            </Grid>
-            <Grid item xs={12} md={6} lg={3}>
-              <MDBox mb={2}>
-                <MDInput type="text" label="Estado de herramienta" fullWidth />
-              </MDBox>
-            </Grid>
           </Grid>
           <Grid container spacing={3} justifyContent="center">
             <Grid item xs={12} md={4} lg={2}>
               <MDBox mb={2}>
-                <MDTypography variant="h6">Numero de herramienta</MDTypography>
+                <MDTypography variant="h6">Tipo de Movimiento:</MDTypography>
               </MDBox>
             </Grid>
             <Grid item xs={12} md={6} lg={3}>
               <MDBox mb={2}>
-                <MDInput type="number" label="Numero de herramienta" fullWidth />
+                <Autocomplete
+                  disablePortal
+                  id="combo-box-demo"
+                  options={listamovimientos}
+                  fullWidth
+                  renderInput={(params) => <TextField {...params} label="Tipo de Movimiento" />}
+                />
               </MDBox>
             </Grid>
-            <Grid item xs={12} md={4} lg={2}>
-              <MDBox mb={2}>
-                <MDTypography variant="h6">Ubicacion</MDTypography>
-              </MDBox>
-            </Grid>
-            <Grid item xs={12} md={6} lg={3}>
-              <MDBox mb={2}>
-                <MDInput type="text" label="Ubicacion" fullWidth />
-              </MDBox>
-            </Grid>
+            <Grid item xs={12} md={4} lg={5} />
           </Grid>
           <Grid container spacing={3} justifyContent="center">
             <Grid item xs={12} md={4} lg={2}>
-              <MDButton variant="gradient" color="info" fullWidth>
-                Crear
+              <MDButton variant="gradient" color="success" fullWidth>
+                Consultar
               </MDButton>
             </Grid>
           </Grid>

@@ -87,7 +87,7 @@ function Clientes() {
             </Grid>
             <Grid item xs={12} md={6} lg={3}>
               <MDBox mb={2}>
-                <MDInput type="textarea" label="Direccion" fullWidth />
+                <MDInput type="text" label="Direccion" fullWidth />
               </MDBox>
             </Grid>
           </Grid>

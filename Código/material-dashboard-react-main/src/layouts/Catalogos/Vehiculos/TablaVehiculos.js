@@ -63,7 +63,7 @@ export default function data() {
 
     rows: [
       {
-        Vehiculo: <Author marca="Volvo" placa="DFG556" />,
+        Vehiculo: <Author marca="Volvo" placa="056FG5" />,
         Modelo: <Job modelo="FM" ano="2020" />,
         Tipo: <Tipos type="Camion" />,
         status: (
@@ -80,7 +80,7 @@ export default function data() {
         ),
       },
       {
-        Vehiculo: <Author marca="DAF" placa="DDG655" />,
+        Vehiculo: <Author marca="DAF" placa="655DDG" />,
         Modelo: <Job modelo="CF" ano="2012" />,
         Tipo: <Tipos type="Camion" />,
         status: (
@@ -97,7 +97,7 @@ export default function data() {
         ),
       },
       {
-        Vehiculo: <Author marca="Scania" placa="AXL896" />,
+        Vehiculo: <Author marca="Scania" placa="896AXL" />,
         Modelo: <Job modelo="S-series" ano="2018" />,
         Tipo: <Tipos type="Camion" />,
         status: (
@@ -114,7 +114,7 @@ export default function data() {
         ),
       },
       {
-        Vehiculo: <Author marca="Mack" placa="HGK123" />,
+        Vehiculo: <Author marca="Mack" placa="123HGK" />,
         Modelo: <Job modelo="Granite" ano="2015" />,
         Tipo: <Tipos type="Camion" />,
         status: (
@@ -131,7 +131,7 @@ export default function data() {
         ),
       },
       {
-        Vehiculo: <Author marca="Peterbilt" placa="UKI202" />,
+        Vehiculo: <Author marca="Peterbilt" placa="202UKI" />,
         Modelo: <Job modelo="389" ano="2020" />,
         Tipo: <Tipos type="Camion" />,
         status: (

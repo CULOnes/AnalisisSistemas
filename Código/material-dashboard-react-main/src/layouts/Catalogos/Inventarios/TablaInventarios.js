@@ -46,8 +46,8 @@ export default function data() {
 
   return {
     columns: [
-      { Header: "IdHerramienta", accessor: "IdHerramienta", align: "left" },
-      { Header: "Herramienta", accessor: "Herramienta", align: "left" },
+      { Header: "id", accessor: "IdHerramienta", align: "left" },
+      { Header: "nombre", accessor: "Herramienta", align: "left" },
       { Header: "status", accessor: "status", align: "center" },
       { Header: "action", accessor: "action", align: "center" },
     ],

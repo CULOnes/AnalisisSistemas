@@ -17,9 +17,18 @@ import DataTable from "examples/Tables/DataTable";
 
 // Data
 import TablaVehiculos from "layouts/Catalogos/Vehiculos/TablaVehiculos";
+import TextField from "@mui/material/TextField";
+import Autocomplete from "@mui/material/Autocomplete";
 
 function Vehiculos() {
   const { columns, rows } = TablaVehiculos();
+  const listatipov = [
+    { label: "Sedan" },
+    { label: "SUV" },
+    { label: "Pick-up" },
+    { label: "Camion" },
+    { label: "Trailer" },
+  ];
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -33,7 +42,7 @@ function Vehiculos() {
             </Grid>
             <Grid item xs={12} md={6} lg={3}>
               <MDBox mb={2}>
-                <MDInput type="text" label="Ingrese Marca" fullWidth />
+                <MDInput type="text" label="Marca del Vehiculo" fullWidth />
               </MDBox>
             </Grid>
             <Grid item xs={12} md={4} lg={2}>
@@ -43,7 +52,7 @@ function Vehiculos() {
             </Grid>
             <Grid item xs={12} md={6} lg={3}>
               <MDBox mb={2}>
-                <MDInput type="text" label="Ingrese Placa" fullWidth />
+                <MDInput type="text" label="Placa del Vehiculo" fullWidth />
               </MDBox>
             </Grid>
           </Grid>
@@ -55,7 +64,7 @@ function Vehiculos() {
             </Grid>
             <Grid item xs={12} md={6} lg={3}>
               <MDBox mb={2}>
-                <MDInput type="text" label="Ingrese Modelo" fullWidth />
+                <MDInput type="text" label="Modelo del Vehiculo" fullWidth />
               </MDBox>
             </Grid>
             <Grid item xs={12} md={4} lg={2}>
@@ -65,7 +74,7 @@ function Vehiculos() {
             </Grid>
             <Grid item xs={12} md={6} lg={3}>
               <MDBox mb={2}>
-                <MDInput type="text" label="Ingrese Año" fullWidth />
+                <MDInput type="text" label="Año del vehiculo" fullWidth />
               </MDBox>
             </Grid>
           </Grid>
@@ -77,7 +86,7 @@ function Vehiculos() {
             </Grid>
             <Grid item xs={12} md={6} lg={3}>
               <MDBox mb={2}>
-                <MDInput type="text" label="Ingrese tipo" fullWidth />
+                <MDInput type="text" label="Tipo de Combustible" fullWidth />
               </MDBox>
             </Grid>
             <Grid item xs={12} md={4} lg={2}>
@@ -87,7 +96,7 @@ function Vehiculos() {
             </Grid>
             <Grid item xs={12} md={6} lg={3}>
               <MDBox mb={2}>
-                <MDInput type="number" label="ingrese Kilometraje" fullWidth />
+                <MDInput type="number" label="Kilometraje" fullWidth />
               </MDBox>
             </Grid>
           </Grid>
@@ -99,7 +108,7 @@ function Vehiculos() {
             </Grid>
             <Grid item xs={12} md={6} lg={3}>
               <MDBox mb={2}>
-                <MDInput type="text" label="ingrese color" fullWidth />
+                <MDInput type="text" label="Color" fullWidth />
               </MDBox>
             </Grid>
             <Grid item xs={12} md={4} lg={2}>
@@ -109,7 +118,7 @@ function Vehiculos() {
             </Grid>
             <Grid item xs={12} md={6} lg={3}>
               <MDBox mb={2}>
-                <MDInput type="text" label="ingrese transmision" fullWidth />
+                <MDInput type="text" label="Transmision" fullWidth />
               </MDBox>
             </Grid>
           </Grid>
@@ -121,7 +130,23 @@ function Vehiculos() {
             </Grid>
             <Grid item xs={12} md={6} lg={3}>
               <MDBox mb={2}>
-                <MDInput type="text" label="ingrese tipo" fullWidth />
+                <Autocomplete
+                  disablePortal
+                  id="combo-box-demo"
+                  options={listatipov}
+                  fullWidth
+                  renderInput={(params) => <TextField {...params} label="Tipo de Vehiculo" />}
+                />
+              </MDBox>
+            </Grid>
+            <Grid item xs={12} md={4} lg={2}>
+              <MDBox mb={2}>
+                <MDTypography variant="h6">Tipo de Llantas:</MDTypography>
+              </MDBox>
+            </Grid>
+            <Grid item xs={12} md={6} lg={3}>
+              <MDBox mb={2}>
+                <MDInput type="text" label="Tipo de Llantas" fullWidth />
               </MDBox>
             </Grid>
           </Grid>

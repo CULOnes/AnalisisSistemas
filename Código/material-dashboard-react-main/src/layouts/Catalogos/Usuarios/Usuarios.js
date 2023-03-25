@@ -28,7 +28,7 @@ function Usuarios() {
           <Grid container spacing={3} justifyContent="center">
             <Grid item xs={12} md={4} lg={2}>
               <MDBox mb={2}>
-                <MDTypography variant="h6">Nombre</MDTypography>
+                <MDTypography variant="h6">Nombre:</MDTypography>
               </MDBox>
             </Grid>
             <Grid item xs={12} md={6} lg={3}>
@@ -38,7 +38,7 @@ function Usuarios() {
             </Grid>
             <Grid item xs={12} md={4} lg={2}>
               <MDBox mb={2}>
-                <MDTypography variant="h6">Apellido</MDTypography>
+                <MDTypography variant="h6">Apellido:</MDTypography>
               </MDBox>
             </Grid>
             <Grid item xs={12} md={6} lg={3}>
@@ -50,7 +50,7 @@ function Usuarios() {
           <Grid container spacing={3} justifyContent="center">
             <Grid item xs={12} md={4} lg={2}>
               <MDBox mb={2}>
-                <MDTypography variant="h6">Correo</MDTypography>
+                <MDTypography variant="h6">Correo:</MDTypography>
               </MDBox>
             </Grid>
             <Grid item xs={12} md={6} lg={3}>
@@ -60,7 +60,7 @@ function Usuarios() {
             </Grid>
             <Grid item xs={12} md={4} lg={2}>
               <MDBox mb={2}>
-                <MDTypography variant="h6">Nombre de Usuario</MDTypography>
+                <MDTypography variant="h6">Nombre de Usuario:</MDTypography>
               </MDBox>
             </Grid>
             <Grid item xs={12} md={6} lg={3}>

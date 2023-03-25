@@ -53,6 +53,8 @@ import TipoReparaciones from "layouts/Catalogos/TiposdeReparaciones/TipoReparaci
 import TipoVehiculos from "layouts/Catalogos/TiposdeVehiculos/TipoVehiculos";
 import RMantenimientos from "layouts/Reportes/mantenimiento/Mantenimientos";
 import RSalidas from "layouts/Reportes/salidas/Salidas";
+import Asignaciones from "layouts/Asignacion/Asignacion";
+import RAsignaciones from "layouts/Reportes/Asignaciones/Asignaciones";
 
 // @mui icons
 import Icon from "@mui/material/Icon";
@@ -84,17 +86,17 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "Operaciones",
+    name: "Asignaciones",
     key: "operaciones",
-    icon: <Icon fontSize="small">receipt_long</Icon>,
+    icon: <Icon fontSize="small">add_box</Icon>,
     route: "/operaciones",
-    // component: <Billing />,
+    component: <Asignaciones />,
   },
   {
     type: "collapse",
     name: "Reportes",
     key: "reportes",
-    icon: <Icon fontSize="small">format_textdirection_r_to_l</Icon>,
+    icon: <Icon fontSize="small">receipt_long</Icon>,
     route: "/reportes",
     component: <Menureportes />,
   },
@@ -201,6 +203,14 @@ const routes = [
     icon: <Icon fontSize="small">format_textdirection_r_to_l</Icon>,
     route: "/reportes/rsalidas",
     component: <RSalidas />,
+  },
+  {
+    type: "title",
+    name: "RAsignaciones",
+    key: "rasignaciones",
+    icon: <Icon fontSize="small">format_textdirection_r_to_l</Icon>,
+    route: "/reportes/rasignaciones",
+    component: <RAsignaciones />,
   },
 ];
 

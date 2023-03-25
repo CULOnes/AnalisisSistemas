@@ -55,7 +55,7 @@ function Empleados() {
             </Grid>
             <Grid item xs={12} md={6} lg={3}>
               <MDBox mb={2}>
-                <MDInput type="textarea" label="Direccion" fullWidth />
+                <MDInput type="text" label="Direccion" fullWidth />
               </MDBox>
             </Grid>
             <Grid item xs={12} md={4} lg={2}>
@@ -72,12 +72,12 @@ function Empleados() {
           <Grid container spacing={3} justifyContent="center">
             <Grid item xs={12} md={4} lg={2}>
               <MDBox mb={2}>
-                <MDTypography variant="h6">dpi:</MDTypography>
+                <MDTypography variant="h6">DPI:</MDTypography>
               </MDBox>
             </Grid>
             <Grid item xs={12} md={6} lg={3}>
               <MDBox mb={2}>
-                <MDInput type="number" label="dpi" fullWidth />
+                <MDInput type="number" label="DPI" fullWidth />
               </MDBox>
             </Grid>
             <Grid item xs={12} md={4} lg={2}>
