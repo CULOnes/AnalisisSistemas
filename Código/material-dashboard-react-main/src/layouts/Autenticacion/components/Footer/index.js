@@ -19,7 +19,7 @@ import PropTypes from "prop-types";
 // @mui material components
 import Container from "@mui/material/Container";
 import Link from "@mui/material/Link";
-import Icon from "@mui/material/Icon";
+// import Icon from "@mui/material/Icon";
 
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
@@ -52,9 +52,9 @@ function Footer({ light }) {
           >
             &copy; {new Date().getFullYear()}, hecho
             <MDBox fontSize={size.md} color={light ? "white" : "dark"} mb={-0.5} mx={0.25}>
-              <Icon color="inherit" fontSize="inherit">
+              {/* <Icon color="inherit" fontSize="inherit">
                 favorite
-              </Icon>
+              </Icon> */}
             </MDBox>
             por
             <Link href="https://www.google.com/" target="_blank">
