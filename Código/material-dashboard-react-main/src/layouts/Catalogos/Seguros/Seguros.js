@@ -27,7 +27,7 @@ function Seguros() {
           <Grid container spacing={3} justifyContent="center">
             <Grid item xs={12} md={4} lg={2}>
               <MDBox mb={2}>
-                <MDTypography variant="h6">Numero de poliza :</MDTypography>
+                <MDTypography variant="h6">Numero de poliza</MDTypography>
               </MDBox>
             </Grid>
             <Grid item xs={12} md={6} lg={3}>
@@ -37,7 +37,7 @@ function Seguros() {
             </Grid>
             <Grid item xs={12} md={4} lg={2}>
               <MDBox mb={2}>
-                <MDTypography variant="h6">Compañia:</MDTypography>
+                <MDTypography variant="h6">Compañia</MDTypography>
               </MDBox>
             </Grid>
             <Grid item xs={12} md={6} lg={3}>
@@ -49,7 +49,7 @@ function Seguros() {
           <Grid container spacing={3} justifyContent="center">
             <Grid item xs={12} md={4} lg={2}>
               <MDBox mb={2}>
-                <MDTypography variant="h6">Tipo de seguro:</MDTypography>
+                <MDTypography variant="h6">Tipo de seguro</MDTypography>
               </MDBox>
             </Grid>
             <Grid item xs={12} md={6} lg={3}>
@@ -59,7 +59,7 @@ function Seguros() {
             </Grid>
             <Grid item xs={12} md={4} lg={2}>
               <MDBox mb={2}>
-                <MDTypography variant="h6">Telefono:</MDTypography>
+                <MDTypography variant="h6">Telefono</MDTypography>
               </MDBox>
             </Grid>
             <Grid item xs={12} md={6} lg={3}>
@@ -71,17 +71,17 @@ function Seguros() {
           <Grid container spacing={3} justifyContent="center">
             <Grid item xs={12} md={4} lg={2}>
               <MDBox mb={2}>
-                <MDTypography variant="h6">Cobertura:</MDTypography>
+                <MDTypography variant="h6">Cobertura</MDTypography>
               </MDBox>
             </Grid>
             <Grid item xs={12} md={6} lg={3}>
               <MDBox mb={2}>
-                <MDInput type="number" label="Cobertura" fullWidth />
+                <MDInput type="text" label="Cobertura" fullWidth />
               </MDBox>
             </Grid>
             <Grid item xs={12} md={4} lg={2}>
               <MDBox mb={2}>
-                <MDTypography variant="h6">Vigencia:</MDTypography>
+                <MDTypography variant="h6">Vigencia</MDTypography>
               </MDBox>
             </Grid>
             <Grid item xs={12} md={6} lg={3}>

@@ -60,34 +60,12 @@ function Usuarios() {
             </Grid>
             <Grid item xs={12} md={4} lg={2}>
               <MDBox mb={2}>
-                <MDTypography variant="h6">Telefono/Celular</MDTypography>
+                <MDTypography variant="h6">Nombre de Usuario</MDTypography>
               </MDBox>
             </Grid>
             <Grid item xs={12} md={6} lg={3}>
               <MDBox mb={2}>
-                <MDInput type="number" label="Telefono/Celular" fullWidth />
-              </MDBox>
-            </Grid>
-          </Grid>
-          <Grid container spacing={3} justifyContent="center">
-            <Grid item xs={12} md={4} lg={2}>
-              <MDBox mb={2}>
-                <MDTypography variant="h6">Telefono Secundario</MDTypography>
-              </MDBox>
-            </Grid>
-            <Grid item xs={12} md={6} lg={3}>
-              <MDBox mb={2}>
-                <MDInput type="number" label="Telefono Secundario" fullWidth />
-              </MDBox>
-            </Grid>
-            <Grid item xs={12} md={4} lg={2}>
-              <MDBox mb={2}>
-                <MDTypography variant="h6">Direccion:</MDTypography>
-              </MDBox>
-            </Grid>
-            <Grid item xs={12} md={6} lg={3}>
-              <MDBox mb={2}>
-                <MDInput type="textarea" label="Direccion" fullWidth />
+                <MDInput type="text" label="Nombre de Usuario" fullWidth />
               </MDBox>
             </Grid>
           </Grid>

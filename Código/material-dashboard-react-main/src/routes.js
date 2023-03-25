@@ -41,32 +41,18 @@ import Dashboard from "layouts/dashboard/dashboard";
 import Menucatalogos from "layouts/Catalogos/menucatalogos/menucatalogos";
 import Menureportes from "layouts/Reportes/menureportes/menureportes";
 import Clientes from "layouts/Catalogos/Clientes/Clientes";
-<<<<<<< HEAD
-import Empleados from "layouts/Catalogos/Empleados";
 import Inventarios from "layouts/Catalogos/Inventarios/Inventarios";
-import Mantenimiento from "layouts/Catalogos/Mantenimiento";
 import Seguros from "layouts/Catalogos/Seguros/Seguros";
 import Usuarios from "layouts/Catalogos/Usuarios/Usuarios";
-import TipoReparaciones from "layouts/Catalogos/TipoReparaciones";
-import TipoVehiculos from "layouts/Catalogos/TipoVehiculos";
-import Vehiculos from "layouts/Catalogos/Vehiculos";
-import REntradas from "layouts/Reportes/Entradas";
 import RInventario from "layouts/Reportes/Inventarios/Inventario";
-import RMantenimientos from "layouts/Reportes/Mantenimientos";
-import RSalidas from "layouts/Reportes/Salidas";
-=======
 import Empleados from "layouts/Catalogos/Empleados/Empleados";
-import Inventarios from "layouts/Catalogos/Inventarios";
 import Mantenimiento from "layouts/Catalogos/Mantenimiento/Mantenimiento";
-import Seguros from "layouts/Catalogos/Seguros";
 import Vehiculos from "layouts/Catalogos/Vehiculos/Vehiculos";
 import REntradas from "layouts/Reportes/Entradas/Entradas";
 import TipoReparaciones from "layouts/Catalogos/TiposdeReparaciones/TipoReparaciones";
 import TipoVehiculos from "layouts/Catalogos/TiposdeVehiculos/TipoVehiculos";
-import RInventario from "layouts/Reportes/Inventario";
 import RMantenimientos from "layouts/Reportes/mantenimiento/Mantenimientos";
 import RSalidas from "layouts/Reportes/salidas/Salidas";
->>>>>>> 3a6edbbf538d71f3a77f4257cb3d1a16dc9d010c
 
 // @mui icons
 import Icon from "@mui/material/Icon";

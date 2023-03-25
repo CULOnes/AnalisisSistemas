@@ -35,27 +35,26 @@ export default function data() {
     </MDBox>
   );
 
-  const Job = ({ phone1, phone2 }) => (
+  const Job = ({ user }) => (
     <MDBox lineHeight={1} textAlign="left">
       <MDTypography display="block" variant="caption" color="text" fontWeight="medium">
-        {phone1}
+        {user}
       </MDTypography>
-      <MDTypography variant="caption">{phone2}</MDTypography>
     </MDBox>
   );
 
   return {
     columns: [
-      { Header: "Usuarios", accessor: "Usuarios", align: "left" },
-      { Header: "telefonos", accessor: "telefonos", align: "left" },
+      { Header: "Nombre", accessor: "nombre", align: "left" },
+      { Header: "usuario", accessor: "usuario", align: "left" },
       { Header: "status", accessor: "status", align: "center" },
       { Header: "action", accessor: "action", align: "center" },
     ],
 
     rows: [
       {
-        Usuarios: <Author name="John Michael" email="john@creative-tim.com" />,
-        telefonos: <Job phone1="61798245" phone2="92384016" />,
+        nombre: <Author name="John Michael" email="john@creative-tim.com" />,
+        usuario: <Job user="JohnM1" />,
         status: (
           <MDBox ml={-1} sx={{ cursor: "pointer" }}>
             <MDBadge badgeContent="Activo" color="success" variant="gradient" size="sm" />
@@ -70,8 +69,8 @@ export default function data() {
         ),
       },
       {
-        Usuarios: <Author name="Alexa Liras" email="alexa@creative-tim.com" />,
-        telefonos: <Job phone1="61798245" phone2="92384016" />,
+        nombre: <Author name="Alexa Liras" email="alexa@creative-tim.com" />,
+        usuario: <Job user="AlexaL2" />,
         status: (
           <MDBox ml={-1} sx={{ cursor: "pointer" }}>
             <MDBadge badgeContent="Inactivo" color="dark" variant="gradient" size="sm" />
@@ -86,8 +85,8 @@ export default function data() {
         ),
       },
       {
-        Usuarios: <Author name="Laurent Perrier" email="laurent@creative-tim.com" />,
-        telefonos: <Job phone1="61798245" phone2="92384016" />,
+        nombre: <Author name="Laurent Perrier" email="laurent@creative-tim.com" />,
+        usuario: <Job user="LaurentP3" />,
         status: (
           <MDBox ml={-1} sx={{ cursor: "pointer" }}>
             <MDBadge badgeContent="Activo" color="success" variant="gradient" size="sm" />
@@ -102,8 +101,8 @@ export default function data() {
         ),
       },
       {
-        Usuarios: <Author name="Michael Levi" email="michael@creative-tim.com" />,
-        telefonos: <Job phone1="61798245" phone2="92384016" />,
+        nombre: <Author name="Michael Levi" email="michael@creative-tim.com" />,
+        usuario: <Job user="MichaelL4" />,
         status: (
           <MDBox ml={-1} sx={{ cursor: "pointer" }}>
             <MDBadge badgeContent="Activo" color="success" variant="gradient" size="sm" />
@@ -118,8 +117,8 @@ export default function data() {
         ),
       },
       {
-        Usuarios: <Author name="Richard Gran" email="richard@creative-tim.com" />,
-        telefonos: <Job phone1="61798245" phone2="92384016" />,
+        nombre: <Author name="Richard Gran" email="richard@creative-tim.com" />,
+        usuario: <Job user="RichardG5" />,
         status: (
           <MDBox ml={-1} sx={{ cursor: "pointer" }}>
             <MDBadge badgeContent="Inactivo" color="dark" variant="gradient" size="sm" />
@@ -134,8 +133,8 @@ export default function data() {
         ),
       },
       {
-        Usuarios: <Author name="Miriam Eric" email="miriam@creative-tim.com" />,
-        telefonos: <Job phone1="61798245" phone2="92384016" />,
+        nombre: <Author name="Miriam Eric" email="miriam@creative-tim.com" />,
+        usuario: <Job user="MiriamE6" />,
         status: (
           <MDBox ml={-1} sx={{ cursor: "pointer" }}>
             <MDBadge badgeContent="Inactivo" color="dark" variant="gradient" size="sm" />

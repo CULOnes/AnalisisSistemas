@@ -68,7 +68,7 @@ function Inventarios() {
             </Grid>
             <Grid item xs={12} md={6} lg={3}>
               <MDBox mb={2}>
-                <MDInput type="text" label="Existencia" fullWidth />
+                <MDInput type="number" label="Existencia" fullWidth />
               </MDBox>
             </Grid>
             <Grid item xs={12} md={4} lg={2}>
@@ -78,7 +78,7 @@ function Inventarios() {
             </Grid>
             <Grid item xs={12} md={6} lg={3}>
               <MDBox mb={2}>
-                <MDInput type="date" label="Fecha de entrada" fullWidth />
+                <MDInput type="date" fullWidth />
               </MDBox>
             </Grid>
           </Grid>
@@ -90,7 +90,7 @@ function Inventarios() {
             </Grid>
             <Grid item xs={12} md={6} lg={3}>
               <MDBox mb={2}>
-                <MDInput type="date" label="Fecha de salida" fullWidth />
+                <MDInput type="date" fullWidth />
               </MDBox>
             </Grid>
             <Grid item xs={12} md={4} lg={2}>
