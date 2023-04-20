@@ -1,0 +1,10 @@
+.my-input {
+    border: 1px solid lightgray;
+    padding: 10px;
+    font-size: 14px;
+    border-radius: 5px;
+}
+
+.my-input:focus {
+    border-color: skyblue;
+}

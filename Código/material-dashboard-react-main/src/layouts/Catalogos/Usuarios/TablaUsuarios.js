@@ -22,8 +22,25 @@ import Icon from "@mui/material/Icon";
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 import MDBadge from "components/MDBadge";
+import axios from "axios";
 
-export default function data() {
+/* DESCOMENTAR ACA */
+
+// async function get() {
+//   const respuesta = await axios.get("https://localhost:7235/api/Usuarios/usuarios");
+//   console.log(respuesta.data);
+//   return respuesta.data;
+// }
+
+/* DESCOMENTAR ACA */
+export default /* async */ function data() {
+  /* DESCOMENTAR ACA */
+  // const myarray = await get();
+
+  /* COMENTAR ACA */
+  const respuesta = /* await */ axios.get("https://localhost:7235/api/Usuarios/usuarios");
+  /* COMENTAR ACA */
+  console.log(respuesta.data);
   const Author = ({ name, email }) => (
     <MDBox alignItems="center" lineHeight={1}>
       <MDBox ml={2} lineHeight={1}>

@@ -1,5 +1,5 @@
 // import PropTypes from 'prop-types'
-import React from "react";
+import React, { useState } from "react";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 
@@ -19,6 +19,22 @@ import DataTable from "examples/Tables/DataTable";
 import TablaClientes from "layouts/Catalogos/Clientes/TablaClientes";
 
 function Clientes() {
+  const [Nombre, setNombre] = useState("");
+  const [Apellido, setApellido] = useState("");
+  const [Correo, setCorreo] = useState("");
+  const [Telefono, setTelefono] = useState("");
+  const [Telefono2, setTelefono2] = useState("");
+  const [Direccion, setDireccion] = useState("");
+
+  const handleGuardar = () => {
+    console.log(Nombre);
+    console.log(Apellido);
+    console.log(Correo);
+    console.log(Telefono);
+    console.log(Telefono2);
+    console.log(Direccion);
+  };
+
   const { columns, rows } = TablaClientes();
   return (
     <DashboardLayout>
@@ -33,7 +49,12 @@ function Clientes() {
             </Grid>
             <Grid item xs={12} md={6} lg={3}>
               <MDBox mb={2}>
-                <MDInput type="text" label="Nombre" fullWidth />
+                <MDInput
+                  type="text"
+                  label="Nombre"
+                  fullWidth
+                  onChange={(e) => setNombre(e.target.value)}
+                />
               </MDBox>
             </Grid>
             <Grid item xs={12} md={4} lg={2}>
@@ -43,7 +64,12 @@ function Clientes() {
             </Grid>
             <Grid item xs={12} md={6} lg={3}>
               <MDBox mb={2}>
-                <MDInput type="text" label="Apellido" fullWidth />
+                <MDInput
+                  type="text"
+                  label="Apellido"
+                  fullWidth
+                  onChange={(e) => setApellido(e.target.value)}
+                />
               </MDBox>
             </Grid>
           </Grid>
@@ -55,7 +81,12 @@ function Clientes() {
             </Grid>
             <Grid item xs={12} md={6} lg={3}>
               <MDBox mb={2}>
-                <MDInput type="email" label="Correo" fullWidth />
+                <MDInput
+                  type="email"
+                  label="Correo"
+                  fullWidth
+                  onChange={(e) => setCorreo(e.target.value)}
+                />
               </MDBox>
             </Grid>
             <Grid item xs={12} md={4} lg={2}>
@@ -65,7 +96,12 @@ function Clientes() {
             </Grid>
             <Grid item xs={12} md={6} lg={3}>
               <MDBox mb={2}>
-                <MDInput type="number" label="Telefono/Celular" fullWidth />
+                <MDInput
+                  type="number"
+                  label="Telefono/Celular"
+                  fullWidth
+                  onChange={(e) => setTelefono(e.target.value)}
+                />
               </MDBox>
             </Grid>
           </Grid>
@@ -77,7 +113,12 @@ function Clientes() {
             </Grid>
             <Grid item xs={12} md={6} lg={3}>
               <MDBox mb={2}>
-                <MDInput type="number" label="Telefono Secundario" fullWidth />
+                <MDInput
+                  type="number"
+                  label="Telefono Secundario"
+                  fullWidth
+                  onChange={(e) => setTelefono2(e.target.value)}
+                />
               </MDBox>
             </Grid>
             <Grid item xs={12} md={4} lg={2}>
@@ -87,13 +128,18 @@ function Clientes() {
             </Grid>
             <Grid item xs={12} md={6} lg={3}>
               <MDBox mb={2}>
-                <MDInput type="text" label="Direccion" fullWidth />
+                <MDInput
+                  type="text"
+                  label="Direccion"
+                  fullWidth
+                  onChange={(e) => setDireccion(e.target.value)}
+                />
               </MDBox>
             </Grid>
           </Grid>
           <Grid container spacing={3} justifyContent="center">
             <Grid item xs={12} md={4} lg={2}>
-              <MDButton variant="gradient" color="info" fullWidth>
+              <MDButton variant="gradient" color="info" fullWidth onClick={handleGuardar}>
                 Crear
               </MDButton>
             </Grid>

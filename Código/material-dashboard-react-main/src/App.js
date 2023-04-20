@@ -54,6 +54,14 @@ import brandWhite from "assets/images/logo-ct.png";
 import brandDark from "assets/images/logo-ct-dark.png";
 
 export default function App() {
+  // const url = "http://localhost/api/students";
+  // const fetchApi = async () => {
+  //   const response = await fetch(url);
+  //   console.log(response);
+  // };
+  // useEffect(() => {
+  //   fetchApi();
+  // }, []);
   const [controller, dispatch] = useMaterialUIController();
   const {
     miniSidenav,
