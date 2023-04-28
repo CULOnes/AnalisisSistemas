@@ -8,3 +8,11 @@
 .my-input:focus {
     border-color: skyblue;
 }
+
+.css-tdxonj-MuiTableHead-root {
+    display: table-header-group !important;
+}
+
+.App{
+    text-align: center;
+}
