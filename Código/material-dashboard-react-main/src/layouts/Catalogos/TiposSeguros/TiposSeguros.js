@@ -13,35 +13,15 @@ import { makeStyles } from "@material-ui/core/styles";
 const columns = [
   {
     title: "ID",
-    field: "ins_Codigo",
+    field: "tiS_Codigo",
   },
   {
-    title: "Usuario",
-    field: "usu_Codigo",
+    title: "Nombre",
+    field: "tiS_Nombre",
   },
-  {
-    title: "Vehiculo",
-    field: "veh_Codigo",
-  },
-  {
-    title: "Kilometraje",
-    field: "ins_KilometrajeActual",
-  },
-  {
-    title: "Aprobacion",
-    field: "ins_Aprobacion",
-  },
-  {
-    title: "Estado",
-    field: "ins_Estado",
-  },
-  // {
-  //   title: "Fecha",
-  //   field: "iNS_Fecha",
-  // },
   {
     title: "Descripcion",
-    field: "iNS_Descripcion",
+    field: "tiS_Descripcion",
   },
 ];
 
@@ -65,21 +45,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Inspecciones() {
+function TiposSeguros() {
   const styles = useStyles();
   const [data, setData] = useState([]);
   const [modalinsertar, setModalInsertar] = useState(false);
   const [modaleditar, setModalEditar] = useState(false);
   const [modaleliminar, setModalEliminar] = useState(false);
-  const [inspeccionseleccionado, setInspeccionSeleccionado] = useState({
-    ins_Codigo: 0,
-    usu_Codigo: 0,
-    veh_Codigo: 0,
-    ins_KilometrajeActual: 0,
-    ins_Aprobacion: "",
-    ins_Estado: "",
-    iNS_Fecha: 0,
-    iNS_Descripcion: "",
+  const [tiposeguroseleccionado, setTipoSeguroSeleccionado] = useState({
+    tiS_Codigo: 0,
+    tiS_Nombre: "",
+    tiS_Descripcion: "123",
   });
 
   const abrircerrarModalInsertar = () => {
@@ -94,8 +69,8 @@ function Inspecciones() {
     setModalEliminar(!modaleliminar);
   };
 
-  const seleccionarInspeccion = (inspeccion, caso) => {
-    setInspeccionSeleccionado(inspeccion);
+  const seleccionarTipoSeguro = (tiposeguro, caso) => {
+    setTipoSeguroSeleccionado(tiposeguro);
     if (caso === "Editar") {
       abrircerrarModalEditar();
     } else {
@@ -105,7 +80,7 @@ function Inspecciones() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setInspeccionSeleccionado((prevState) => ({
+    setTipoSeguroSeleccionado((prevState) => ({
       ...prevState,
       [name]: value,
     }));
@@ -113,7 +88,7 @@ function Inspecciones() {
 
   const peticionpost = async () => {
     await axios
-      .post("https://localhost:7235/api/Inspecciones/registroinspecciones", inspeccionseleccionado)
+      .post("https://localhost:7235/api/TiposSeguros/registrotiposeguro", tiposeguroseleccionado)
       .then((response) => {
         setData(data.concat(response.data));
         abrircerrarModalInsertar();
@@ -125,22 +100,17 @@ function Inspecciones() {
 
   const peticionput = async () => {
     await axios
-      .put("https://localhost:7235/api/Inspecciones/actualizar", inspeccionseleccionado)
+      .put("https://localhost:7235/api/TiposSeguros/actualizar", tiposeguroseleccionado)
       .then(() => {
         const copiaArray = [...data];
         const indice = copiaArray.findIndex(
-          (elemento) => elemento.ins_Codigo === inspeccionseleccionado.ins_Codigo
+          (elemento) => elemento.tiS_Codigo === tiposeguroseleccionado.tiS_Codigo
         );
         if (indice !== -1) {
           copiaArray[indice] = {
             ...copiaArray[indice],
-            usu_Codigo: inspeccionseleccionado.usu_Codigo,
-            veh_Codigo: inspeccionseleccionado.veh_Codigo,
-            ins_KilometrajeActual: inspeccionseleccionado.ins_KilometrajeActual,
-            ins_Aprobacion: inspeccionseleccionado.ins_Aprobacion,
-            ins_Estado: inspeccionseleccionado.ins_Estado,
-            iNS_Fecha: inspeccionseleccionado.iNS_Fecha,
-            iNS_Descripcion: inspeccionseleccionado.iNS_Descripcion,
+            tiS_Nombre: tiposeguroseleccionado.tiS_Nombre,
+            tiS_Descripcion: tiposeguroseleccionado.tiS_Descripcion,
           };
         }
         setData(copiaArray);
@@ -153,10 +123,10 @@ function Inspecciones() {
 
   const peticiondelete = async () => {
     await axios
-      .put("https://localhost:7235/api/Inspecciones/eliminar", inspeccionseleccionado)
+      .put("https://localhost:7235/api/TiposSeguros/eliminar", tiposeguroseleccionado)
       .then(() => {
         setData(
-          data.filter((inspeccion) => inspeccion.ins_Codigo !== inspeccionseleccionado.ins_Codigo)
+          data.filter((tiposeguro) => tiposeguro.tiS_Codigo !== tiposeguroseleccionado.tiS_Codigo)
         );
         abrircerrarModalEliminar();
       })
@@ -167,7 +137,7 @@ function Inspecciones() {
 
   const peticionget = async () => {
     await axios
-      .get("https://localhost:7235/api/Inspecciones/inspecciones")
+      .get("https://localhost:7235/api/TiposSeguros/tiposseguros")
       .then((response) => {
         setData(response.data);
       })
@@ -182,55 +152,19 @@ function Inspecciones() {
 
   const bodyInsertar = (
     <div className={styles.modal}>
-      <h3>Agregar Nueva Inspeccion</h3>
+      <h3>Agregar Nuevo Tipo de Seguro</h3>
       <TextField
         className={styles.inputMaterial}
-        label="Usuario"
-        name="usu_Codigo"
-        onChange={handleChange}
-      />
-      <br />
-      <TextField
-        className={styles.inputMaterial}
-        label="Vehiculo"
-        name="veh_Codigo"
-        onChange={handleChange}
-      />
-      <br />
-      <TextField
-        className={styles.inputMaterial}
-        label="Kilometraje"
-        name="ins_KilometrajeActual"
-        onChange={handleChange}
-      />
-      <br />
-      <TextField
-        className={styles.inputMaterial}
-        label="Aprobacion"
-        name="ins_Aprobacion"
-        onChange={handleChange}
-      />
-      <br />
-      <TextField
-        className={styles.inputMaterial}
-        label="Estado"
-        name="ins_Estado"
+        label="Nombre"
+        name="tiS_Nombre"
         onChange={handleChange}
       />
       <br />
       <TextField
         className={styles.inputMaterial}
         label="Descripcion"
-        name="iNS_Descripcion"
+        name="tiS_Descripcion"
         onChange={handleChange}
-      />
-      <br />
-      <TextField
-        className={styles.inputMaterial}
-        label="Fecha"
-        name="iNS_Fecha"
-        onChange={handleChange}
-        value={inspeccionseleccionado && inspeccionseleccionado.iNS_Fecha}
       />
       <br />
       <br />
@@ -245,61 +179,21 @@ function Inspecciones() {
 
   const bodyEditar = (
     <div className={styles.modal}>
-      <h3>Editar Inspeccion</h3>
+      <h3>Editar Tipo de Seguro</h3>
       <TextField
         className={styles.inputMaterial}
-        label="Usuario"
-        name="usu_Codigo"
+        label="Nombre"
+        name="tiS_Nombre"
         onChange={handleChange}
-        value={inspeccionseleccionado && inspeccionseleccionado.usu_Codigo}
-      />
-      <br />
-      <TextField
-        className={styles.inputMaterial}
-        label="Vehiculo"
-        name="veh_Codigo"
-        onChange={handleChange}
-        value={inspeccionseleccionado && inspeccionseleccionado.veh_Codigo}
-      />
-      <br />
-      <TextField
-        className={styles.inputMaterial}
-        label="Kilometraje"
-        name="ins_KilometrajeActual"
-        onChange={handleChange}
-        value={inspeccionseleccionado && inspeccionseleccionado.ins_KilometrajeActual}
-      />
-      <br />
-      <TextField
-        className={styles.inputMaterial}
-        label="Aprobacion"
-        name="ins_Aprobacion"
-        onChange={handleChange}
-        value={inspeccionseleccionado && inspeccionseleccionado.ins_Aprobacion}
-      />
-      <br />
-      <TextField
-        className={styles.inputMaterial}
-        label="Estado"
-        name="ins_Estado"
-        onChange={handleChange}
-        value={inspeccionseleccionado && inspeccionseleccionado.ins_Estado}
+        value={tiposeguroseleccionado && tiposeguroseleccionado.tiS_Nombre}
       />
       <br />
       <TextField
         className={styles.inputMaterial}
         label="Descripcion"
-        name="iNS_Descripcion"
+        name="tiS_Descripcion"
         onChange={handleChange}
-        value={inspeccionseleccionado && inspeccionseleccionado.iNS_Descripcion}
-      />
-      <br />
-      <TextField
-        className={styles.inputMaterial}
-        label="Fecha"
-        name="iNS_Fecha"
-        onChange={handleChange}
-        value={inspeccionseleccionado && inspeccionseleccionado.iNS_Fecha}
+        value={tiposeguroseleccionado && tiposeguroseleccionado.tiS_Descripcion}
       />
       <br />
       <br />
@@ -315,8 +209,8 @@ function Inspecciones() {
   const bodyEliminar = (
     <div className={styles.modal}>
       <p>
-        Deseas Eliminar la Inspeccion
-        <b> {inspeccionseleccionado && inspeccionseleccionado.ins_Codigo}</b>?
+        Deseas Eliminar el Tipo de Seguro
+        <b> {tiposeguroseleccionado && tiposeguroseleccionado.tiS_Nombre}</b>?
       </p>
       <div align="right">
         <Button color="secondary" onClick={() => peticiondelete()}>
@@ -336,23 +230,23 @@ function Inspecciones() {
             <Card>
               <div className="App">
                 <br />
-                <Button onClick={() => abrircerrarModalInsertar()}>Insertar Inspeccion</Button>
+                <Button onClick={() => abrircerrarModalInsertar()}>Insertar Tipo de Seguro</Button>
                 <br />
                 <br />
                 <MaterialTable
                   columns={columns}
                   data={data}
-                  title="Inspecciones"
+                  title="Tipos de Seguros"
                   actions={[
                     {
                       icon: "edit",
-                      tooltip: "Editar Inspeccion",
-                      onClick: (event, rowData) => seleccionarInspeccion(rowData, "Editar"),
+                      tooltip: "Editar Tipo de Seguro",
+                      onClick: (event, rowData) => seleccionarTipoSeguro(rowData, "Editar"),
                     },
                     {
                       icon: "delete",
-                      tooltip: "Eliminar Inspeccion",
-                      onClick: (event, rowData) => seleccionarInspeccion(rowData, "Eliminar"),
+                      tooltip: "Eliminar Tipo de Seguro",
+                      onClick: (event, rowData) => seleccionarTipoSeguro(rowData, "Eliminar"),
                     },
                   ]}
                   options={{
@@ -385,4 +279,4 @@ function Inspecciones() {
   );
 }
 
-export default Inspecciones;
+export default TiposSeguros;

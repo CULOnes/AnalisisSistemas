@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\tavit\\source\\repos\\backend\\RoadMaster\\RoadMaster.csproj": {}
+    "C:\\Users\\tavit\\OneDrive\\Escritorio\\Proyecto Analisis\\AnalisisSistemas\\Código\\API\\backend\\RoadMaster\\RoadMaster.csproj": {}
   },
   "projects": {
-    "C:\\Users\\tavit\\source\\repos\\backend\\RoadMaster\\RoadMaster.csproj": {
+    "C:\\Users\\tavit\\OneDrive\\Escritorio\\Proyecto Analisis\\AnalisisSistemas\\Código\\API\\backend\\RoadMaster\\RoadMaster.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\tavit\\source\\repos\\backend\\RoadMaster\\RoadMaster.csproj",
+        "projectUniqueName": "C:\\Users\\tavit\\OneDrive\\Escritorio\\Proyecto Analisis\\AnalisisSistemas\\Código\\API\\backend\\RoadMaster\\RoadMaster.csproj",
         "projectName": "RoadMaster",
-        "projectPath": "C:\\Users\\tavit\\source\\repos\\backend\\RoadMaster\\RoadMaster.csproj",
+        "projectPath": "C:\\Users\\tavit\\OneDrive\\Escritorio\\Proyecto Analisis\\AnalisisSistemas\\Código\\API\\backend\\RoadMaster\\RoadMaster.csproj",
         "packagesPath": "C:\\Users\\tavit\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\tavit\\source\\repos\\backend\\RoadMaster\\obj\\",
+        "outputPath": "C:\\Users\\tavit\\OneDrive\\Escritorio\\Proyecto Analisis\\AnalisisSistemas\\Código\\API\\backend\\RoadMaster\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

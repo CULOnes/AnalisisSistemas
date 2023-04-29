@@ -49,7 +49,7 @@ namespace RoadMaster.Controllers
                 inspeccion.Ins_KilometrajeActual = inspecciones.Ins_KilometrajeActual;
                 inspeccion.Ins_Aprobacion = inspecciones.Ins_Aprobacion;
                 inspeccion.Ins_Estado = inspecciones.Ins_Estado;
-                inspeccion.INS_Fecha = inspecciones.INS_Fecha;
+                inspeccion.INS_Fecha = DateTime.Now;
                 inspeccion.INS_Descripcion = inspecciones.INS_Descripcion;
 
                 db.Entry(inspeccion).State = EntityState.Modified;

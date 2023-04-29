@@ -47,6 +47,7 @@ import Usuarios from "layouts/Catalogos/Usuarios/Usuarios";
 import Combustibles from "layouts/Catalogos/Combustibles/Combustibles";
 import RInventario from "layouts/Reportes/Inventarios/Inventario";
 import Empleados from "layouts/Catalogos/Empleados/Empleados";
+import TiposSeguros from "layouts/Catalogos/TiposSeguros/TiposSeguros";
 import Mantenimiento from "layouts/Catalogos/Mantenimiento/Mantenimiento";
 import Vehiculos from "layouts/Catalogos/Vehiculos/Vehiculos";
 import REntradas from "layouts/Reportes/Entradas/Entradas";
@@ -148,6 +149,14 @@ const routes = [
     icon: <Icon fontSize="small">format_textdirection_r_to_l</Icon>,
     route: "/catalogos/seguros",
     component: <Seguros />,
+  },
+  {
+    type: "title",
+    name: "TiposSeguros",
+    key: "tiposSeguros",
+    icon: <Icon fontSize="small">format_textdirection_r_to_l</Icon>,
+    route: "/catalogos/tiposseguros",
+    component: <TiposSeguros />,
   },
   {
     type: "title",

@@ -13,7 +13,7 @@
         public string Ins_Aprobacion { get; set; }
 
         public string Ins_Estado { get; set; }
-        public DateTime INS_Fecha { get; set; }
+        public DateTime? INS_Fecha { get; set; }
         public string INS_Descripcion { get; set; }
     }
 }
