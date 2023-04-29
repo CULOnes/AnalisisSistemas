@@ -41,9 +41,10 @@ import Dashboard from "layouts/dashboard/dashboard";
 import Menucatalogos from "layouts/Catalogos/menucatalogos/menucatalogos";
 import Menureportes from "layouts/Reportes/menureportes/menureportes";
 import Clientes from "layouts/Catalogos/Clientes/Clientes";
-import Inventarios from "layouts/Catalogos/Inventarios/Inventarios";
+import Inspecciones from "layouts/Catalogos/Inspecciones/Inspecciones";
 import Seguros from "layouts/Catalogos/Seguros/Seguros";
 import Usuarios from "layouts/Catalogos/Usuarios/Usuarios";
+import Combustibles from "layouts/Catalogos/Combustibles/Combustibles";
 import RInventario from "layouts/Reportes/Inventarios/Inventario";
 import Empleados from "layouts/Catalogos/Empleados/Empleados";
 import Mantenimiento from "layouts/Catalogos/Mantenimiento/Mantenimiento";
@@ -118,11 +119,19 @@ const routes = [
   },
   {
     type: "title",
-    name: "Inventarios",
-    key: "inventarios",
+    name: "Combustibles",
+    key: "combustibles",
     icon: <Icon fontSize="small">format_textdirection_r_to_l</Icon>,
-    route: "/catalogos/inventarios",
-    component: <Inventarios />,
+    route: "/catalogos/combustibles",
+    component: <Combustibles />,
+  },
+  {
+    type: "title",
+    name: "Inspecciones",
+    key: "inspecciones",
+    icon: <Icon fontSize="small">format_textdirection_r_to_l</Icon>,
+    route: "/catalogos/inspecciones",
+    component: <Inspecciones />,
   },
   {
     type: "title",

@@ -13,23 +13,35 @@ import { makeStyles } from "@material-ui/core/styles";
 const columns = [
   {
     title: "ID",
-    field: "usu_Codigo",
+    field: "ins_Codigo",
   },
   {
     title: "Usuario",
-    field: "usu_NombreUsuario",
+    field: "usu_Codigo",
   },
   {
-    title: "Nombre",
-    field: "usu_Nombre",
+    title: "Vehiculo",
+    field: "veh_Codigo",
   },
   {
-    title: "Apellido",
-    field: "usu_Apellido",
+    title: "Kilometraje",
+    field: "ins_KilometrajeActual",
   },
   {
-    title: "Correo",
-    field: "usu_Correo",
+    title: "Aprobacion",
+    field: "ins_Aprobacion",
+  },
+  {
+    title: "Estado",
+    field: "ins_Estado",
+  },
+  {
+    title: "Fecha",
+    field: "iNS_Fecha",
+  },
+  {
+    title: "Descripcion",
+    field: "iNS_Descripcion",
   },
 ];
 
@@ -53,19 +65,21 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Usuarios() {
+function Inspecciones() {
   const styles = useStyles();
   const [data, setData] = useState([]);
   const [modalinsertar, setModalInsertar] = useState(false);
   const [modaleditar, setModalEditar] = useState(false);
   const [modaleliminar, setModalEliminar] = useState(false);
-  const [usuarioseleccionado, setUsuarioSeleccionado] = useState({
-    usu_Apellido: "",
+  const [inspeccionseleccionado, setInspeccionSeleccionado] = useState({
+    ins_Codigo: 0,
     usu_Codigo: 0,
-    usu_Contrasena: "123",
-    usu_Correo: "",
-    usu_Nombre: "",
-    usu_NombreUsuario: "",
+    veh_Codigo: 0,
+    ins_KilometrajeActual: 0,
+    ins_Aprobacion: "",
+    ins_Estado: "",
+    iNS_Fecha: "",
+    iNS_Descripcion: "",
   });
 
   const abrircerrarModalInsertar = () => {
@@ -80,8 +94,8 @@ function Usuarios() {
     setModalEliminar(!modaleliminar);
   };
 
-  const seleccionarUsuario = (usuario, caso) => {
-    setUsuarioSeleccionado(usuario);
+  const seleccionarInspeccion = (inspeccion, caso) => {
+    setInspeccionSeleccionado(inspeccion);
     if (caso === "Editar") {
       abrircerrarModalEditar();
     } else {
@@ -91,7 +105,7 @@ function Usuarios() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setUsuarioSeleccionado((prevState) => ({
+    setInspeccionSeleccionado((prevState) => ({
       ...prevState,
       [name]: value,
     }));
@@ -99,7 +113,7 @@ function Usuarios() {
 
   const peticionpost = async () => {
     await axios
-      .post("https://localhost:7235/api/Usuarios/registrousuarios", usuarioseleccionado)
+      .post("https://localhost:7235/api/Inspecciones/registroinspecciones", inspeccionseleccionado)
       .then((response) => {
         setData(data.concat(response.data));
         abrircerrarModalInsertar();
@@ -111,19 +125,22 @@ function Usuarios() {
 
   const peticionput = async () => {
     await axios
-      .put("https://localhost:7235/api/Usuarios/actualizar", usuarioseleccionado)
+      .put("https://localhost:7235/api/Inspecciones/actualizar", inspeccionseleccionado)
       .then(() => {
         const copiaArray = [...data];
         const indice = copiaArray.findIndex(
-          (elemento) => elemento.usu_Codigo === usuarioseleccionado.usu_Codigo
+          (elemento) => elemento.ins_Codigo === inspeccionseleccionado.ins_Codigo
         );
         if (indice !== -1) {
           copiaArray[indice] = {
             ...copiaArray[indice],
-            usu_Nombre: usuarioseleccionado.usu_Nombre,
-            usu_Apellido: usuarioseleccionado.usu_Apellido,
-            usu_Correo: usuarioseleccionado.usu_Correo,
-            usu_NombreUsuario: usuarioseleccionado.usu_NombreUsuario,
+            usu_Codigo: inspeccionseleccionado.usu_Codigo,
+            veh_Codigo: inspeccionseleccionado.veh_Codigo,
+            ins_KilometrajeActual: inspeccionseleccionado.ins_KilometrajeActual,
+            ins_Aprobacion: inspeccionseleccionado.ins_Aprobacion,
+            ins_Estado: inspeccionseleccionado.ins_Estado,
+            iNS_Fecha: inspeccionseleccionado.iNS_Fecha,
+            iNS_Descripcion: inspeccionseleccionado.iNS_Descripcion,
           };
         }
         setData(copiaArray);
@@ -136,9 +153,11 @@ function Usuarios() {
 
   const peticiondelete = async () => {
     await axios
-      .put("https://localhost:7235/api/Usuarios/eliminar", usuarioseleccionado)
+      .put("https://localhost:7235/api/Inspecciones/eliminar", inspeccionseleccionado)
       .then(() => {
-        setData(data.filter((usuario) => usuario.usu_Codigo !== usuarioseleccionado.usu_Codigo));
+        setData(
+          data.filter((inspeccion) => inspeccion.ins_Codigo !== inspeccionseleccionado.ins_Codigo)
+        );
         abrircerrarModalEliminar();
       })
       .catch((error) => {
@@ -148,7 +167,7 @@ function Usuarios() {
 
   const peticionget = async () => {
     await axios
-      .get("https://localhost:7235/api/Usuarios/usuarios")
+      .get("https://localhost:7235/api/Inspecciones/inspecciones")
       .then((response) => {
         setData(response.data);
       })
@@ -163,33 +182,55 @@ function Usuarios() {
 
   const bodyInsertar = (
     <div className={styles.modal}>
-      <h3>Agregar Nuevo Usuario</h3>
+      <h3>Agregar Nueva Inspeccion</h3>
       <TextField
         className={styles.inputMaterial}
         label="Usuario"
-        name="usu_NombreUsuario"
+        name="usu_Codigo"
         onChange={handleChange}
       />
       <br />
       <TextField
         className={styles.inputMaterial}
-        label="Nombre"
-        name="usu_Nombre"
+        label="Vehiculo"
+        name="veh_Codigo"
         onChange={handleChange}
       />
       <br />
       <TextField
         className={styles.inputMaterial}
-        label="Apellido"
-        name="usu_Apellido"
+        label="Kilometraje"
+        name="ins_KilometrajeActual"
         onChange={handleChange}
       />
       <br />
       <TextField
         className={styles.inputMaterial}
-        label="Correo"
-        name="usu_Correo"
+        label="Aprobacion"
+        name="ins_Aprobacion"
         onChange={handleChange}
+      />
+      <br />
+      <TextField
+        className={styles.inputMaterial}
+        label="Estado"
+        name="ins_Estado"
+        onChange={handleChange}
+      />
+      <br />
+      <TextField
+        className={styles.inputMaterial}
+        label="Descripcion"
+        name="iNS_Descripcion"
+        onChange={handleChange}
+      />
+      <br />
+      <TextField
+        className={styles.inputMaterial}
+        label="Fecha"
+        name="iNS_Fecha"
+        onChange={handleChange}
+        value={inspeccionseleccionado && inspeccionseleccionado.iNS_Fecha}
       />
       <br />
       <br />
@@ -204,37 +245,61 @@ function Usuarios() {
 
   const bodyEditar = (
     <div className={styles.modal}>
-      <h3>Editar Usuario</h3>
+      <h3>Editar Inspeccion</h3>
       <TextField
         className={styles.inputMaterial}
         label="Usuario"
-        name="usu_NombreUsuario"
+        name="usu_Codigo"
         onChange={handleChange}
-        value={usuarioseleccionado && usuarioseleccionado.usu_NombreUsuario}
+        value={inspeccionseleccionado && inspeccionseleccionado.usu_Codigo}
       />
       <br />
       <TextField
         className={styles.inputMaterial}
-        label="Nombre"
-        name="usu_Nombre"
+        label="Vehiculo"
+        name="veh_Codigo"
         onChange={handleChange}
-        value={usuarioseleccionado && usuarioseleccionado.usu_Nombre}
+        value={inspeccionseleccionado && inspeccionseleccionado.veh_Codigo}
       />
       <br />
       <TextField
         className={styles.inputMaterial}
-        label="Apellido"
-        name="usu_Apellido"
+        label="Kilometraje"
+        name="ins_KilometrajeActual"
         onChange={handleChange}
-        value={usuarioseleccionado && usuarioseleccionado.usu_Apellido}
+        value={inspeccionseleccionado && inspeccionseleccionado.ins_KilometrajeActual}
       />
       <br />
       <TextField
         className={styles.inputMaterial}
-        label="Correo"
-        name="usu_Correo"
+        label="Aprobacion"
+        name="ins_Aprobacion"
         onChange={handleChange}
-        value={usuarioseleccionado && usuarioseleccionado.usu_Correo}
+        value={inspeccionseleccionado && inspeccionseleccionado.ins_Aprobacion}
+      />
+      <br />
+      <TextField
+        className={styles.inputMaterial}
+        label="Estado"
+        name="ins_Estado"
+        onChange={handleChange}
+        value={inspeccionseleccionado && inspeccionseleccionado.ins_Estado}
+      />
+      <br />
+      <TextField
+        className={styles.inputMaterial}
+        label="Descripcion"
+        name="iNS_Descripcion"
+        onChange={handleChange}
+        value={inspeccionseleccionado && inspeccionseleccionado.iNS_Descripcion}
+      />
+      <br />
+      <TextField
+        className={styles.inputMaterial}
+        label="Fecha"
+        name="iNS_Fecha"
+        onChange={handleChange}
+        value={inspeccionseleccionado && inspeccionseleccionado.iNS_Fecha}
       />
       <br />
       <br />
@@ -250,8 +315,8 @@ function Usuarios() {
   const bodyEliminar = (
     <div className={styles.modal}>
       <p>
-        Deseas Eliminar el Usuario
-        <b> {usuarioseleccionado && usuarioseleccionado.usu_NombreUsuario}</b>?
+        Deseas Eliminar la Inspeccion
+        <b> {inspeccionseleccionado && inspeccionseleccionado.ins_Codigo}</b>?
       </p>
       <div align="right">
         <Button color="secondary" onClick={() => peticiondelete()}>
@@ -271,23 +336,23 @@ function Usuarios() {
             <Card>
               <div className="App">
                 <br />
-                <Button onClick={() => abrircerrarModalInsertar()}>Insertar Usuario</Button>
+                <Button onClick={() => abrircerrarModalInsertar()}>Insertar Inspeccion</Button>
                 <br />
                 <br />
                 <MaterialTable
                   columns={columns}
                   data={data}
-                  title="Usuarios"
+                  title="Inspecciones"
                   actions={[
                     {
                       icon: "edit",
-                      tooltip: "Editar Usuario",
-                      onClick: (event, rowData) => seleccionarUsuario(rowData, "Editar"),
+                      tooltip: "Editar Inspeccion",
+                      onClick: (event, rowData) => seleccionarInspeccion(rowData, "Editar"),
                     },
                     {
                       icon: "delete",
-                      tooltip: "Eliminar Usuario",
-                      onClick: (event, rowData) => seleccionarUsuario(rowData, "Eliminar"),
+                      tooltip: "Eliminar Inspeccion",
+                      onClick: (event, rowData) => seleccionarInspeccion(rowData, "Eliminar"),
                     },
                   ]}
                   options={{
@@ -320,4 +385,4 @@ function Usuarios() {
   );
 }
 
-export default Usuarios;
+export default Inspecciones;

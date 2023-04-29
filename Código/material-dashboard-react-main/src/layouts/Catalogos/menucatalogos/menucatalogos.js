@@ -111,8 +111,8 @@ function Menucatalogos() {
               <ComplexStatisticsCard
                 color="dark"
                 icon="inventory"
-                title="Inventarios"
-                route="Inventarios"
+                title="Inspecciones"
+                route="Inspecciones"
               />
             </MDBox>
           </Grid>
@@ -121,7 +121,16 @@ function Menucatalogos() {
       <MDBox py={3}>
         <Grid container spacing={3}>
           <Grid item xs={12} md={6} lg={3} />
-          <Grid item xs={12} md={6} lg={3} />
+          <Grid item xs={12} md={6} lg={3}>
+            <MDBox mb={1.5}>
+              <ComplexStatisticsCard
+                color="secondary"
+                icon="local_shipping"
+                title="Combustibles"
+                route="Combustibles"
+              />
+            </MDBox>
+          </Grid>
           <Grid item xs={12} md={6} lg={3}>
             <MDBox mb={1.5}>
               <ComplexStatisticsCard

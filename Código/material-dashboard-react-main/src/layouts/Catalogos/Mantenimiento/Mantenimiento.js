@@ -11,17 +11,11 @@ import MDInput from "components/MDInput";
 import MDTypography from "components/MDTypography";
 import MDButton from "components/MDButton";
 
-// Material Dashboard 2 React example components
-import DataTable from "examples/Tables/DataTable";
-
-// Data
-import TablaMantenimiento from "layouts/Catalogos/Mantenimiento/TablaMantenimiento";
-
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 
 function Mantenimiento() {
-  const { columns, rows } = TablaMantenimiento();
+  // const { columns, rows } = TablaMantenimiento();
   const listadovehiculos = [
     { label: "Vehiculo 1" },
     { label: "Vehiculo 2" },
@@ -134,13 +128,13 @@ function Mantenimiento() {
           <Grid item xs={12}>
             <Card>
               <MDBox pt={3}>
-                <DataTable
+                {/* <DataTable
                   table={{ columns, rows }}
                   isSorted={false}
                   entriesPerPage={false}
                   showTotalEntries={false}
                   noEndBorder
-                />
+                /> */}
               </MDBox>
             </Card>
           </Grid>

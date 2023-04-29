@@ -13,23 +13,15 @@ import { makeStyles } from "@material-ui/core/styles";
 const columns = [
   {
     title: "ID",
-    field: "usu_Codigo",
+    field: "com_Codigo",
   },
   {
-    title: "Usuario",
-    field: "usu_NombreUsuario",
+    title: "Tipo",
+    field: "com_TipoCombustible",
   },
   {
-    title: "Nombre",
-    field: "usu_Nombre",
-  },
-  {
-    title: "Apellido",
-    field: "usu_Apellido",
-  },
-  {
-    title: "Correo",
-    field: "usu_Correo",
+    title: "Marca",
+    field: "com_Marca",
   },
 ];
 
@@ -53,19 +45,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Usuarios() {
+function Combustibles() {
   const styles = useStyles();
   const [data, setData] = useState([]);
   const [modalinsertar, setModalInsertar] = useState(false);
   const [modaleditar, setModalEditar] = useState(false);
   const [modaleliminar, setModalEliminar] = useState(false);
-  const [usuarioseleccionado, setUsuarioSeleccionado] = useState({
-    usu_Apellido: "",
-    usu_Codigo: 0,
-    usu_Contrasena: "123",
-    usu_Correo: "",
-    usu_Nombre: "",
-    usu_NombreUsuario: "",
+  const [combustibleseleccionado, setCombustibleSeleccionado] = useState({
+    com_Codigo: 0,
+    com_TipoCombustible: "",
+    com_Marca: "",
   });
 
   const abrircerrarModalInsertar = () => {
@@ -80,8 +69,8 @@ function Usuarios() {
     setModalEliminar(!modaleliminar);
   };
 
-  const seleccionarUsuario = (usuario, caso) => {
-    setUsuarioSeleccionado(usuario);
+  const seleccionarCombustible = (combustible, caso) => {
+    setCombustibleSeleccionado(combustible);
     if (caso === "Editar") {
       abrircerrarModalEditar();
     } else {
@@ -91,7 +80,7 @@ function Usuarios() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setUsuarioSeleccionado((prevState) => ({
+    setCombustibleSeleccionado((prevState) => ({
       ...prevState,
       [name]: value,
     }));
@@ -99,7 +88,7 @@ function Usuarios() {
 
   const peticionpost = async () => {
     await axios
-      .post("https://localhost:7235/api/Usuarios/registrousuarios", usuarioseleccionado)
+      .post("https://localhost:7235/api/Combustibles/registrocombustibles", combustibleseleccionado)
       .then((response) => {
         setData(data.concat(response.data));
         abrircerrarModalInsertar();
@@ -111,19 +100,17 @@ function Usuarios() {
 
   const peticionput = async () => {
     await axios
-      .put("https://localhost:7235/api/Usuarios/actualizar", usuarioseleccionado)
+      .put("https://localhost:7235/api/Combustibles/actualizar", combustibleseleccionado)
       .then(() => {
         const copiaArray = [...data];
         const indice = copiaArray.findIndex(
-          (elemento) => elemento.usu_Codigo === usuarioseleccionado.usu_Codigo
+          (elemento) => elemento.com_Codigo === combustibleseleccionado.com_Codigo
         );
         if (indice !== -1) {
           copiaArray[indice] = {
             ...copiaArray[indice],
-            usu_Nombre: usuarioseleccionado.usu_Nombre,
-            usu_Apellido: usuarioseleccionado.usu_Apellido,
-            usu_Correo: usuarioseleccionado.usu_Correo,
-            usu_NombreUsuario: usuarioseleccionado.usu_NombreUsuario,
+            com_TipoCombustible: combustibleseleccionado.com_TipoCombustible,
+            com_Marca: combustibleseleccionado.com_Marca,
           };
         }
         setData(copiaArray);
@@ -136,9 +123,13 @@ function Usuarios() {
 
   const peticiondelete = async () => {
     await axios
-      .put("https://localhost:7235/api/Usuarios/eliminar", usuarioseleccionado)
+      .put("https://localhost:7235/api/Combustibles/eliminar", combustibleseleccionado)
       .then(() => {
-        setData(data.filter((usuario) => usuario.usu_Codigo !== usuarioseleccionado.usu_Codigo));
+        setData(
+          data.filter(
+            (combustible) => combustible.com_Codigo !== combustibleseleccionado.com_Codigo
+          )
+        );
         abrircerrarModalEliminar();
       })
       .catch((error) => {
@@ -148,7 +139,7 @@ function Usuarios() {
 
   const peticionget = async () => {
     await axios
-      .get("https://localhost:7235/api/Usuarios/usuarios")
+      .get("https://localhost:7235/api/Combustibles/combustibles")
       .then((response) => {
         setData(response.data);
       })
@@ -163,32 +154,18 @@ function Usuarios() {
 
   const bodyInsertar = (
     <div className={styles.modal}>
-      <h3>Agregar Nuevo Usuario</h3>
+      <h3>Agregar Nuevo Combustible</h3>
       <TextField
         className={styles.inputMaterial}
-        label="Usuario"
-        name="usu_NombreUsuario"
+        label="Tipo"
+        name="com_TipoCombustible"
         onChange={handleChange}
       />
       <br />
       <TextField
         className={styles.inputMaterial}
-        label="Nombre"
-        name="usu_Nombre"
-        onChange={handleChange}
-      />
-      <br />
-      <TextField
-        className={styles.inputMaterial}
-        label="Apellido"
-        name="usu_Apellido"
-        onChange={handleChange}
-      />
-      <br />
-      <TextField
-        className={styles.inputMaterial}
-        label="Correo"
-        name="usu_Correo"
+        label="Marca"
+        name="com_Marca"
         onChange={handleChange}
       />
       <br />
@@ -204,37 +181,21 @@ function Usuarios() {
 
   const bodyEditar = (
     <div className={styles.modal}>
-      <h3>Editar Usuario</h3>
+      <h3>Editar Combustible</h3>
       <TextField
         className={styles.inputMaterial}
-        label="Usuario"
-        name="usu_NombreUsuario"
+        label="Tipo"
+        name="com_TipoCombustible"
         onChange={handleChange}
-        value={usuarioseleccionado && usuarioseleccionado.usu_NombreUsuario}
+        value={combustibleseleccionado && combustibleseleccionado.com_TipoCombustible}
       />
       <br />
       <TextField
         className={styles.inputMaterial}
-        label="Nombre"
-        name="usu_Nombre"
+        label="Marca"
+        name="com_Marca"
         onChange={handleChange}
-        value={usuarioseleccionado && usuarioseleccionado.usu_Nombre}
-      />
-      <br />
-      <TextField
-        className={styles.inputMaterial}
-        label="Apellido"
-        name="usu_Apellido"
-        onChange={handleChange}
-        value={usuarioseleccionado && usuarioseleccionado.usu_Apellido}
-      />
-      <br />
-      <TextField
-        className={styles.inputMaterial}
-        label="Correo"
-        name="usu_Correo"
-        onChange={handleChange}
-        value={usuarioseleccionado && usuarioseleccionado.usu_Correo}
+        value={combustibleseleccionado && combustibleseleccionado.com_Marca}
       />
       <br />
       <br />
@@ -250,8 +211,8 @@ function Usuarios() {
   const bodyEliminar = (
     <div className={styles.modal}>
       <p>
-        Deseas Eliminar el Usuario
-        <b> {usuarioseleccionado && usuarioseleccionado.usu_NombreUsuario}</b>?
+        Deseas Eliminar el Combustible
+        <b> {combustibleseleccionado && combustibleseleccionado.com_TipoCombustible}</b>?
       </p>
       <div align="right">
         <Button color="secondary" onClick={() => peticiondelete()}>
@@ -271,23 +232,23 @@ function Usuarios() {
             <Card>
               <div className="App">
                 <br />
-                <Button onClick={() => abrircerrarModalInsertar()}>Insertar Usuario</Button>
+                <Button onClick={() => abrircerrarModalInsertar()}>Insertar Combustible</Button>
                 <br />
                 <br />
                 <MaterialTable
                   columns={columns}
                   data={data}
-                  title="Usuarios"
+                  title="Combustibles"
                   actions={[
                     {
                       icon: "edit",
-                      tooltip: "Editar Usuario",
-                      onClick: (event, rowData) => seleccionarUsuario(rowData, "Editar"),
+                      tooltip: "Editar Combustible",
+                      onClick: (event, rowData) => seleccionarCombustible(rowData, "Editar"),
                     },
                     {
                       icon: "delete",
-                      tooltip: "Eliminar Usuario",
-                      onClick: (event, rowData) => seleccionarUsuario(rowData, "Eliminar"),
+                      tooltip: "Eliminar Combustible",
+                      onClick: (event, rowData) => seleccionarCombustible(rowData, "Eliminar"),
                     },
                   ]}
                   options={{
@@ -320,4 +281,4 @@ function Usuarios() {
   );
 }
 
-export default Usuarios;
+export default Combustibles;
