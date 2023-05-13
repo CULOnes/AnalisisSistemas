@@ -35,6 +35,21 @@ namespace RoadMaster.Controllers
             }
         }
 
+        //Reporte de Vehiculos
+        [HttpPost("reporteinspecciones")]
+        public async ValueTask<ActionResult<InspeccionesResponseDTO>> ReporteInspecciones(ReporteIns inspecciones)
+        {
+            try
+            {
+                var busqueda = db.Inspecciones.Where(x => x.Ins_Fecha >= inspecciones.fechainicio || x.Ins_Fecha <= inspecciones.fechafin).ToArray();
+
+                return Ok(busqueda);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
         [HttpPut("actualizar")]
         public async ValueTask<ActionResult<InspeccionesResponseDTO>> Actualizar(InspeccionesRequestDTO inspecciones)
@@ -49,8 +64,8 @@ namespace RoadMaster.Controllers
                 inspeccion.Ins_KilometrajeActual = inspecciones.Ins_KilometrajeActual;
                 inspeccion.Ins_Aprobacion = inspecciones.Ins_Aprobacion;
                 inspeccion.Ins_Estado = inspecciones.Ins_Estado;
-                inspeccion.INS_Fecha = DateTime.Now;
-                inspeccion.INS_Descripcion = inspecciones.INS_Descripcion;
+                //inspeccion.Ins_Fecha = inspecciones.Ins_Fecha;
+                inspeccion.Ins_Descripcion = inspecciones.Ins_Descripcion;
 
                 db.Entry(inspeccion).State = EntityState.Modified;
                 db.SaveChanges();
@@ -68,22 +83,22 @@ namespace RoadMaster.Controllers
             try
             {
 
-                var query = db.Inspecciones.ToArray();
+                //var query = db.Inspecciones.ToArray();
 
-                var id = query.Count() + 1;
+                //var id = query.Count() + 1;
 
-                var date = DateTime.Now;
+                //var date = DateTime.Now;
 
                 var inspeccion = new Inspecciones
                 {
-                    Ins_Codigo = id,
+                    //Ins_Codigo = id,
                     Usu_Codigo = inspecciones.Usu_Codigo,
                     Veh_Codigo = inspecciones.Veh_Codigo,
                     Ins_KilometrajeActual = inspecciones.Ins_KilometrajeActual,
                     Ins_Aprobacion = inspecciones.Ins_Aprobacion,
                     Ins_Estado = inspecciones.Ins_Estado,
-                    INS_Fecha = date,
-                    INS_Descripcion = inspecciones.INS_Descripcion
+                    Ins_Fecha = inspecciones.Ins_Fecha,
+                    Ins_Descripcion = inspecciones.Ins_Descripcion
                 };
 
                 await db.Inspecciones.AddAsync(inspeccion);
@@ -115,5 +130,11 @@ namespace RoadMaster.Controllers
                 return BadRequest(ex.Message);
             }
         }
+    }
+
+    public class ReporteIns
+    {
+        public DateTime fechainicio { get; set; }
+        public DateTime fechafin { get; set; }
     }
 }

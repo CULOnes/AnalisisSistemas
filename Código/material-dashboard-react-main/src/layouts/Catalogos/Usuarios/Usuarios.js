@@ -189,6 +189,7 @@ function Usuarios() {
         className={styles.inputMaterial}
         label="Correo"
         name="usu_Correo"
+        type="email"
         onChange={handleChange}
       />
       <br />

@@ -17,6 +17,7 @@ namespace RoadMaster.Repositories
         public DbSet<TiposSeguros> TiposSeguros { get; set; }
         public DbSet<TiposReparaciones> TiposReparaciones { get; set; }
         public DbSet<Seguros> Seguros { get; set; }
+        public DbSet<Mantenimientos> Mantenimientos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

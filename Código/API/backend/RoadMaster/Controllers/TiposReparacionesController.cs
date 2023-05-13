@@ -66,13 +66,13 @@ namespace RoadMaster.Controllers
             try
             {
 
-                var query = db.TiposReparaciones.ToArray();
+                //var query = db.TiposReparaciones.ToArray();
 
-                var id = query.Count() + 1;
+                //var id = query.Count() + 1;
 
                 var tiporeparacion = new TiposReparaciones
                 {
-                    TiR_Codigo = id,
+                    //TiR_Codigo = id,
                     TiR_Nombre = tiposreparaciones.TiR_Nombre,
                     TiR_Costo = tiposreparaciones.TiR_Costo,
                     TiR_Tiempo = tiposreparaciones.TiR_Tiempo,

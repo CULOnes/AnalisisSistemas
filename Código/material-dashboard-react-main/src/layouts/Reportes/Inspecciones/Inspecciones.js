@@ -13,27 +13,35 @@ import { makeStyles } from "@material-ui/core/styles";
 const columns = [
   {
     title: "ID",
-    field: "man_codigo",
+    field: "ins_Codigo",
   },
   {
-    title: "Tipo Reparacion",
-    field: "tir_codigo",
+    title: "Usuario",
+    field: "usu_Codigo",
   },
   {
-    title: "Inspeccion",
-    field: "ins_codigo",
-  },
-  {
-    title: "Fecha",
-    field: "man_fecha",
+    title: "Vehiculo",
+    field: "veh_Codigo",
   },
   {
     title: "Kilometraje",
-    field: "man_kilometraje",
+    field: "ins_KilometrajeActual",
+  },
+  {
+    title: "Aprobacion",
+    field: "ins_Aprobacion",
   },
   {
     title: "Estado",
-    field: "man_estado",
+    field: "ins_Estado",
+  },
+  {
+    title: "Fecha",
+    field: "ins_Fecha",
+  },
+  {
+    title: "Descripcion",
+    field: "ins_Descripcion",
   },
 ];
 
@@ -57,11 +65,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function RMantenimientos() {
+function RInspecciones() {
   const styles = useStyles();
   const [data, setData] = useState([]);
   const [modalbuscar, setModalBuscar] = useState(false);
-  const [mantenimientoseleccionado, setMantenimientoSeleccionado] = useState({
+  const [inspeccionseleccionada, setInspeccionSeleccionada] = useState({
     fechainicio: 0,
     fechafin: 0,
   });
@@ -72,7 +80,7 @@ function RMantenimientos() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setMantenimientoSeleccionado((prevState) => ({
+    setInspeccionSeleccionada((prevState) => ({
       ...prevState,
       [name]: value,
     }));
@@ -80,10 +88,7 @@ function RMantenimientos() {
 
   const peticionpost = async () => {
     await axios
-      .post(
-        "https://localhost:7235/api/Mantenimientos/reportemantenimientos",
-        mantenimientoseleccionado
-      )
+      .post("https://localhost:7235/api/Inspecciones/reporteinspecciones", inspeccionseleccionada)
       .then((response) => {
         setData(response.data);
         abrircerrarModalBuscar();
@@ -95,14 +100,14 @@ function RMantenimientos() {
 
   const bodyConsultar = (
     <div className={styles.modal}>
-      <h3>Consultar Mantenimiento</h3>
+      <h3>Consultar Inspeccion</h3>
       <TextField
         className={styles.inputMaterial}
         // label="Fecha"
         name="fechainicio"
         type="date"
         onChange={handleChange}
-        value={mantenimientoseleccionado && mantenimientoseleccionado.fechainicio}
+        value={inspeccionseleccionada && inspeccionseleccionada.fechainicio}
       />
       <br />
       <TextField
@@ -111,7 +116,7 @@ function RMantenimientos() {
         name="fechafin"
         type="date"
         onChange={handleChange}
-        value={mantenimientoseleccionado && mantenimientoseleccionado.fechafin}
+        value={inspeccionseleccionada && inspeccionseleccionada.fechafin}
       />
       <br />
       <br />
@@ -133,10 +138,10 @@ function RMantenimientos() {
             <Card>
               <div className="App">
                 <br />
-                <Button onClick={() => abrircerrarModalBuscar()}>Consultar Mantenimientos</Button>
+                <Button onClick={() => abrircerrarModalBuscar()}>Consultar Inspeccion</Button>
                 <br />
                 <br />
-                <MaterialTable columns={columns} data={data} title="Mantenimientos" />
+                <MaterialTable columns={columns} data={data} title="Inspecciones" />
 
                 <Modal open={modalbuscar} onClose={abrircerrarModalBuscar}>
                   {bodyConsultar}
@@ -150,4 +155,4 @@ function RMantenimientos() {
   );
 }
 
-export default RMantenimientos;
+export default RInspecciones;

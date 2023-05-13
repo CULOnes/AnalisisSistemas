@@ -45,7 +45,7 @@ import Inspecciones from "layouts/Catalogos/Inspecciones/Inspecciones";
 import Seguros from "layouts/Catalogos/Seguros/Seguros";
 import Usuarios from "layouts/Catalogos/Usuarios/Usuarios";
 import Combustibles from "layouts/Catalogos/Combustibles/Combustibles";
-import RInventario from "layouts/Reportes/Inventarios/Inventario";
+import RInspecciones from "layouts/Reportes/Inspecciones/Inspecciones";
 import Empleados from "layouts/Catalogos/Empleados/Empleados";
 import TiposSeguros from "layouts/Catalogos/TiposSeguros/TiposSeguros";
 import Mantenimiento from "layouts/Catalogos/Mantenimiento/Mantenimiento";
@@ -60,6 +60,7 @@ import RAsignaciones from "layouts/Reportes/Asignaciones/Asignaciones";
 
 // @mui icons
 import Icon from "@mui/material/Icon";
+import RepVehiculos from "layouts/Reportes/Vehiculos/ReporteVehiculos";
 
 const routes = [
   {
@@ -200,11 +201,11 @@ const routes = [
   },
   {
     type: "title",
-    name: "RInventario",
-    key: "rinventario",
+    name: "RInspecciones",
+    key: "rinspecciones",
     icon: <Icon fontSize="small">format_textdirection_r_to_l</Icon>,
-    route: "/reportes/rinventario",
-    component: <RInventario />,
+    route: "/reportes/rinspecciones",
+    component: <RInspecciones />,
   },
   {
     type: "title",
@@ -229,6 +230,14 @@ const routes = [
     icon: <Icon fontSize="small">format_textdirection_r_to_l</Icon>,
     route: "/reportes/rasignaciones",
     component: <RAsignaciones />,
+  },
+  {
+    type: "title",
+    name: "RepVehiculos",
+    key: "repvehiculos",
+    icon: <Icon fontSize="small">format_textdirection_r_to_l</Icon>,
+    route: "/reportes/repvehiculos",
+    component: <RepVehiculos />,
   },
 ];
 

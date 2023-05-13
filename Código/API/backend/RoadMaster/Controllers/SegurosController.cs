@@ -65,13 +65,13 @@ namespace RoadMaster.Controllers
             try
             {
 
-                var query = db.Seguros.ToArray();
+                //var query = db.Seguros.ToArray();
 
-                var id = query.Count() + 1;
+                //var id = query.Count() + 1;
 
                 var seguro = new Seguros
                 {
-                    Seg_Codigo = id,
+                    //Seg_Codigo = id,
                     TiS_Codigo = seguros.TiS_Codigo,
                     Seg_Compañia = seguros.Seg_Compañia,
                     Seg_Cobertura = seguros.Seg_Cobertura,

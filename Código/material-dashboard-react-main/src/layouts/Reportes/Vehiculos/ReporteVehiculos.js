@@ -13,27 +13,43 @@ import { makeStyles } from "@material-ui/core/styles";
 const columns = [
   {
     title: "ID",
-    field: "man_codigo",
+    field: "veh_Codigo",
   },
   {
-    title: "Tipo Reparacion",
-    field: "tir_codigo",
+    title: "Tipo de vehiculo",
+    field: "tiV_Codigo",
   },
   {
-    title: "Inspeccion",
-    field: "ins_codigo",
+    title: "Combustible",
+    field: "com_Codigo",
   },
   {
-    title: "Fecha",
-    field: "man_fecha",
+    title: "Marca",
+    field: "veh_Marca",
+  },
+  {
+    title: "Placa",
+    field: "veh_Placa",
+  },
+  {
+    title: "Modelo",
+    field: "veh_Modelo",
+  },
+  {
+    title: "Año",
+    field: "veh_Año",
   },
   {
     title: "Kilometraje",
-    field: "man_kilometraje",
+    field: "veh_KilometrajeInicial",
   },
   {
-    title: "Estado",
-    field: "man_estado",
+    title: "Color",
+    field: "veh_Color",
+  },
+  {
+    title: "Transmision",
+    field: "veh_Transmision",
   },
 ];
 
@@ -57,13 +73,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function RMantenimientos() {
+function RepVehiculos() {
   const styles = useStyles();
   const [data, setData] = useState([]);
   const [modalbuscar, setModalBuscar] = useState(false);
-  const [mantenimientoseleccionado, setMantenimientoSeleccionado] = useState({
-    fechainicio: 0,
-    fechafin: 0,
+  const [vehiculoseleccionado, setVehiculoSeleccionado] = useState({
+    tipobusqueda: 0,
+    valor: "",
   });
 
   const abrircerrarModalBuscar = () => {
@@ -72,7 +88,7 @@ function RMantenimientos() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setMantenimientoSeleccionado((prevState) => ({
+    setVehiculoSeleccionado((prevState) => ({
       ...prevState,
       [name]: value,
     }));
@@ -80,10 +96,7 @@ function RMantenimientos() {
 
   const peticionpost = async () => {
     await axios
-      .post(
-        "https://localhost:7235/api/Mantenimientos/reportemantenimientos",
-        mantenimientoseleccionado
-      )
+      .post("https://localhost:7235/api/Vehiculos/reportevehiculos", vehiculoseleccionado)
       .then((response) => {
         setData(response.data);
         abrircerrarModalBuscar();
@@ -95,23 +108,35 @@ function RMantenimientos() {
 
   const bodyConsultar = (
     <div className={styles.modal}>
-      <h3>Consultar Mantenimiento</h3>
-      <TextField
-        className={styles.inputMaterial}
-        // label="Fecha"
-        name="fechainicio"
-        type="date"
-        onChange={handleChange}
-        value={mantenimientoseleccionado && mantenimientoseleccionado.fechainicio}
-      />
+      <h3>Consultar Vehiculo</h3>
+
+      <select name="tipobusqueda" className="form-control" onChange={handleChange}>
+        <option key="0" value="0">
+          Seleccione el Tipo de Busqueda
+        </option>
+        <option key="1" value="1">
+          Marca
+        </option>
+        <option key="2" value="2">
+          Modelo
+        </option>
+        <option key="3" value="3">
+          Año
+        </option>
+        <option key="4" value="4">
+          Color
+        </option>
+        <option key="5" value="5">
+          Transmision
+        </option>
+      </select>
+      <br />
       <br />
       <TextField
         className={styles.inputMaterial}
-        // label="Fecha"
-        name="fechafin"
-        type="date"
+        label="Valor"
+        name="valor"
         onChange={handleChange}
-        value={mantenimientoseleccionado && mantenimientoseleccionado.fechafin}
       />
       <br />
       <br />
@@ -133,10 +158,22 @@ function RMantenimientos() {
             <Card>
               <div className="App">
                 <br />
-                <Button onClick={() => abrircerrarModalBuscar()}>Consultar Mantenimientos</Button>
+                <Button onClick={() => abrircerrarModalBuscar()}>Consultar Vehiculo</Button>
                 <br />
                 <br />
-                <MaterialTable columns={columns} data={data} title="Mantenimientos" />
+                <MaterialTable
+                  columns={columns}
+                  data={data}
+                  title="Vehiculos"
+                  options={{
+                    actionsColumnIndex: -1,
+                  }}
+                  localization={{
+                    header: {
+                      actions: "Acciones",
+                    },
+                  }}
+                />
 
                 <Modal open={modalbuscar} onClose={abrircerrarModalBuscar}>
                   {bodyConsultar}
@@ -150,4 +187,4 @@ function RMantenimientos() {
   );
 }
 
-export default RMantenimientos;
+export default RepVehiculos;

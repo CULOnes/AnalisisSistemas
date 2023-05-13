@@ -35,6 +35,44 @@ namespace RoadMaster.Controllers
             }
         }
 
+        //Reporte de Vehiculos
+        [HttpPost("reportevehiculos")]
+        public async ValueTask<ActionResult<VehiculosResponseDTO>> ReporteVehiculos(ReporteV vehiculos)
+        {
+            try
+            {
+                int año = 0;
+                Vehiculos[]? busqueda = null;
+
+                switch (vehiculos.tipobusqueda)
+                {
+                    case 1:
+                        busqueda = db.Vehiculos.Where(x => x.Veh_Marca == vehiculos.valor).ToArray();
+                        break;
+                    case 2:
+                        busqueda = db.Vehiculos.Where(x => x.Veh_Modelo == vehiculos.valor).ToArray();
+                        break;
+                    case 3:
+                        año = Int32.Parse(vehiculos.valor);
+                        busqueda = db.Vehiculos.Where(x => x.Veh_Año == año).ToArray();
+                        break;
+                    case 4:
+                        busqueda = db.Vehiculos.Where(x => x.Veh_Color == vehiculos.valor).ToArray();
+                        break;
+                    case 5:
+                        busqueda = db.Vehiculos.Where(x => x.Veh_Transmision == vehiculos.valor).ToArray();
+                        break;
+                    default:
+                        break;
+                }
+
+                return Ok(busqueda);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
         [HttpPut("actualizar")]
         public async ValueTask<ActionResult<VehiculosResponseDTO>> Actualizar(VehiculosRequestDTO vehiculos)
@@ -70,13 +108,13 @@ namespace RoadMaster.Controllers
             try
             {
 
-                var query = db.Vehiculos.ToArray();
+                //var query = db.Vehiculos.ToArray();
 
-                var id = query.Count() + 1;
+                //var id = query.Count() + 1;
 
                 var vehiculo = new Vehiculos
                 {
-                    Veh_Codigo = id,
+                    //Veh_Codigo = id,
                     TiV_Codigo = vehiculos.TiV_Codigo,
                     Com_Codigo = vehiculos.Com_Codigo,
                     Veh_Marca = vehiculos.Veh_Marca,
@@ -117,5 +155,11 @@ namespace RoadMaster.Controllers
                 return BadRequest(ex.Message);
             }
         }
+    }
+
+    public class ReporteV
+    {
+        public int tipobusqueda { get; set; }
+        public string valor { get; set; }
     }
 }

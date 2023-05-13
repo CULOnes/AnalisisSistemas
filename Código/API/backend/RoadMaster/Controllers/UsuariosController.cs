@@ -65,13 +65,13 @@ namespace RoadMaster.Controllers
             try
             {
 
-                var query = db.Usuarios.ToArray();
+                //var query = db.Usuarios.ToArray();
 
-                var id = query.Count() + 1;
+                //var id = query.Count() + 1;
 
                 var usuario = new Usuarios
                 {
-                    Usu_Codigo = id,
+                    //Usu_Codigo = id,
                     Usu_NombreUsuario = usuarios.Usu_NombreUsuario,
                     Usu_Nombre = usuarios.Usu_Nombre,
                     Usu_Apellido = usuarios.Usu_Apellido,

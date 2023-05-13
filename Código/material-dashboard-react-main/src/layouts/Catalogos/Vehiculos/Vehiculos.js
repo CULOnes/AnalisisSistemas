@@ -76,6 +76,8 @@ const useStyles = makeStyles((theme) => ({
 function Vehiculos() {
   const styles = useStyles();
   const [data, setData] = useState([]);
+  const [datatv, setDatatv] = useState([]);
+  const [datatc, setDatatc] = useState([]);
   const [modalinsertar, setModalInsertar] = useState(false);
   const [modaleditar, setModalEditar] = useState(false);
   const [modaleliminar, setModalEliminar] = useState(false);
@@ -187,26 +189,74 @@ function Vehiculos() {
       });
   };
 
+  const peticiongettv = async () => {
+    await axios
+      .get("https://localhost:7235/api/TiposVehiculos/tiposvehiculos")
+      .then((response) => {
+        setDatatv(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const peticiongettc = async () => {
+    await axios
+      .get("https://localhost:7235/api/Combustibles/combustibles")
+      .then((response) => {
+        setDatatc(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   useEffect(() => {
     peticionget();
+    peticiongettv();
+    peticiongettc();
   }, []);
 
   const bodyInsertar = (
     <div className={styles.modal}>
       <h3>Agregar Nuevo Vehiculo</h3>
-      <TextField
+
+      <select name="tiV_Codigo" className="form-control" onChange={handleChange}>
+        <option key="0" value="0">
+          Seleccione el Tipo de Vehiculo
+        </option>
+        {datatv.map((element) => (
+          <option key={element.tiV_Codigo} value={element.tiV_Codigo}>
+            {element.tiV_Nombre}
+          </option>
+        ))}
+      </select>
+
+      <br />
+
+      <select name="com_Codigo" className="form-control" onChange={handleChange}>
+        <option key="0" value="0">
+          Seleccione el Tipo de Vehiculo
+        </option>
+        {datatc.map((element) => (
+          <option key={element.com_Codigo} value={element.com_Codigo}>
+            {element.com_TipoCombustible}
+          </option>
+        ))}
+      </select>
+
+      {/* <TextField
         className={styles.inputMaterial}
         label="Tipo Vehiculo"
         name="tiV_Codigo"
         onChange={handleChange}
-      />
-      <br />
-      <TextField
+      /> */}
+      {/* <TextField
         className={styles.inputMaterial}
         label="Combustible"
         name="com_Codigo"
         onChange={handleChange}
-      />
+      /> */}
       <br />
       <TextField
         className={styles.inputMaterial}
@@ -233,6 +283,7 @@ function Vehiculos() {
         className={styles.inputMaterial}
         label="Año"
         name="veh_Año"
+        type="number"
         onChange={handleChange}
       />
       <br />
@@ -240,6 +291,7 @@ function Vehiculos() {
         className={styles.inputMaterial}
         label="Kilometraje"
         name="veh_KilometrajeInicial"
+        type="number"
         onChange={handleChange}
       />
       <br />
@@ -314,6 +366,7 @@ function Vehiculos() {
         className={styles.inputMaterial}
         label="Año"
         name="veh_Año"
+        type="number"
         onChange={handleChange}
         value={vehiculoseleccionado && vehiculoseleccionado.veh_Año}
       />
@@ -322,6 +375,7 @@ function Vehiculos() {
         className={styles.inputMaterial}
         label="Kilometraje"
         name="veh_KilometrajeInicial"
+        type="number"
         onChange={handleChange}
         value={vehiculoseleccionado && vehiculoseleccionado.veh_KilometrajeInicial}
       />
@@ -376,7 +430,7 @@ function Vehiculos() {
             <Card>
               <div className="App">
                 <br />
-                <Button onClick={() => abrircerrarModalInsertar()}>Insertar Usuario</Button>
+                <Button onClick={() => abrircerrarModalInsertar()}>Insertar Vehiculo</Button>
                 <br />
                 <br />
                 <MaterialTable

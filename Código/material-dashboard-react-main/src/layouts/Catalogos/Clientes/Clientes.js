@@ -72,7 +72,7 @@ function Clientes() {
   const [clienteseleccionado, setClienteSeleccionado] = useState({
     cli_Codigo: 0,
     cli_Nombre: "",
-    cli_Apellido: "123",
+    cli_Apellido: "",
     cli_Correo: "",
     cli_TelefonoCelular: 0,
     cli_TelefonoSecundario: 0,
@@ -181,6 +181,7 @@ function Clientes() {
         className={styles.inputMaterial}
         label="Nombre"
         name="cli_Nombre"
+        type="text"
         onChange={handleChange}
       />
       <br />
@@ -195,6 +196,7 @@ function Clientes() {
         className={styles.inputMaterial}
         label="Correo"
         name="cli_Correo"
+        type="email"
         onChange={handleChange}
       />
       <br />
@@ -202,6 +204,7 @@ function Clientes() {
         className={styles.inputMaterial}
         label="Celular"
         name="cli_TelefonoCelular"
+        type="number"
         onChange={handleChange}
       />
       <br />
@@ -209,6 +212,7 @@ function Clientes() {
         className={styles.inputMaterial}
         label="Telefono Secundario"
         name="cli_TelefonoSecundario"
+        type="number"
         onChange={handleChange}
       />
       <br />
@@ -252,6 +256,7 @@ function Clientes() {
         className={styles.inputMaterial}
         label="Correo"
         name="cli_Correo"
+        type="email"
         onChange={handleChange}
         value={clienteseleccionado && clienteseleccionado.cli_Correo}
       />
@@ -260,6 +265,7 @@ function Clientes() {
         className={styles.inputMaterial}
         label="Celular"
         name="cli_TelefonoCelular"
+        type="number"
         onChange={handleChange}
         value={clienteseleccionado && clienteseleccionado.cli_TelefonoCelular}
       />
@@ -268,6 +274,7 @@ function Clientes() {
         className={styles.inputMaterial}
         label="Telefono Secundario"
         name="cli_TelefonoSecundario"
+        type="number"
         onChange={handleChange}
         value={clienteseleccionado && clienteseleccionado.cli_TelefonoSecundario}
       />
@@ -294,7 +301,7 @@ function Clientes() {
     <div className={styles.modal}>
       <p>
         Deseas Eliminar el Cliente
-        <b> {clienteseleccionado && clienteseleccionado.cli_Direccion}</b>?
+        <b> {clienteseleccionado && clienteseleccionado.cli_Nombre}</b>?
       </p>
       <div align="right">
         <Button color="secondary" onClick={() => peticiondelete()}>

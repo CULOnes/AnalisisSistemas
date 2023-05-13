@@ -65,13 +65,13 @@ namespace RoadMaster.Controllers
             try
             {
 
-                var query = db.TiposVehiculos.ToArray();
+                //var query = db.TiposVehiculos.ToArray();
 
-                var id = query.Count() + 1;
+                //var id = query.Count() + 1;
 
                 var tipovehiculo = new TiposVehiculos
                 {
-                    TiV_Codigo = id,
+                    //TiV_Codigo = id,
                     TiV_Nombre = tiposvehiculos.TiV_Nombre,
                     TiV_Capacidad = tiposvehiculos.TiV_Capacidad,
                     TiV_Tonelaje = tiposvehiculos.TiV_Tonelaje,

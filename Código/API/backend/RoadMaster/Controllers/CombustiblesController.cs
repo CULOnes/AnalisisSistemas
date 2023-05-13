@@ -63,13 +63,13 @@ namespace RoadMaster.Controllers
             try
             {
 
-                var query = db.Combustibles.ToArray();
+                //var query = db.Combustibles.ToArray();
 
-                var id = query.Count() + 1;
+                //var id = query.Count() + 1;
 
                 var combustible = new Combustibles
                 {
-                    Com_Codigo = id,
+                    //Com_Codigo = id,
                     Com_TipoCombustible = combustibles.Com_TipoCombustible,
                     Com_Marca = combustibles.Com_Marca
                 };

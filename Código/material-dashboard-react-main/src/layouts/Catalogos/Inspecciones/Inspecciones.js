@@ -35,13 +35,13 @@ const columns = [
     title: "Estado",
     field: "ins_Estado",
   },
-  // {
-  //   title: "Fecha",
-  //   field: "iNS_Fecha",
-  // },
+  {
+    title: "Fecha",
+    field: "ins_Fecha",
+  },
   {
     title: "Descripcion",
-    field: "iNS_Descripcion",
+    field: "ins_Descripcion",
   },
 ];
 
@@ -63,6 +63,11 @@ const useStyles = makeStyles((theme) => ({
   inputMaterial: {
     width: "100%",
   },
+  parrafo: {
+    paddingTop: "5px",
+    color: "grey",
+    fontSize: "14px",
+  },
 }));
 
 function Inspecciones() {
@@ -78,8 +83,8 @@ function Inspecciones() {
     ins_KilometrajeActual: 0,
     ins_Aprobacion: "",
     ins_Estado: "",
-    iNS_Fecha: 0,
-    iNS_Descripcion: "",
+    ins_Fecha: 0,
+    ins_Descripcion: "",
   });
 
   const abrircerrarModalInsertar = () => {
@@ -139,8 +144,8 @@ function Inspecciones() {
             ins_KilometrajeActual: inspeccionseleccionado.ins_KilometrajeActual,
             ins_Aprobacion: inspeccionseleccionado.ins_Aprobacion,
             ins_Estado: inspeccionseleccionado.ins_Estado,
-            iNS_Fecha: inspeccionseleccionado.iNS_Fecha,
-            iNS_Descripcion: inspeccionseleccionado.iNS_Descripcion,
+            ins_Fecha: inspeccionseleccionado.ins_Fecha,
+            ins_Descripcion: inspeccionseleccionado.ins_Descripcion,
           };
         }
         setData(copiaArray);
@@ -221,14 +226,16 @@ function Inspecciones() {
       <TextField
         className={styles.inputMaterial}
         label="Descripcion"
-        name="iNS_Descripcion"
+        name="ins_Descripcion"
         onChange={handleChange}
       />
       <br />
+      <p className={styles.parrafo}>Fecha de Nacimiento</p>
       <TextField
         className={styles.inputMaterial}
-        label="Fecha"
-        name="iNS_Fecha"
+        // label="Fecha"
+        name="ins_Fecha"
+        type="date"
         onChange={handleChange}
         value={inspeccionseleccionado && inspeccionseleccionado.iNS_Fecha}
       />
@@ -289,18 +296,19 @@ function Inspecciones() {
       <TextField
         className={styles.inputMaterial}
         label="Descripcion"
-        name="iNS_Descripcion"
+        name="ins_Descripcion"
         onChange={handleChange}
-        value={inspeccionseleccionado && inspeccionseleccionado.iNS_Descripcion}
+        value={inspeccionseleccionado && inspeccionseleccionado.ins_Descripcion}
       />
       <br />
-      <TextField
+      {/* <TextField
         className={styles.inputMaterial}
-        label="Fecha"
-        name="iNS_Fecha"
+        // label="Fecha"
+        name="ins_Fecha"
+        type="date"
         onChange={handleChange}
-        value={inspeccionseleccionado && inspeccionseleccionado.iNS_Fecha}
-      />
+        value={inspeccionseleccionado && inspeccionseleccionado.ins_Fecha}
+      /> */}
       <br />
       <br />
       <div align="right">

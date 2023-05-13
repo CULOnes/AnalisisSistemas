@@ -63,13 +63,13 @@ namespace RoadMaster.Controllers
             try
             {
 
-                var query = db.TiposSeguros.ToArray();
+                //var query = db.TiposSeguros.ToArray();
 
-                var id = query.Count() + 1;
+                //var id = query.Count() + 1;
 
                 var tiposeguro = new TiposSeguros
                 {
-                    TiS_Codigo = id,
+                    //TiS_Codigo = id,
                     TiS_Nombre = tiposseguros.TiS_Nombre,
                     TiS_Descripcion = tiposseguros.TiS_Descripcion
                 };

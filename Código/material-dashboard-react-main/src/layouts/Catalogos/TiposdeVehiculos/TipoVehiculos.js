@@ -188,6 +188,7 @@ function TipoVehiculos() {
         className={styles.inputMaterial}
         label="Tonelaje"
         name="tiV_Tonelaje"
+        type="number"
         onChange={handleChange}
       />
       <br />

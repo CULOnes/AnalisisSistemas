@@ -17,8 +17,8 @@ namespace RoadMaster.Repositories.Configurations
             builder.Property(x => x.Ins_KilometrajeActual).HasColumnName("Ins_KilometrajeActual");
             builder.Property(x => x.Ins_Aprobacion).HasColumnName("Ins_Aprobacion");
             builder.Property(x => x.Ins_Estado).HasColumnName("Ins_Estado");
-            builder.Property(x => x.INS_Fecha).HasColumnName("INS_Fecha");
-            builder.Property(x => x.INS_Descripcion).HasColumnName("INS_Descripcion");
+            builder.Property(x => x.Ins_Fecha).HasColumnName("Ins_Fecha");
+            builder.Property(x => x.Ins_Descripcion).HasColumnName("Ins_Descripcion");
         }
     }
 }
