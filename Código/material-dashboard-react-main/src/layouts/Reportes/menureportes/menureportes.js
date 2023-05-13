@@ -81,8 +81,8 @@ function Menureportes() {
               <ComplexStatisticsCard
                 color="info"
                 icon="assignment_turned_in"
-                title="Asignaciones"
-                route="RAsignaciones"
+                title="Empleados"
+                route="REmpleados"
               />
             </MDBox>
           </Grid>

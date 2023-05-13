@@ -1,113 +1,163 @@
-// import PropTypes from 'prop-types'
-import React from "react";
+import React, { useState } from "react";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
-
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
-
-// Material Dashboard 2 React components
+import axios from "axios";
 import MDBox from "components/MDBox";
-import MDInput from "components/MDInput";
-import MDTypography from "components/MDTypography";
-import MDButton from "components/MDButton";
+import "styles/styles.css";
+import MaterialTable from "material-table";
+import { Modal, TextField, Button } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 
-// Material Dashboard 2 React example components
-import DataTable from "examples/Tables/DataTable";
+const columns = [
+  {
+    title: "ID",
+    field: "asi_codigo",
+  },
+  {
+    title: "Usuario",
+    field: "usu_codigo",
+  },
+  {
+    title: "Inspeccion",
+    field: "ins_codigo",
+  },
+  {
+    title: "Vehiculo",
+    field: "veh_codigo",
+  },
+  {
+    title: "Empleado",
+    field: "emp_codigo",
+  },
+  {
+    title: "Cliente",
+    field: "cli_codigo",
+  },
+  {
+    title: "Seguro",
+    field: "seg_codigo",
+  },
+  {
+    title: "Kilometraje Salida",
+    field: "asi_kilometraje",
+  },
+  {
+    title: "Fecha Salida",
+    field: "asi_fechasalida",
+  },
+  {
+    title: "Observaciones",
+    field: "asi_observaciones",
+  },
+];
 
-// Data
-import TablaEntradas from "layouts/Reportes/Entradas/TablaEntradas";
-import TextField from "@mui/material/TextField";
-import Autocomplete from "@mui/material/Autocomplete";
+const useStyles = makeStyles((theme) => ({
+  modal: {
+    position: "absolute",
+    width: 400,
+    backgroundColor: theme.palette.background.paper,
+    border: "2px solid #000",
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(2, 4, 3),
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+  },
+  iconos: {
+    cursor: "pointer",
+  },
+  inputMaterial: {
+    width: "100%",
+  },
+}));
 
 function REntradas() {
-  // Top 100 films as rated by IMDb users. http://www.imdb.com/chart/top
-  const top100Films = [
-    { label: "Numero de Placa" },
-    { label: "Tipo de Vehiculo" },
-    { label: "Empleados" },
-    { label: "Kilometraje" },
-    { label: "Combustible consumido" },
-  ];
+  const styles = useStyles();
+  const [data, setData] = useState([]);
+  const [modalbuscar, setModalBuscar] = useState(false);
+  const [asignacionseleccionada, setAsignacionSeleccionada] = useState({
+    fechainicio: 0,
+    fechafin: 0,
+  });
 
-  const { columns, rows } = TablaEntradas();
+  const abrircerrarModalBuscar = () => {
+    setModalBuscar(!modalbuscar);
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setAsignacionSeleccionada((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
+  const peticionpost = async () => {
+    await axios
+      .post(
+        "https://localhost:7235/api/Asignaciones/reporteasignacionesentradas",
+        asignacionseleccionada
+      )
+      .then((response) => {
+        setData(response.data);
+        abrircerrarModalBuscar();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const bodyConsultar = (
+    <div className={styles.modal}>
+      <h3>Consultar Inspeccion</h3>
+      <TextField
+        className={styles.inputMaterial}
+        // label="Fecha"
+        name="fechainicio"
+        type="date"
+        onChange={handleChange}
+        value={asignacionseleccionada && asignacionseleccionada.fechainicio}
+      />
+      <br />
+      <TextField
+        className={styles.inputMaterial}
+        // label="Fecha"
+        name="fechafin"
+        type="date"
+        onChange={handleChange}
+        value={asignacionseleccionada && asignacionseleccionada.fechafin}
+      />
+      <br />
+      <br />
+      <div align="right">
+        <Button color="primary" onClick={() => peticionpost()}>
+          Consultar
+        </Button>
+        <Button onClick={() => abrircerrarModalBuscar()}>Cancelar</Button>
+      </div>
+    </div>
+  );
+
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      <Card>
-        <MDBox pt={6} pb={3}>
-          <Grid container spacing={3} justifyContent="center">
-            <Grid item xs={12} md={4} lg={2}>
-              <MDBox mb={2}>
-                <MDTypography variant="h6">Fecha Inicio:</MDTypography>
-              </MDBox>
-            </Grid>
-            <Grid item xs={12} md={6} lg={3}>
-              <MDBox mb={2}>
-                <MDInput type="date" fullWidth />
-              </MDBox>
-            </Grid>
-            <Grid item xs={12} md={4} lg={2}>
-              <MDBox mb={2}>
-                <MDTypography variant="h6">Fecha Fin:</MDTypography>
-              </MDBox>
-            </Grid>
-            <Grid item xs={12} md={6} lg={3}>
-              <MDBox mb={2}>
-                <MDInput type="date" fullWidth />
-              </MDBox>
-            </Grid>
-          </Grid>
-          <Grid container spacing={3} justifyContent="center">
-            <Grid item xs={12} md={4} lg={2}>
-              <MDBox mb={2}>
-                <MDTypography variant="h6">Tipo de Busqueda:</MDTypography>
-              </MDBox>
-            </Grid>
-            <Grid item xs={12} md={6} lg={3}>
-              <MDBox mb={2}>
-                <Autocomplete
-                  disablePortal
-                  id="combo-box-demo"
-                  options={top100Films}
-                  fullWidth
-                  renderInput={(params) => <TextField {...params} label="Ingresar dato" />}
-                />
-              </MDBox>
-            </Grid>
-            <Grid item xs={12} md={4} lg={2}>
-              <MDBox mb={2}>
-                <MDTypography variant="h6">Valor de Busqueda:</MDTypography>
-              </MDBox>
-            </Grid>
-            <Grid item xs={12} md={6} lg={3}>
-              <MDBox mb={2}>
-                <MDInput type="text" label="Ingresar Valor de Busqueda" fullWidth />
-              </MDBox>
-            </Grid>
-          </Grid>
-          <Grid container spacing={3} justifyContent="center">
-            <Grid item xs={12} md={4} lg={2}>
-              <MDButton variant="gradient" color="success" fullWidth>
-                Consultar
-              </MDButton>
-            </Grid>
-          </Grid>
-        </MDBox>
-      </Card>
       <MDBox pt={6} pb={3}>
         <Grid container spacing={6}>
           <Grid item xs={12}>
             <Card>
-              <MDBox pt={3}>
-                <DataTable
-                  table={{ columns, rows }}
-                  isSorted={false}
-                  entriesPerPage={false}
-                  showTotalEntries={false}
-                  noEndBorder
-                />
-              </MDBox>
+              <div className="App">
+                <br />
+                <Button onClick={() => abrircerrarModalBuscar()}>Consultar Entradas</Button>
+                <br />
+                <br />
+                <MaterialTable columns={columns} data={data} title="Entradas" />
+
+                <Modal open={modalbuscar} onClose={abrircerrarModalBuscar}>
+                  {bodyConsultar}
+                </Modal>
+              </div>
             </Card>
           </Grid>
         </Grid>

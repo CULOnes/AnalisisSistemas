@@ -13,43 +13,47 @@ import { makeStyles } from "@material-ui/core/styles";
 const columns = [
   {
     title: "ID",
-    field: "asi_codigo",
-  },
-  {
-    title: "Usuario",
-    field: "usu_codigo",
-  },
-  {
-    title: "Inspeccion",
-    field: "ins_codigo",
-  },
-  {
-    title: "Vehiculo",
-    field: "veh_codigo",
-  },
-  {
-    title: "Empleado",
     field: "emp_codigo",
   },
   {
-    title: "Cliente",
-    field: "cli_codigo",
+    title: "Puesto",
+    field: "pue_codigo",
   },
   {
-    title: "Seguro",
-    field: "seg_codigo",
+    title: "Nombre",
+    field: "emp_nombre",
   },
   {
-    title: "Kilometraje Salida",
-    field: "asi_kilometraje",
+    title: "Apellido",
+    field: "emp_apellido",
   },
   {
-    title: "Fecha Salida",
-    field: "asi_fechasalida",
+    title: "Direccion",
+    field: "emp_direccion",
   },
   {
-    title: "Observaciones",
-    field: "asi_observaciones",
+    title: "Telefono",
+    field: "emp_telefono",
+  },
+  {
+    title: "DPI",
+    field: "emp_dpi",
+  },
+  {
+    title: "Edad",
+    field: "emp_edad",
+  },
+  {
+    title: "Fecha de Nacimiento",
+    field: "emp_nacimiento",
+  },
+  {
+    title: "Numero de Licencia",
+    field: "emp_nolicencia",
+  },
+  {
+    title: "Tipo de Licencia",
+    field: "emp_tipolicencia",
   },
 ];
 
@@ -73,13 +77,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function RSalidas() {
+function REmpleados() {
   const styles = useStyles();
   const [data, setData] = useState([]);
   const [modalbuscar, setModalBuscar] = useState(false);
-  const [asignacionseleccionada, setAsignacionSeleccionada] = useState({
-    fechainicio: 0,
-    fechafin: 0,
+  const [empleadoseleccionado, setEmpleadoSeleccionado] = useState({
+    tipobusqueda: 0,
+    valor: "",
   });
 
   const abrircerrarModalBuscar = () => {
@@ -88,7 +92,7 @@ function RSalidas() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setAsignacionSeleccionada((prevState) => ({
+    setEmpleadoSeleccionado((prevState) => ({
       ...prevState,
       [name]: value,
     }));
@@ -96,10 +100,7 @@ function RSalidas() {
 
   const peticionpost = async () => {
     await axios
-      .post(
-        "https://localhost:7235/api/Asignaciones/reporteasignacionessalidas",
-        asignacionseleccionada
-      )
+      .post("https://localhost:7235/api/Empleados/reporteempleados", empleadoseleccionado)
       .then((response) => {
         setData(response.data);
         abrircerrarModalBuscar();
@@ -111,23 +112,29 @@ function RSalidas() {
 
   const bodyConsultar = (
     <div className={styles.modal}>
-      <h3>Consultar Inspeccion</h3>
-      <TextField
-        className={styles.inputMaterial}
-        // label="Fecha"
-        name="fechainicio"
-        type="date"
-        onChange={handleChange}
-        value={asignacionseleccionada && asignacionseleccionada.fechainicio}
-      />
+      <h3>Consultar Empleado</h3>
+
+      <select name="tipobusqueda" className="form-control" onChange={handleChange}>
+        <option key="0" value="0">
+          Seleccione el Tipo de Busqueda
+        </option>
+        <option key="1" value="1">
+          DPI
+        </option>
+        <option key="2" value="2">
+          Numero Licencia
+        </option>
+        <option key="3" value="3">
+          Tipo Licencia
+        </option>
+      </select>
+      <br />
       <br />
       <TextField
         className={styles.inputMaterial}
-        // label="Fecha"
-        name="fechafin"
-        type="date"
+        label="Valor"
+        name="valor"
         onChange={handleChange}
-        value={asignacionseleccionada && asignacionseleccionada.fechafin}
       />
       <br />
       <br />
@@ -149,10 +156,10 @@ function RSalidas() {
             <Card>
               <div className="App">
                 <br />
-                <Button onClick={() => abrircerrarModalBuscar()}>Consultar Salidas</Button>
+                <Button onClick={() => abrircerrarModalBuscar()}>Consultar Empleado</Button>
                 <br />
                 <br />
-                <MaterialTable columns={columns} data={data} title="Salidas" />
+                <MaterialTable columns={columns} data={data} title="Empleados" />
 
                 <Modal open={modalbuscar} onClose={abrircerrarModalBuscar}>
                   {bodyConsultar}
@@ -166,4 +173,4 @@ function RSalidas() {
   );
 }
 
-export default RSalidas;
+export default REmpleados;

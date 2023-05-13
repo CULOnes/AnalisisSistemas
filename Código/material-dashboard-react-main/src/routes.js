@@ -56,7 +56,7 @@ import TipoVehiculos from "layouts/Catalogos/TiposdeVehiculos/TipoVehiculos";
 import RMantenimientos from "layouts/Reportes/mantenimiento/Mantenimientos";
 import RSalidas from "layouts/Reportes/salidas/Salidas";
 import Asignaciones from "layouts/Asignacion/Asignacion";
-import RAsignaciones from "layouts/Reportes/Asignaciones/Asignaciones";
+import REmpleados from "layouts/Reportes/empleados/Empleados";
 
 // @mui icons
 import Icon from "@mui/material/Icon";
@@ -225,11 +225,11 @@ const routes = [
   },
   {
     type: "title",
-    name: "RAsignaciones",
-    key: "rasignaciones",
+    name: "REmpleados",
+    key: "rempleados",
     icon: <Icon fontSize="small">format_textdirection_r_to_l</Icon>,
-    route: "/reportes/rasignaciones",
-    component: <RAsignaciones />,
+    route: "/reportes/rempleados",
+    component: <REmpleados />,
   },
   {
     type: "title",
