@@ -57,6 +57,8 @@ import RMantenimientos from "layouts/Reportes/mantenimiento/Mantenimientos";
 import RSalidas from "layouts/Reportes/salidas/Salidas";
 import Asignaciones from "layouts/Asignacion/Asignacion";
 import REmpleados from "layouts/Reportes/empleados/Empleados";
+import RSeguros from "layouts/Reportes/Seguros/Seguros";
+import RClientes from "layouts/Reportes/clientes/Clientes";
 
 // @mui icons
 import Icon from "@mui/material/Icon";
@@ -238,6 +240,22 @@ const routes = [
     icon: <Icon fontSize="small">format_textdirection_r_to_l</Icon>,
     route: "/reportes/repvehiculos",
     component: <RepVehiculos />,
+  },
+  {
+    type: "title",
+    name: "RepSeguros",
+    key: "repseguros",
+    icon: <Icon fontSize="small">format_textdirection_r_to_l</Icon>,
+    route: "/reportes/repseguros",
+    component: <RSeguros />,
+  },
+  {
+    type: "title",
+    name: "RepClientes",
+    key: "clientes",
+    icon: <Icon fontSize="small">format_textdirection_r_to_l</Icon>,
+    route: "/reportes/repclientes",
+    component: <RClientes />,
   },
 ];
 

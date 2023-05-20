@@ -15,47 +15,31 @@ import XLSX from "sheetjs-style";
 const columns = [
   {
     title: "ID",
-    field: "emp_codigo",
-  },
-  {
-    title: "Puesto",
-    field: "pue_codigo",
+    field: "cli_Codigo",
   },
   {
     title: "Nombre",
-    field: "emp_nombre",
+    field: "cli_Nombre",
   },
   {
     title: "Apellido",
-    field: "emp_apellido",
+    field: "cli_Apellido",
+  },
+  {
+    title: "Correo",
+    field: "cli_Correo",
+  },
+  {
+    title: "Celular",
+    field: "cli_TelefonoCelular",
+  },
+  {
+    title: "Telefono Secundario",
+    field: "cli_TelefonoSecundario",
   },
   {
     title: "Direccion",
-    field: "emp_direccion",
-  },
-  {
-    title: "Telefono",
-    field: "emp_telefono",
-  },
-  {
-    title: "DPI",
-    field: "emp_dpi",
-  },
-  {
-    title: "Edad",
-    field: "emp_edad",
-  },
-  {
-    title: "Fecha de Nacimiento",
-    field: "emp_nacimiento",
-  },
-  {
-    title: "Numero de Licencia",
-    field: "emp_nolicencia",
-  },
-  {
-    title: "Tipo de Licencia",
-    field: "emp_tipolicencia",
+    field: "cli_Direccion",
   },
 ];
 
@@ -79,11 +63,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function REmpleados() {
+function RClientes() {
   const styles = useStyles();
   const [data, setData] = useState([]);
   const [modalbuscar, setModalBuscar] = useState(false);
-  const [empleadoseleccionado, setEmpleadoSeleccionado] = useState({
+  const [clienteseleccionado, setClienteSeleccionado] = useState({
     tipobusqueda: 0,
     valor: "",
   });
@@ -93,11 +77,10 @@ function REmpleados() {
       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
     const fileExtension = ".xlsx";
     const ws = XLSX.utils.json_to_sheet(data);
-    console.log("aqui");
-    const wb = { Sheets: { Empleados: ws }, SheetNames: ["Empleados"] };
+    const wb = { Sheets: { Clientes: ws }, SheetNames: ["Clientes"] };
     const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
     const dataex = new Blob([excelBuffer], { type: fileType });
-    FileSaver.saveAs(dataex, `Empleados${fileExtension}`);
+    FileSaver.saveAs(dataex, `Clientes${fileExtension}`);
   };
 
   const abrircerrarModalBuscar = () => {
@@ -106,7 +89,7 @@ function REmpleados() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setEmpleadoSeleccionado((prevState) => ({
+    setClienteSeleccionado((prevState) => ({
       ...prevState,
       [name]: value,
     }));
@@ -114,7 +97,7 @@ function REmpleados() {
 
   const peticionpost = async () => {
     await axios
-      .post("https://localhost:7235/api/Empleados/reporteempleados", empleadoseleccionado)
+      .post("https://localhost:7235/api/Clientes/reporteclientes", clienteseleccionado)
       .then((response) => {
         setData(response.data);
         abrircerrarModalBuscar();
@@ -126,20 +109,17 @@ function REmpleados() {
 
   const bodyConsultar = (
     <div className={styles.modal}>
-      <h3>Consultar Empleado</h3>
+      <h3>Consultar Cliente</h3>
 
       <select name="tipobusqueda" className="form-control" onChange={handleChange}>
         <option key="0" value="0">
           Seleccione el Tipo de Busqueda
         </option>
         <option key="1" value="1">
-          DPI
+          Nombre
         </option>
         <option key="2" value="2">
-          Numero Licencia
-        </option>
-        <option key="3" value="3">
-          Tipo Licencia
+          Apellido
         </option>
       </select>
       <br />
@@ -170,13 +150,13 @@ function REmpleados() {
             <Card>
               <div className="App">
                 <br />
-                <Button onClick={() => abrircerrarModalBuscar()}>Consultar Empleado</Button>
+                <Button onClick={() => abrircerrarModalBuscar()}>Consultar Cliente</Button>
                 <br />
                 <br />
                 <MaterialTable
                   columns={columns}
                   data={data}
-                  title="Empleados"
+                  title="Clientes"
                   actions={[
                     {
                       icon: "edit",
@@ -200,4 +180,4 @@ function REmpleados() {
   );
 }
 
-export default REmpleados;
+export default RClientes;

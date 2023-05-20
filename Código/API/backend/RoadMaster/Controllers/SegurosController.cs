@@ -35,6 +35,35 @@ namespace RoadMaster.Controllers
             }
         }
 
+        //Reporte de Vehiculos
+        [HttpPost("reporteseguros")]
+        public async ValueTask<ActionResult<SegurosResponseDTO>> ReporteSeguros(ReporteSeg seguros)
+        {
+            try
+            {
+                int tipoS = 0;
+                Seguros[]? busqueda = null;
+
+                switch (seguros.tipobusqueda)
+                {
+                    case 1:
+                        tipoS = Int32.Parse(seguros.valor);
+                        busqueda = db.Seguros.Where(x => x.TiS_Codigo == tipoS).ToArray();
+                        break;
+                    case 2:
+                        busqueda = db.Seguros.Where(x => x.Seg_Compañia == seguros.valor).ToArray();
+                        break;
+                    default:
+                        break;
+                }
+
+                return Ok(busqueda);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
         [HttpPut("actualizar")]
         public async ValueTask<ActionResult<SegurosResponseDTO>> Actualizar(SegurosRequestDTO seguros)
@@ -107,5 +136,11 @@ namespace RoadMaster.Controllers
                 return BadRequest(ex.Message);
             }
         }
+    }
+
+    public class ReporteSeg
+    {
+        public int tipobusqueda { get; set; }
+        public string valor { get; set; }
     }
 }

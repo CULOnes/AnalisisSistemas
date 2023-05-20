@@ -35,6 +35,33 @@ namespace RoadMaster.Controllers
             }
         }
 
+        //Reporte de Vehiculos
+        [HttpPost("reporteclientes")]
+        public async ValueTask<ActionResult<ClientesResponseDTO>> ReporteVehiculos(ReporteCli clientes)
+        {
+            try
+            {
+                Clientes[]? busqueda = null;
+
+                switch (clientes.tipobusqueda)
+                {
+                    case 1:
+                        busqueda = db.Clientes.Where(x => x.Cli_Nombre == clientes.valor).ToArray();
+                        break;
+                    case 2:
+                        busqueda = db.Clientes.Where(x => x.Cli_Apellido == clientes.valor).ToArray();
+                        break;
+                    default:
+                        break;
+                }
+
+                return Ok(busqueda);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
         [HttpPut("actualizar")]
         public async ValueTask<ActionResult<ClientesResponseDTO>> Actualizar(ClientesResponseDTO clientes)
@@ -111,5 +138,11 @@ namespace RoadMaster.Controllers
                 return BadRequest(ex.Message);
             }
         }
+    }
+
+    public class ReporteCli
+    {
+        public int tipobusqueda { get; set; }
+        public string valor { get; set; }
     }
 }
