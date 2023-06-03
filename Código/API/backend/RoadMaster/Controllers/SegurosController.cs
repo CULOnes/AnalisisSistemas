@@ -31,7 +31,7 @@ namespace RoadMaster.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Error interno, contacte administrador");
             }
         }
 
@@ -61,7 +61,7 @@ namespace RoadMaster.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Error interno, contacte administrador");
             }
         }
 
@@ -89,7 +89,7 @@ namespace RoadMaster.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Error interno, contacte administrador");
             }
         }
 
@@ -124,7 +124,7 @@ namespace RoadMaster.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Error interno, contacte administrador");
             }
         }
 
@@ -143,7 +143,7 @@ namespace RoadMaster.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Error interno, contacte administrador");
             }
         }
     }

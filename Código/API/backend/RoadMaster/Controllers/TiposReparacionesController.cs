@@ -31,7 +31,7 @@ namespace RoadMaster.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Error interno, contacte administrador");
             }
         }
 
@@ -41,6 +41,16 @@ namespace RoadMaster.Controllers
         {
             try
             {
+
+                if (tiposreparaciones.TiR_Costo < 0)
+                {
+                    return BadRequest("Ingrese un costo mayor o igual a 0");
+                }
+
+                if (tiposreparaciones.TiR_Tiempo < 0)
+                {
+                    return BadRequest("El tiempo no puede ser menor a 0");
+                }
 
                 var tiporeparacion = db.TiposReparaciones.Find(tiposreparaciones.TiR_Codigo);
 
@@ -56,7 +66,7 @@ namespace RoadMaster.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Error interno, contacte administrador");
             }
         }
 
@@ -66,9 +76,15 @@ namespace RoadMaster.Controllers
             try
             {
 
-                //var query = db.TiposReparaciones.ToArray();
+                if (tiposreparaciones.TiR_Costo < 0)
+                {
+                    return BadRequest("Ingrese un costo mayor o igual a 0");
+                }
 
-                //var id = query.Count() + 1;
+                if (tiposreparaciones.TiR_Tiempo < 0)
+                {
+                    return BadRequest("El tiempo no puede ser menor a 0");
+                }
 
                 var tiporeparacion = new TiposReparaciones
                 {
@@ -86,7 +102,7 @@ namespace RoadMaster.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Error interno, contacte administrador");
             }
         }
 
@@ -106,7 +122,7 @@ namespace RoadMaster.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Error interno, contacte administrador");
             }
         }
     }

@@ -9,19 +9,19 @@ namespace RoadMaster.Repositories.Configurations
         public void Configure(EntityTypeBuilder<Asignaciones> builder)
         {
             builder.ToTable("rom_asignaciones");
-            builder.HasKey(x => x.asi_codigo);
+            builder.HasKey(x => x.asi_Codigo);
 
-            builder.Property(x => x.asi_codigo).HasColumnName("asi_codigo");
-            builder.Property(x => x.usu_codigo).HasColumnName("usu_codigo");
-            builder.Property(x => x.ins_codigo).HasColumnName("ins_codigo");
-            builder.Property(x => x.veh_codigo).HasColumnName("veh_codigo");
-            builder.Property(x => x.emp_codigo).HasColumnName("emp_codigo");
-            builder.Property(x => x.cli_codigo).HasColumnName("cli_codigo");
-            builder.Property(x => x.seg_codigo).HasColumnName("seg_codigo");
-            builder.Property(x => x.asi_kilometraje).HasColumnName("asi_kilometraje");
-            builder.Property(x => x.asi_fechasalida).HasColumnName("asi_fechasalida");
-            builder.Property(x => x.asi_fechaentrada).HasColumnName("asi_fechaentrada");
-            builder.Property(x => x.asi_observaciones).HasColumnName("asi_observaciones");
+            builder.Property(x => x.asi_Codigo).HasColumnName("asi_Codigo");
+            builder.Property(x => x.usu_Codigo).HasColumnName("usu_Codigo");
+            builder.Property(x => x.ins_Codigo).HasColumnName("ins_Codigo");
+            builder.Property(x => x.veh_Codigo).HasColumnName("veh_Codigo");
+            builder.Property(x => x.emp_Codigo).HasColumnName("emp_Codigo");
+            builder.Property(x => x.cli_Codigo).HasColumnName("cli_Codigo");
+            builder.Property(x => x.seg_Codigo).HasColumnName("seg_Codigo");
+            builder.Property(x => x.asi_Kilometraje).HasColumnName("asi_Kilometraje");
+            builder.Property(x => x.asi_Fechasalida).HasColumnName("asi_Fechasalida");
+            builder.Property(x => x.asi_Fechaentrada).HasColumnName("asi_Fechaentrada");
+            builder.Property(x => x.asi_Observaciones).HasColumnName("asi_Observaciones");
         }
     }
 }

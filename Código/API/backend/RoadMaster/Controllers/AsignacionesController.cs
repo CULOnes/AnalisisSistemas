@@ -41,7 +41,7 @@ namespace RoadMaster.Controllers
         {
             try
             {
-                var busqueda = db.Asignaciones.Where(x => x.asi_fechaentrada >= asignaciones.fechainicio || x.asi_fechaentrada <= asignaciones.fechafin).ToArray();
+                var busqueda = db.Asignaciones.Where(x => x.asi_Fechaentrada >= asignaciones.fechainicio || x.asi_Fechaentrada <= asignaciones.fechafin).ToArray();
 
                 return Ok(busqueda);
             }
@@ -57,7 +57,7 @@ namespace RoadMaster.Controllers
         {
             try
             {
-                var busqueda = db.Asignaciones.Where(x => x.asi_fechasalida >= asignaciones.fechainicio || x.asi_fechasalida <= asignaciones.fechafin).ToArray();
+                var busqueda = db.Asignaciones.Where(x => x.asi_Fechaentrada >= asignaciones.fechainicio || x.asi_Fechaentrada <= asignaciones.fechafin).ToArray();
 
                 return Ok(busqueda);
             }
@@ -73,18 +73,18 @@ namespace RoadMaster.Controllers
             try
             {
 
-                var asignacion = db.Asignaciones.Find(asignaciones.asi_codigo);
+                var asignacion = db.Asignaciones.Find(asignaciones.asi_Codigo);
 
-                asignacion.usu_codigo = asignaciones.usu_codigo;
-                asignacion.ins_codigo = asignaciones.ins_codigo;
-                asignacion.veh_codigo = asignaciones.veh_codigo;
-                asignacion.emp_codigo = asignaciones.emp_codigo;
-                asignacion.cli_codigo = asignaciones.cli_codigo;
-                asignacion.seg_codigo = asignaciones.seg_codigo;
-                asignacion.asi_kilometraje = asignaciones.asi_kilometraje;
-                asignacion.asi_fechasalida = asignaciones.asi_fechasalida;
-                asignacion.asi_fechaentrada = asignaciones.asi_fechaentrada;
-                asignacion.asi_observaciones = asignaciones.asi_observaciones;
+                asignacion.usu_Codigo = asignaciones.usu_Codigo;
+                asignacion.ins_Codigo = asignaciones.ins_Codigo;
+                asignacion.veh_Codigo = asignaciones.veh_Codigo;
+                asignacion.emp_Codigo = asignaciones.emp_Codigo;
+                asignacion.cli_Codigo = asignaciones.cli_Codigo;
+                asignacion.seg_Codigo = asignaciones.seg_Codigo;
+                asignacion.asi_Kilometraje = asignaciones.asi_Kilometraje;
+                asignacion.asi_Fechasalida = asignaciones.asi_Fechasalida;
+                asignacion.asi_Fechaentrada = asignaciones.asi_Fechaentrada;
+                asignacion.asi_Observaciones = asignaciones.asi_Observaciones;
 
                 db.Entry(asignacion).State = EntityState.Modified;
                 db.SaveChanges();
@@ -104,17 +104,17 @@ namespace RoadMaster.Controllers
 
                 var asignacion = new Asignaciones
                 {
-                    asi_codigo = asignaciones.asi_codigo,
-                    usu_codigo = asignaciones.usu_codigo,
-                    ins_codigo = asignaciones.ins_codigo,
-                    veh_codigo = asignaciones.veh_codigo,
-                    emp_codigo = asignaciones.emp_codigo,
-                    cli_codigo = asignaciones.cli_codigo,
-                    seg_codigo = asignaciones.seg_codigo,
-                    asi_kilometraje = asignaciones.asi_kilometraje,
-                    asi_fechasalida = asignaciones.asi_fechasalida,
-                    asi_fechaentrada = asignaciones.asi_fechaentrada,
-                    asi_observaciones = asignaciones.asi_observaciones
+                    asi_Codigo = asignaciones.asi_Codigo,
+                    usu_Codigo = asignaciones.usu_Codigo,
+                    ins_Codigo = asignaciones.ins_Codigo,
+                    veh_Codigo = asignaciones.veh_Codigo,
+                    emp_Codigo = asignaciones.emp_Codigo,
+                    cli_Codigo = asignaciones.cli_Codigo,
+                    seg_Codigo = asignaciones.seg_Codigo,
+                    asi_Kilometraje = asignaciones.asi_Kilometraje,
+                    asi_Fechasalida = asignaciones.asi_Fechasalida,
+                    asi_Fechaentrada = asignaciones.asi_Fechaentrada,
+                    asi_Observaciones = asignaciones.asi_Observaciones
                 };
 
                 await db.Asignaciones.AddAsync(asignacion);
@@ -133,7 +133,7 @@ namespace RoadMaster.Controllers
             try
             {
 
-                var asignacion = db.Asignaciones.Find(asignaciones.asi_codigo);
+                var asignacion = db.Asignaciones.Find(asignaciones.asi_Codigo);
                 if (asignacion != null)
                 {
                     db.Asignaciones.Remove(asignacion);

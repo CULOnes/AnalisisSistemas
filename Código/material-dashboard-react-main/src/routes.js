@@ -59,6 +59,7 @@ import Asignaciones from "layouts/Asignacion/Asignacion";
 import REmpleados from "layouts/Reportes/empleados/Empleados";
 import RSeguros from "layouts/Reportes/Seguros/Seguros";
 import RClientes from "layouts/Reportes/clientes/RClientes";
+import Puestos from "layouts/Catalogos/Puestos/Puestos";
 
 // @mui icons
 import Icon from "@mui/material/Icon";
@@ -192,6 +193,14 @@ const routes = [
     icon: <Icon fontSize="small">format_textdirection_r_to_l</Icon>,
     route: "/catalogos/usuarios",
     component: <Usuarios />,
+  },
+  {
+    type: "title",
+    name: "Puestos",
+    key: "puestos",
+    icon: <Icon fontSize="small">format_textdirection_r_to_l</Icon>,
+    route: "/catalogos/puestos",
+    component: <Puestos />,
   },
   {
     type: "title",

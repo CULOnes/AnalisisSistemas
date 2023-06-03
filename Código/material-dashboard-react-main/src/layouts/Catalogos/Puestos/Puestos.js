@@ -18,15 +18,15 @@ import MDButton from "components/MDButton";
 const columns = [
   {
     title: "ID",
-    field: "tiS_Codigo",
+    field: "pue_Codigo",
   },
   {
     title: "Nombre",
-    field: "tiS_Nombre",
+    field: "pue_Nombre",
   },
   {
     title: "Descripcion",
-    field: "tiS_Descripcion",
+    field: "pue_Descripcion",
   },
 ];
 
@@ -50,17 +50,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function TiposSeguros() {
+function Puestos() {
   const styles = useStyles();
   const [data, setData] = useState([]);
   const [modalinsertar, setModalInsertar] = useState(false);
   const [modaleditar, setModalEditar] = useState(false);
   const [modaleliminar, setModalEliminar] = useState(false);
   const [showComponent, setShowComponent] = useState(false);
-  const [tiposeguroseleccionado, setTipoSeguroSeleccionado] = useState({
-    tiS_Codigo: 0,
-    tiS_Nombre: "",
-    tiS_Descripcion: "",
+  const [puestoseleccionado, setPuestoSeleccionado] = useState({
+    pue_Codigo: 0,
+    pue_Nombre: "",
+    pue_Descripcion: "",
   });
 
   const abrircerrarModalInsertar = () => {
@@ -91,8 +91,8 @@ function TiposSeguros() {
     setModalEliminar(!modaleliminar);
   };
 
-  const seleccionarTipoSeguro = (tiposeguro, caso) => {
-    setTipoSeguroSeleccionado(tiposeguro);
+  const seleccionarPuesto = (puesto, caso) => {
+    setPuestoSeleccionado(puesto);
     if (caso === "Editar") {
       abrircerrarModalEditar();
     } else {
@@ -102,7 +102,7 @@ function TiposSeguros() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setTipoSeguroSeleccionado((prevState) => ({
+    setPuestoSeleccionado((prevState) => ({
       ...prevState,
       [name]: value,
     }));
@@ -110,7 +110,7 @@ function TiposSeguros() {
 
   const peticionpost = async () => {
     Swal.showLoading();
-    if (tiposeguroseleccionado.tiS_Nombre === "" || tiposeguroseleccionado.tiS_Descripcion === "") {
+    if (puestoseleccionado.pue_Nombre === "" || puestoseleccionado.pue_Descripcion === "") {
       abrircerrarModalInsertar();
       Swal.close();
       Swal.fire({
@@ -121,14 +121,14 @@ function TiposSeguros() {
     } else {
       abrircerrarModalInsertar();
       await axios
-        .post("https://localhost:7235/api/TiposSeguros/registrotiposeguro", tiposeguroseleccionado)
+        .post("https://localhost:7235/api/Puestos/registropuestos", puestoseleccionado)
         .then((response) => {
           setData(data.concat(response.data));
           Swal.close();
           Swal.fire({
             icon: "success",
             title: "",
-            text: "Tipo de Seguro creado exitosamente",
+            text: "Puesto creado exitosamente",
             timer: 2500,
           });
         })
@@ -145,7 +145,7 @@ function TiposSeguros() {
   };
 
   const peticionput = async () => {
-    if (tiposeguroseleccionado.tiS_Nombre === "" || tiposeguroseleccionado.tiS_Descripcion === "") {
+    if (puestoseleccionado.pue_Nombre === "" || puestoseleccionado.pue_Descripcion === "") {
       abrircerrarModalEditar();
       Swal.close();
       Swal.fire({
@@ -157,17 +157,17 @@ function TiposSeguros() {
       abrircerrarModalEditar();
       Swal.showLoading();
       await axios
-        .put("https://localhost:7235/api/TiposSeguros/actualizar", tiposeguroseleccionado)
+        .put("https://localhost:7235/api/Puestos/actualizar", puestoseleccionado)
         .then(() => {
           const copiaArray = [...data];
           const indice = copiaArray.findIndex(
-            (elemento) => elemento.tiS_Codigo === tiposeguroseleccionado.tiS_Codigo
+            (elemento) => elemento.pue_Codigo === puestoseleccionado.pue_Codigo
           );
           if (indice !== -1) {
             copiaArray[indice] = {
               ...copiaArray[indice],
-              tiS_Nombre: tiposeguroseleccionado.tiS_Nombre,
-              tiS_Descripcion: tiposeguroseleccionado.tiS_Descripcion,
+              pue_Nombre: puestoseleccionado.pue_Nombre,
+              pue_Descripcion: puestoseleccionado.pue_Descripcion,
             };
           }
           setData(copiaArray);
@@ -175,7 +175,7 @@ function TiposSeguros() {
           Swal.fire({
             icon: "success",
             title: "",
-            text: "Tipo Seguro actualizado exitosamente",
+            text: "Puesto actualizado exitosamente",
             timer: 2500,
           });
         })
@@ -195,16 +195,14 @@ function TiposSeguros() {
     abrircerrarModalEliminar();
     Swal.showLoading();
     await axios
-      .put("https://localhost:7235/api/TiposSeguros/eliminar", tiposeguroseleccionado)
+      .put("https://localhost:7235/api/Puestos/eliminar", puestoseleccionado)
       .then(() => {
-        setData(
-          data.filter((tiposeguro) => tiposeguro.tiS_Codigo !== tiposeguroseleccionado.tiS_Codigo)
-        );
+        setData(data.filter((puesto) => puesto.pue_Codigo !== puestoseleccionado.pue_Codigo));
         Swal.close();
         Swal.fire({
           icon: "success",
           title: "",
-          text: "Tipo Seguros eliminado exitosamente",
+          text: "Puesto eliminado exitosamente",
           timer: 2500,
         });
       })
@@ -222,7 +220,7 @@ function TiposSeguros() {
   const peticionget = async () => {
     Swal.showLoading();
     await axios
-      .get("https://localhost:7235/api/TiposSeguros/tiposseguros")
+      .get("https://localhost:7235/api/Puestos/puestos")
       .then((response) => {
         setData(response.data);
         Swal.close();
@@ -251,7 +249,7 @@ function TiposSeguros() {
 
   const bodyInsertar = (
     <div className={styles.modal}>
-      <MDTypography variant="h3"> Agregar Nuevo Tipo de Seguro </MDTypography>
+      <MDTypography variant="h3"> Agregar Nuevo Puesto </MDTypography>
       <Divider sx={{ marginTop: 1 }} light={false} />
       <MDBox pt={2} pb={3}>
         <Grid container spacing={3} justifyContent="center">
@@ -262,7 +260,7 @@ function TiposSeguros() {
           </Grid>
           <Grid item xs={12} md={6} lg={9}>
             <MDBox mb={2}>
-              <MDInput type="text" label="Nombre" name="tiS_Nombre" onChange={handleChange} />
+              <MDInput type="text" label="Nombre" name="pue_Nombre" onChange={handleChange} />
             </MDBox>
           </Grid>
         </Grid>
@@ -277,10 +275,10 @@ function TiposSeguros() {
               <MDInput
                 type="text"
                 label="Desccripcion"
-                name="tiS_Descripcion"
+                name="pue_Descripcion"
+                onChange={handleChange}
                 multiline
                 rows={3}
-                onChange={handleChange}
               />
             </MDBox>
           </Grid>
@@ -308,7 +306,7 @@ function TiposSeguros() {
 
   const bodyEditar = (
     <div className={styles.modal}>
-      <MDTypography variant="h3"> Editar Tipo de Seguro </MDTypography>
+      <MDTypography variant="h3"> Editar Puesto </MDTypography>
       <Divider sx={{ marginTop: 1 }} light={false} />
       <MDBox pt={2} pb={3}>
         <Grid container spacing={3} justifyContent="center">
@@ -322,9 +320,9 @@ function TiposSeguros() {
               <MDInput
                 type="text"
                 label="Nombre"
-                name="tiS_Nombre"
+                name="pue_Nombre"
                 onChange={handleChange}
-                value={tiposeguroseleccionado && tiposeguroseleccionado.tiS_Nombre}
+                value={puestoseleccionado && puestoseleccionado.pue_Nombre}
               />
             </MDBox>
           </Grid>
@@ -340,11 +338,11 @@ function TiposSeguros() {
               <MDInput
                 type="text"
                 label="Desccripcion"
-                name="tiS_Descripcion"
+                name="pue_Descripcion"
+                onChange={handleChange}
                 multiline
                 rows={3}
-                onChange={handleChange}
-                value={tiposeguroseleccionado && tiposeguroseleccionado.tiS_Descripcion}
+                value={puestoseleccionado && puestoseleccionado.pue_Descripcion}
               />
             </MDBox>
           </Grid>
@@ -373,8 +371,8 @@ function TiposSeguros() {
   const bodyEliminar = (
     <div className={styles.modal}>
       <p>
-        Deseas Eliminar el Tipo de Seguro
-        <b> {tiposeguroseleccionado && tiposeguroseleccionado.tiS_Nombre}</b>?
+        Deseas Eliminar el Puesto
+        <b> {puestoseleccionado && puestoseleccionado.pue_Nombre}</b>?
       </p>
       <div align="right">
         <MDButton color="secondary" onClick={() => peticiondelete()}>
@@ -399,24 +397,24 @@ function TiposSeguros() {
                   color="success"
                   onClick={() => abrircerrarModalInsertar()}
                 >
-                  Insertar Tipo de Seguro
+                  Insertar Puesto
                 </MDButton>
                 <br />
                 <br />
                 <MaterialTable
                   columns={columns}
                   data={data}
-                  title="Tipos de Seguros"
+                  title="Puesto"
                   actions={[
                     {
                       icon: "edit",
-                      tooltip: "Editar Tipo Seguro",
-                      onClick: (event, rowData) => seleccionarTipoSeguro(rowData, "Editar"),
+                      tooltip: "Editar Puesto",
+                      onClick: (event, rowData) => seleccionarPuesto(rowData, "Editar"),
                     },
                     {
                       icon: "delete",
-                      tooltip: "Eliminar Tipo Seguro",
-                      onClick: (event, rowData) => seleccionarTipoSeguro(rowData, "Eliminar"),
+                      tooltip: "Eliminar Puesto",
+                      onClick: (event, rowData) => seleccionarPuesto(rowData, "Eliminar"),
                     },
                   ]}
                   options={{
@@ -449,4 +447,4 @@ function TiposSeguros() {
   );
 }
 
-export default TiposSeguros;
+export default Puestos;

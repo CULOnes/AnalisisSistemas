@@ -31,7 +31,7 @@ namespace RoadMaster.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Error interno, contacte administrador");
             }
         }
 
@@ -62,7 +62,7 @@ namespace RoadMaster.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Error interno, contacte administrador");
             }
         }
 
@@ -113,7 +113,7 @@ namespace RoadMaster.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Error interno, contacte administrador");
             }
         }
 
@@ -140,7 +140,7 @@ namespace RoadMaster.Controllers
                     return BadRequest("Ingrese una edad valida");
                 }
 
-                if(empleados.emp_Nacimiento > fechamenor)
+                if (empleados.emp_Nacimiento > fechamenor)
                 {
                     return BadRequest("La fecha de nacimiento no es valida");
                 }
@@ -166,7 +166,7 @@ namespace RoadMaster.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Error interno, contacte administrador");
             }
         }
 
@@ -186,7 +186,7 @@ namespace RoadMaster.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Error interno, contacte administrador");
             }
         }
     }

@@ -31,7 +31,7 @@ namespace RoadMaster.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Error interno, contacte administrador");
             }
         }
 
@@ -47,7 +47,7 @@ namespace RoadMaster.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Error interno, contacte administrador");
             }
         }
 
@@ -56,6 +56,15 @@ namespace RoadMaster.Controllers
         {
             try
             {
+                if (inspecciones.Ins_KilometrajeActual < 0)
+                {
+                    return BadRequest("Kilometraje no puede ser menor a 0");
+                }
+
+                if (inspecciones.Ins_Fecha > DateTime.Now)
+                {
+                    return BadRequest("La fecha no puede ser mayor a hoy");
+                }
 
                 var inspeccion = db.Inspecciones.Find(inspecciones.Ins_Codigo);
 
@@ -73,7 +82,7 @@ namespace RoadMaster.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Error interno, contacte administrador");
             }
         }
 
@@ -83,11 +92,15 @@ namespace RoadMaster.Controllers
             try
             {
 
-                //var query = db.Inspecciones.ToArray();
+                if (inspecciones.Ins_KilometrajeActual < 0)
+                {
+                    return BadRequest("Kilometraje no puede ser menor a 0");
+                }
 
-                //var id = query.Count() + 1;
-
-                //var date = DateTime.Now;
+                if (inspecciones.Ins_Fecha > DateTime.Now)
+                {
+                    return BadRequest("La fecha no puede ser mayor a hoy");
+                }
 
                 var inspeccion = new Inspecciones
                 {
@@ -107,7 +120,7 @@ namespace RoadMaster.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Error interno, contacte administrador");
             }
         }
 
@@ -127,7 +140,7 @@ namespace RoadMaster.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Error interno, contacte administrador");
             }
         }
     }

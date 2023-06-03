@@ -7,8 +7,13 @@ import axios from "axios";
 import MDBox from "components/MDBox";
 import "styles/styles.css";
 import MaterialTable from "material-table";
-import { Modal, TextField, Button } from "@material-ui/core";
+import { Modal } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import Swal from "sweetalert2";
+import MDInput from "components/MDInput";
+import MDTypography from "components/MDTypography";
+import Divider from "@mui/material/Divider";
+import MDButton from "components/MDButton";
 
 const columns = [
   {
@@ -35,10 +40,10 @@ const columns = [
 
 const useStyles = makeStyles((theme) => ({
   modal: {
+    borderRadius: "5%",
     position: "absolute",
-    width: 400,
+    width: 600,
     backgroundColor: theme.palette.background.paper,
-    border: "2px solid #000",
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
     top: "50%",
@@ -49,7 +54,7 @@ const useStyles = makeStyles((theme) => ({
     cursor: "pointer",
   },
   inputMaterial: {
-    width: "100%",
+    marginTop: "15px",
   },
 }));
 
@@ -59,12 +64,13 @@ function TipoVehiculos() {
   const [modalinsertar, setModalInsertar] = useState(false);
   const [modaleditar, setModalEditar] = useState(false);
   const [modaleliminar, setModalEliminar] = useState(false);
+  const [showComponent, setShowComponent] = useState(false);
   const [tipovehiculoseleccionado, setTipoVehiculoSeleccionado] = useState({
     tiV_Codigo: 0,
-    TiV_Nombre: "",
-    TiV_Capacidad: "",
-    TiV_Tonelaje: "",
-    TiV_Descripcion: "",
+    tiV_Nombre: "",
+    tiV_Capacidad: "",
+    tiV_Tonelaje: "",
+    tiV_Descripcion: "",
   });
 
   const abrircerrarModalInsertar = () => {
@@ -76,6 +82,22 @@ function TipoVehiculos() {
   };
 
   const abrircerrarModalEliminar = () => {
+    // Swal.fire({
+    //   title: "",
+    //   html: `Estas seguro que deseas eliminar <b>${
+    //     clienteseleccionado && clienteseleccionado.cli_Nombre
+    //   }</b>`,
+    //   icon: "warning",
+    //   showCancelButton: true,
+    //   cancelButtonText: "Cancelar",
+    //   confirmButtonColor: "#3085d6",
+    //   cancelButtonColor: "#d33",
+    //   confirmButtonText: "Eliminar",
+    // }).then((result) => {
+    //   if (result.isConfirmed) {
+    //     peticiondelete();
+    //   }
+    // });
     setModalEliminar(!modaleliminar);
   };
 
@@ -97,46 +119,107 @@ function TipoVehiculos() {
   };
 
   const peticionpost = async () => {
-    await axios
-      .post(
-        "https://localhost:7235/api/TiposVehiculos/registrotiposvehiculos",
-        tipovehiculoseleccionado
-      )
-      .then((response) => {
-        setData(data.concat(response.data));
-        abrircerrarModalInsertar();
-      })
-      .catch((error) => {
-        console.log(error);
+    console.log(tipovehiculoseleccionado);
+    Swal.showLoading();
+    if (
+      tipovehiculoseleccionado.tiV_Nombre === "" ||
+      tipovehiculoseleccionado.tiV_Capacidad === "" ||
+      tipovehiculoseleccionado.tiV_Tonelaje === "" ||
+      tipovehiculoseleccionado.tiV_Descripcion === ""
+    ) {
+      abrircerrarModalInsertar();
+      Swal.close();
+      Swal.fire({
+        icon: "info",
+        title: "",
+        html: "Debe de llenar <b>todos</b> los campos",
       });
+    } else {
+      abrircerrarModalInsertar();
+      await axios
+        .post(
+          "https://localhost:7235/api/TiposVehiculos/registrotiposvehiculos",
+          tipovehiculoseleccionado
+        )
+        .then((response) => {
+          setData(data.concat(response.data));
+          Swal.close();
+          Swal.fire({
+            icon: "success",
+            title: "",
+            text: "Tipo Vehiculo creado exitosamente",
+            timer: 2500,
+          });
+        })
+        .catch((error) => {
+          Swal.close();
+          Swal.fire({
+            icon: "error",
+            title: "",
+            text: error.response.data,
+            timer: 2500,
+          });
+        });
+    }
   };
 
   const peticionput = async () => {
-    await axios
-      .put("https://localhost:7235/api/TiposVehiculos/actualizar", tipovehiculoseleccionado)
-      .then(() => {
-        const copiaArray = [...data];
-        const indice = copiaArray.findIndex(
-          (elemento) => elemento.tiV_Codigo === tipovehiculoseleccionado.tiV_Codigo
-        );
-        if (indice !== -1) {
-          copiaArray[indice] = {
-            ...copiaArray[indice],
-            tiV_Nombre: tipovehiculoseleccionado.tiV_Nombre,
-            tiV_Capacidad: tipovehiculoseleccionado.tiV_Capacidad,
-            tiV_Tonelaje: tipovehiculoseleccionado.tiV_Tonelaje,
-            tiV_Descripcion: tipovehiculoseleccionado.tiV_Descripcion,
-          };
-        }
-        setData(copiaArray);
-        abrircerrarModalEditar();
-      })
-      .catch((error) => {
-        console.log(error);
+    if (
+      tipovehiculoseleccionado.tiV_Nombre === "" ||
+      tipovehiculoseleccionado.tiV_Capacidad === "" ||
+      tipovehiculoseleccionado.tiV_Tonelaje === "" ||
+      tipovehiculoseleccionado.tiV_Descripcion === ""
+    ) {
+      abrircerrarModalEditar();
+      Swal.close();
+      Swal.fire({
+        icon: "info",
+        title: "",
+        html: "Debe de llenar <b>todos</b> los campos",
       });
+    } else {
+      abrircerrarModalEditar();
+      Swal.showLoading();
+      await axios
+        .put("https://localhost:7235/api/TiposVehiculos/actualizar", tipovehiculoseleccionado)
+        .then(() => {
+          const copiaArray = [...data];
+          const indice = copiaArray.findIndex(
+            (elemento) => elemento.tiV_Codigo === tipovehiculoseleccionado.tiV_Codigo
+          );
+          if (indice !== -1) {
+            copiaArray[indice] = {
+              ...copiaArray[indice],
+              tiV_Nombre: tipovehiculoseleccionado.tiV_Nombre,
+              tiV_Capacidad: tipovehiculoseleccionado.tiV_Capacidad,
+              tiV_Tonelaje: tipovehiculoseleccionado.tiV_Tonelaje,
+              tiV_Descripcion: tipovehiculoseleccionado.tiV_Descripcion,
+            };
+          }
+          setData(copiaArray);
+          Swal.close();
+          Swal.fire({
+            icon: "success",
+            title: "",
+            text: "Tipo Vehiculo actualizado exitosamente",
+            timer: 2500,
+          });
+        })
+        .catch((error) => {
+          Swal.close();
+          Swal.fire({
+            icon: "error",
+            title: "",
+            text: error.response.data,
+            timer: 2500,
+          });
+        });
+    }
   };
 
   const peticiondelete = async () => {
+    abrircerrarModalEliminar();
+    Swal.showLoading();
     await axios
       .put("https://localhost:7235/api/TiposVehiculos/eliminar", tipovehiculoseleccionado)
       .then(() => {
@@ -145,112 +228,233 @@ function TipoVehiculos() {
             (tipovehiculo) => tipovehiculo.tiV_Codigo !== tipovehiculoseleccionado.tiV_Codigo
           )
         );
-        abrircerrarModalEliminar();
+        Swal.close();
+        Swal.fire({
+          icon: "success",
+          title: "",
+          text: "Tipo Vehiculo eliminado exitosamente",
+          timer: 2500,
+        });
       })
       .catch((error) => {
-        console.log(error);
+        Swal.close();
+        Swal.fire({
+          icon: "error",
+          title: "",
+          text: error.response.data,
+          timer: 2500,
+        });
       });
   };
 
   const peticionget = async () => {
+    Swal.showLoading();
     await axios
       .get("https://localhost:7235/api/TiposVehiculos/tiposvehiculos")
       .then((response) => {
         setData(response.data);
+        Swal.close();
       })
       .catch((error) => {
-        console.log(error);
+        Swal.close();
+        Swal.fire({
+          icon: "error",
+          title: "",
+          text: error.response.data,
+          timer: 2500,
+        });
       });
   };
 
   useEffect(() => {
     peticionget();
+    setTimeout(() => {
+      setShowComponent(true);
+    }, 100);
   }, []);
+
+  if (!showComponent) {
+    return null;
+  }
 
   const bodyInsertar = (
     <div className={styles.modal}>
-      <h3>Agregar Nuevo Tipo Vehiculo</h3>
-      <TextField
-        className={styles.inputMaterial}
-        label="Nombre"
-        name="tiV_Nombre"
-        onChange={handleChange}
-      />
-      <br />
-      <TextField
-        className={styles.inputMaterial}
-        label="Capacidad"
-        name="tiV_Capacidad"
-        onChange={handleChange}
-      />
-      <br />
-      <TextField
-        className={styles.inputMaterial}
-        label="Tonelaje"
-        name="tiV_Tonelaje"
-        type="number"
-        onChange={handleChange}
-      />
-      <br />
-      <TextField
-        className={styles.inputMaterial}
-        label="Descripcion"
-        name="tiV_Descripcion"
-        onChange={handleChange}
-      />
-      <br />
-      <br />
-      <div align="right">
-        <Button color="primary" onClick={() => peticionpost()}>
-          Insertar
-        </Button>
-        <Button onClick={() => abrircerrarModalInsertar()}>Cancelar</Button>
-      </div>
+      <MDTypography variant="h3"> Agregar Nuevo Tipo Vehiculo </MDTypography>
+      <Divider sx={{ marginTop: 1 }} light={false} />
+      <MDBox pt={2} pb={3}>
+        <Grid container spacing={3} justifyContent="center">
+          <Grid item xs={12} md={4} lg={3}>
+            <MDBox mb={2}>
+              <MDTypography variant="h6"> Nombre: </MDTypography>
+            </MDBox>
+          </Grid>
+          <Grid item xs={12} md={6} lg={9}>
+            <MDBox mb={2}>
+              <MDInput type="text" label="Nombre" name="tiV_Nombre" onChange={handleChange} />
+            </MDBox>
+          </Grid>
+        </Grid>
+        <Grid container spacing={3} justifyContent="center">
+          <Grid item xs={12} md={4} lg={3}>
+            <MDBox mb={2}>
+              <MDTypography variant="h6"> Capacidad: </MDTypography>
+            </MDBox>
+          </Grid>
+          <Grid item xs={12} md={6} lg={9}>
+            <MDBox mb={2}>
+              <MDInput type="text" label="capacidad" name="tiV_Capacidad" onChange={handleChange} />
+            </MDBox>
+          </Grid>
+        </Grid>
+        <Grid container spacing={3} justifyContent="center">
+          <Grid item xs={12} md={4} lg={3}>
+            <MDBox mb={2}>
+              <MDTypography variant="h6"> Tonelaje: </MDTypography>
+            </MDBox>
+          </Grid>
+          <Grid item xs={12} md={6} lg={9}>
+            <MDBox mb={2}>
+              <MDInput label="Tonelaje" name="tiV_Tonelaje" type="text" onChange={handleChange} />
+            </MDBox>
+          </Grid>
+        </Grid>
+        <Grid container spacing={3} justifyContent="center">
+          <Grid item xs={12} md={4} lg={3}>
+            <MDBox mb={2}>
+              <MDTypography variant="h6"> Descripcion: </MDTypography>
+            </MDBox>
+          </Grid>
+          <Grid item xs={12} md={6} lg={9}>
+            <MDBox mb={2}>
+              <MDInput
+                label="Descripcion"
+                name="tiV_Descripcion"
+                type="number"
+                multiline
+                rows={3}
+                onChange={handleChange}
+              />
+            </MDBox>
+          </Grid>
+        </Grid>
+        <Grid container spacing={3} justifyContent="center">
+          <Grid item xs={12} md={4} lg={3}>
+            <MDButton variant="gradient" color="info" fullWidth onClick={() => peticionpost()}>
+              Insertar
+            </MDButton>
+          </Grid>
+          <Grid item xs={12} md={4} lg={3}>
+            <MDButton
+              variant="gradient"
+              color="light"
+              fullWidth
+              onClick={() => abrircerrarModalInsertar()}
+            >
+              Cancelar
+            </MDButton>
+          </Grid>
+        </Grid>
+      </MDBox>
     </div>
   );
 
   const bodyEditar = (
     <div className={styles.modal}>
-      <h3>Editar Tipo Vehiculo</h3>
-      <TextField
-        className={styles.inputMaterial}
-        label="Nombre"
-        name="tiV_Nombre"
-        onChange={handleChange}
-        value={tipovehiculoseleccionado && tipovehiculoseleccionado.tiV_Nombre}
-      />
-      <br />
-      <TextField
-        className={styles.inputMaterial}
-        label="Capacidad"
-        name="tiV_Capacidad"
-        onChange={handleChange}
-        value={tipovehiculoseleccionado && tipovehiculoseleccionado.tiV_Capacidad}
-      />
-      <br />
-      <TextField
-        className={styles.inputMaterial}
-        label="Tonelaje"
-        name="tiV_Tonelaje"
-        onChange={handleChange}
-        value={tipovehiculoseleccionado && tipovehiculoseleccionado.tiV_Tonelaje}
-      />
-      <br />
-      <TextField
-        className={styles.inputMaterial}
-        label="Descripcion"
-        name="tiV_Descripcion"
-        onChange={handleChange}
-        value={tipovehiculoseleccionado && tipovehiculoseleccionado.tiV_Descripcion}
-      />
-      <br />
-      <br />
-      <div align="right">
-        <Button color="primary" onClick={() => peticionput()}>
-          Editar
-        </Button>
-        <Button onClick={() => abrircerrarModalEditar()}>Cancelar</Button>
-      </div>
+      <MDTypography variant="h3"> Editar Tipo Vehiculo </MDTypography>
+      <Divider sx={{ marginTop: 1 }} light={false} />
+      <MDBox pt={2} pb={3}>
+        <Grid container spacing={3} justifyContent="center">
+          <Grid item xs={12} md={4} lg={3}>
+            <MDBox mb={2}>
+              <MDTypography variant="h6"> Nombre: </MDTypography>
+            </MDBox>
+          </Grid>
+          <Grid item xs={12} md={6} lg={9}>
+            <MDBox mb={2}>
+              <MDInput
+                type="text"
+                label="Nombre"
+                name="tiV_Nombre"
+                onChange={handleChange}
+                value={tipovehiculoseleccionado && tipovehiculoseleccionado.tiV_Nombre}
+              />
+            </MDBox>
+          </Grid>
+        </Grid>
+        <Grid container spacing={3} justifyContent="center">
+          <Grid item xs={12} md={4} lg={3}>
+            <MDBox mb={2}>
+              <MDTypography variant="h6"> Capacidad: </MDTypography>
+            </MDBox>
+          </Grid>
+          <Grid item xs={12} md={6} lg={9}>
+            <MDBox mb={2}>
+              <MDInput
+                type="text"
+                label="capacidad"
+                name="tiV_Capacidad"
+                onChange={handleChange}
+                value={tipovehiculoseleccionado && tipovehiculoseleccionado.tiV_Capacidad}
+              />
+            </MDBox>
+          </Grid>
+        </Grid>
+        <Grid container spacing={3} justifyContent="center">
+          <Grid item xs={12} md={4} lg={3}>
+            <MDBox mb={2}>
+              <MDTypography variant="h6"> Tonelaje: </MDTypography>
+            </MDBox>
+          </Grid>
+          <Grid item xs={12} md={6} lg={9}>
+            <MDBox mb={2}>
+              <MDInput
+                label="Tonelaje"
+                name="tiV_Tonelaje"
+                type="text"
+                onChange={handleChange}
+                value={tipovehiculoseleccionado && tipovehiculoseleccionado.tiV_Tonelaje}
+              />
+            </MDBox>
+          </Grid>
+        </Grid>
+        <Grid container spacing={3} justifyContent="center">
+          <Grid item xs={12} md={4} lg={3}>
+            <MDBox mb={2}>
+              <MDTypography variant="h6"> Descripcion: </MDTypography>
+            </MDBox>
+          </Grid>
+          <Grid item xs={12} md={6} lg={9}>
+            <MDBox mb={2}>
+              <MDInput
+                label="Descripcion"
+                name="tiV_Descripcion"
+                type="number"
+                multiline
+                rows={3}
+                onChange={handleChange}
+                value={tipovehiculoseleccionado && tipovehiculoseleccionado.tiV_Descripcion}
+              />
+            </MDBox>
+          </Grid>
+        </Grid>
+        <Grid container spacing={3} justifyContent="center">
+          <Grid item xs={12} md={4} lg={3}>
+            <MDButton variant="gradient" color="info" fullWidth onClick={() => peticionput()}>
+              Actualizar
+            </MDButton>
+          </Grid>
+          <Grid item xs={12} md={4} lg={3}>
+            <MDButton
+              variant="gradient"
+              color="light"
+              fullWidth
+              onClick={() => abrircerrarModalEditar()}
+            >
+              Cancelar
+            </MDButton>
+          </Grid>
+        </Grid>
+      </MDBox>
     </div>
   );
 
@@ -261,10 +465,10 @@ function TipoVehiculos() {
         <b> {tipovehiculoseleccionado && tipovehiculoseleccionado.tiV_Nombre}</b>?
       </p>
       <div align="right">
-        <Button color="secondary" onClick={() => peticiondelete()}>
+        <MDButton color="secondary" onClick={() => peticiondelete()}>
           Si
-        </Button>
-        <Button onClick={() => abrircerrarModalEliminar()}>No</Button>
+        </MDButton>
+        <MDButton onClick={() => abrircerrarModalEliminar()}>No</MDButton>
       </div>
     </div>
   );
@@ -278,9 +482,13 @@ function TipoVehiculos() {
             <Card>
               <div className="App">
                 <br />
-                <Button onClick={() => abrircerrarModalInsertar()}>
-                  Insertar Tipo de Vehiculo
-                </Button>
+                <MDButton
+                  variant="gradient"
+                  color="success"
+                  onClick={() => abrircerrarModalInsertar()}
+                >
+                  Insertar Tipo Vehiculo
+                </MDButton>
                 <br />
                 <br />
                 <MaterialTable
@@ -290,12 +498,12 @@ function TipoVehiculos() {
                   actions={[
                     {
                       icon: "edit",
-                      tooltip: "Editar Tipo de Vehiculo",
+                      tooltip: "Editar Tipo Vehiculo",
                       onClick: (event, rowData) => seleccionarTipoVehiculo(rowData, "Editar"),
                     },
                     {
                       icon: "delete",
-                      tooltip: "Eliminar Tipo de Vehiculo",
+                      tooltip: "Eliminar Tipo Vehiculo",
                       onClick: (event, rowData) => seleccionarTipoVehiculo(rowData, "Eliminar"),
                     },
                   ]}
