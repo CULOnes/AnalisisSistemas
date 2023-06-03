@@ -9,47 +9,50 @@ import "styles/styles.css";
 import MaterialTable from "material-table";
 import { Modal, TextField, Button } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import FileSaver from "file-saver";
+import XLSX from "sheetjs-style";
+import Swal from "sweetalert2";
 
 const columns = [
   {
     title: "ID",
-    field: "asi_codigo",
+    field: "asi_Codigo",
   },
   {
     title: "Usuario",
-    field: "usu_codigo",
+    field: "usu_Codigo",
   },
   {
     title: "Inspeccion",
-    field: "ins_codigo",
+    field: "ins_Codigo",
   },
   {
     title: "Vehiculo",
-    field: "veh_codigo",
+    field: "veh_Codigo",
   },
   {
     title: "Empleado",
-    field: "emp_codigo",
+    field: "emp_Codigo",
   },
   {
     title: "Cliente",
-    field: "cli_codigo",
+    field: "cli_Codigo",
   },
   {
     title: "Seguro",
-    field: "seg_codigo",
+    field: "seg_Codigo",
   },
   {
     title: "Kilometraje Salida",
-    field: "asi_kilometraje",
+    field: "asi_Kilometraje",
   },
   {
     title: "Fecha Salida",
-    field: "asi_fechasalida",
+    field: "asi_Fechasalida",
   },
   {
     title: "Observaciones",
-    field: "asi_observaciones",
+    field: "asi_Observaciones",
   },
 ];
 
@@ -81,6 +84,26 @@ function REntradas() {
     fechainicio: 0,
     fechafin: 0,
   });
+
+  const exporttoExcel = async () => {
+    if (data.length === 0) {
+      Swal.fire({
+        icon: "info",
+        title: "",
+        text: "Debe de generar un reporte primero",
+      });
+    } else {
+      const fileType =
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
+      const fileExtension = ".xlsx";
+      const ws = XLSX.utils.json_to_sheet(data);
+      console.log("aqui");
+      const wb = { Sheets: { Entradas: ws }, SheetNames: ["Entradas"] };
+      const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+      const dataex = new Blob([excelBuffer], { type: fileType });
+      FileSaver.saveAs(dataex, `Entradas${fileExtension}`);
+    }
+  };
 
   const abrircerrarModalBuscar = () => {
     setModalBuscar(!modalbuscar);
@@ -152,7 +175,20 @@ function REntradas() {
                 <Button onClick={() => abrircerrarModalBuscar()}>Consultar Entradas</Button>
                 <br />
                 <br />
-                <MaterialTable columns={columns} data={data} title="Entradas" />
+                <MaterialTable
+                  columns={columns}
+                  data={data}
+                  title="Entradas"
+                  actions={[
+                    {
+                      icon: "addchart",
+                      tooltip: "Exportar a Excel",
+                      onClick: (event, rowData) => exporttoExcel(rowData),
+                      isFreeAction: true,
+                      position: "toolbar",
+                    },
+                  ]}
+                />
 
                 <Modal open={modalbuscar} onClose={abrircerrarModalBuscar}>
                   {bodyConsultar}

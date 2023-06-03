@@ -9,6 +9,9 @@ import "styles/styles.css";
 import MaterialTable from "material-table";
 import { Modal, TextField, Button } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import FileSaver from "file-saver";
+import XLSX from "sheetjs-style";
+import Swal from "sweetalert2";
 
 const columns = [
   {
@@ -81,6 +84,26 @@ function RepVehiculos() {
     tipobusqueda: 0,
     valor: "",
   });
+
+  const exporttoExcel = async () => {
+    if (data.length === 0) {
+      Swal.fire({
+        icon: "info",
+        title: "",
+        text: "Debe de generar un reporte primero",
+      });
+    } else {
+      const fileType =
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
+      const fileExtension = ".xlsx";
+      const ws = XLSX.utils.json_to_sheet(data);
+      console.log("aqui");
+      const wb = { Sheets: { Vehiculos: ws }, SheetNames: ["Vehiculos"] };
+      const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+      const dataex = new Blob([excelBuffer], { type: fileType });
+      FileSaver.saveAs(dataex, `Vehiculos${fileExtension}`);
+    }
+  };
 
   const abrircerrarModalBuscar = () => {
     setModalBuscar(!modalbuscar);
@@ -165,14 +188,15 @@ function RepVehiculos() {
                   columns={columns}
                   data={data}
                   title="Vehiculos"
-                  options={{
-                    actionsColumnIndex: -1,
-                  }}
-                  localization={{
-                    header: {
-                      actions: "Acciones",
+                  actions={[
+                    {
+                      icon: "addchart",
+                      tooltip: "Exportar a Excel",
+                      onClick: (event, rowData) => exporttoExcel(rowData),
+                      isFreeAction: true,
+                      position: "toolbar",
                     },
-                  }}
+                  ]}
                 />
 
                 <Modal open={modalbuscar} onClose={abrircerrarModalBuscar}>

@@ -11,51 +11,52 @@ import { Modal, TextField, Button } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import FileSaver from "file-saver";
 import XLSX from "sheetjs-style";
+import Swal from "sweetalert2";
 
 const columns = [
   {
     title: "ID",
-    field: "emp_codigo",
+    field: "emp_Codigo",
   },
   {
     title: "Puesto",
-    field: "pue_codigo",
+    field: "pue_Codigo",
   },
   {
     title: "Nombre",
-    field: "emp_nombre",
+    field: "emp_Nombre",
   },
   {
     title: "Apellido",
-    field: "emp_apellido",
+    field: "emp_Apellido",
   },
   {
     title: "Direccion",
-    field: "emp_direccion",
+    field: "emp_Direccion",
   },
   {
     title: "Telefono",
-    field: "emp_telefono",
+    field: "emp_Telefono",
   },
   {
     title: "DPI",
-    field: "emp_dpi",
+    field: "emp_Dpi",
   },
   {
     title: "Edad",
-    field: "emp_edad",
+    field: "emp_Edad",
   },
   {
     title: "Fecha de Nacimiento",
-    field: "emp_nacimiento",
+    field: "emp_Nacimiento",
   },
   {
     title: "Numero de Licencia",
-    field: "emp_nolicencia",
+    field: "emp_Nolicencia",
   },
   {
     title: "Tipo de Licencia",
-    field: "emp_tipolicencia",
+    field: "emp_Tipolicencia",
   },
 ];
 
@@ -89,15 +90,23 @@ function REmpleados() {
   });
 
   const exporttoExcel = async () => {
-    const fileType =
-      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
-    const fileExtension = ".xlsx";
-    const ws = XLSX.utils.json_to_sheet(data);
-    console.log("aqui");
-    const wb = { Sheets: { Empleados: ws }, SheetNames: ["Empleados"] };
-    const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
-    const dataex = new Blob([excelBuffer], { type: fileType });
-    FileSaver.saveAs(dataex, `Empleados${fileExtension}`);
+    if (data.length === 0) {
+      Swal.fire({
+        icon: "info",
+        title: "",
+        text: "Debe de generar un reporte primero",
+      });
+    } else {
+      const fileType =
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
+      const fileExtension = ".xlsx";
+      const ws = XLSX.utils.json_to_sheet(data);
+      console.log("aqui");
+      const wb = { Sheets: { Empleados: ws }, SheetNames: ["Empleados"] };
+      const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+      const dataex = new Blob([excelBuffer], { type: fileType });
+      FileSaver.saveAs(dataex, `Empleados${fileExtension}`);
+    }
   };
 
   const abrircerrarModalBuscar = () => {
@@ -179,7 +188,7 @@ function REmpleados() {
                   title="Empleados"
                   actions={[
                     {
-                      icon: "edit",
+                      icon: "addchart",
                       tooltip: "Exportar a Excel",
                       onClick: (event, rowData) => exporttoExcel(rowData),
                       isFreeAction: true,

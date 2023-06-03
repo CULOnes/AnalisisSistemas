@@ -123,7 +123,7 @@ function Menucatalogos() {
           <Grid item xs={12} md={6} lg={3}>
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
-                color="info"
+                color="primary"
                 icon="local_shipping"
                 title="Tipos Seguros"
                 route="TiposSeguros"
@@ -134,7 +134,7 @@ function Menucatalogos() {
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
                 color="secondary"
-                icon="local_shipping"
+                icon="local_gas_station"
                 title="Combustibles"
                 route="Combustibles"
               />
@@ -144,7 +144,7 @@ function Menucatalogos() {
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
                 color="info"
-                icon="local_shipping"
+                icon="person_add"
                 title="Usuarios"
                 route="Usuarios"
               />
@@ -153,8 +153,8 @@ function Menucatalogos() {
           <Grid item xs={12} md={6} lg={3}>
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
-                color="info"
-                icon="local_shipping"
+                color="success"
+                icon="work_outline"
                 title="Puestos"
                 route="Puestos"
               />

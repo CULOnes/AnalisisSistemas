@@ -34,12 +34,7 @@ function Menureportes() {
         <Grid container spacing={3}>
           <Grid item xs={12} md={6} lg={3}>
             <MDBox mb={1.5}>
-              <ComplexStatisticsCard
-                color="warning"
-                icon="near_me"
-                title="Salidas"
-                route="RSalidas"
-              />
+              <ComplexStatisticsCard color="dark" icon="near_me" title="Salidas" route="RSalidas" />
             </MDBox>
           </Grid>
           <Grid item xs={12} md={6} lg={3}>
@@ -79,8 +74,8 @@ function Menureportes() {
           <Grid item xs={12} md={6} lg={3}>
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
-                color="info"
-                icon="assignment_turned_in"
+                color="warning"
+                icon="badge"
                 title="Empleados"
                 route="REmpleados"
               />
@@ -90,7 +85,7 @@ function Menureportes() {
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
                 color="info"
-                icon="assignment_turned_in"
+                icon="local_shipping"
                 title="Vehiculos"
                 route="RepVehiculos"
               />
@@ -99,8 +94,8 @@ function Menureportes() {
           <Grid item xs={12} md={6} lg={3}>
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
-                color="info"
-                icon="assignment_turned_in"
+                color="success"
+                icon="shield"
                 title="Seguros"
                 route="RepSeguros"
               />
@@ -109,8 +104,8 @@ function Menureportes() {
           <Grid item xs={12} md={6} lg={3}>
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
-                color="info"
-                icon="assignment_turned_in"
+                color="primary"
+                icon="person"
                 title="Clientes"
                 route="RepClientes"
               />

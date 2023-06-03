@@ -31,7 +31,7 @@ namespace RoadMaster.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Error interno, contacte administrador");
             }
         }
 
@@ -47,10 +47,10 @@ namespace RoadMaster.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Error interno, contacte administrador");
             }
         }
-        
+
         //Reporte de Vehiculos
         [HttpPost("reporteasignacionessalidas")]
         public async ValueTask<ActionResult<AsignacionesResponseDTO>> ReporteAsignaconesSalidas(ReporteAsig asignaciones)
@@ -63,7 +63,7 @@ namespace RoadMaster.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Error interno, contacte administrador");
             }
         }
 
@@ -72,6 +72,20 @@ namespace RoadMaster.Controllers
         {
             try
             {
+                if (asignaciones.asi_Kilometraje < 0)
+                {
+                    return BadRequest("Kilometraje no puede ser menor a 0");
+                }
+
+                if (asignaciones.asi_Fechasalida > DateTime.Now)
+                {
+                    return BadRequest("La fecha de salida no debe de ser mayor al dia de hoy");
+                }
+
+                if (asignaciones.asi_Fechaentrada > DateTime.Now)
+                {
+                    return BadRequest("La fecha de entrada no debe de ser mayor al dia de hoy");
+                }
 
                 var asignacion = db.Asignaciones.Find(asignaciones.asi_Codigo);
 
@@ -92,7 +106,7 @@ namespace RoadMaster.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Error interno, contacte administrador");
             }
         }
 
@@ -101,6 +115,21 @@ namespace RoadMaster.Controllers
         {
             try
             {
+
+                if (asignaciones.asi_Kilometraje < 0)
+                {
+                    return BadRequest("Kilometraje no puede ser menor a 0");
+                }
+
+                if (asignaciones.asi_Fechasalida > DateTime.Now)
+                {
+                    return BadRequest("La fecha de salida no debe de ser mayor al dia de hoy");
+                }
+
+                if (asignaciones.asi_Fechaentrada > DateTime.Now)
+                {
+                    return BadRequest("La fecha de entrada no debe de ser mayor al dia de hoy");
+                }
 
                 var asignacion = new Asignaciones
                 {
@@ -123,7 +152,7 @@ namespace RoadMaster.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Error interno, contacte administrador");
             }
         }
 
@@ -143,7 +172,7 @@ namespace RoadMaster.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Error interno, contacte administrador");
             }
         }
     }

@@ -9,6 +9,9 @@ import "styles/styles.css";
 import MaterialTable from "material-table";
 import { Modal, TextField, Button } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import FileSaver from "file-saver";
+import XLSX from "sheetjs-style";
+import Swal from "sweetalert2";
 
 const columns = [
   {
@@ -73,6 +76,26 @@ function RInspecciones() {
     fechainicio: 0,
     fechafin: 0,
   });
+
+  const exporttoExcel = async () => {
+    if (data.length === 0) {
+      Swal.fire({
+        icon: "info",
+        title: "",
+        text: "Debe de generar un reporte primero",
+      });
+    } else {
+      const fileType =
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
+      const fileExtension = ".xlsx";
+      const ws = XLSX.utils.json_to_sheet(data);
+      console.log("aqui");
+      const wb = { Sheets: { Inspecciones: ws }, SheetNames: ["Inspecciones"] };
+      const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+      const dataex = new Blob([excelBuffer], { type: fileType });
+      FileSaver.saveAs(dataex, `Inspecciones${fileExtension}`);
+    }
+  };
 
   const abrircerrarModalBuscar = () => {
     setModalBuscar(!modalbuscar);
@@ -141,7 +164,20 @@ function RInspecciones() {
                 <Button onClick={() => abrircerrarModalBuscar()}>Consultar Inspeccion</Button>
                 <br />
                 <br />
-                <MaterialTable columns={columns} data={data} title="Inspecciones" />
+                <MaterialTable
+                  columns={columns}
+                  data={data}
+                  title="Inspecciones"
+                  actions={[
+                    {
+                      icon: "addchart",
+                      tooltip: "Exportar a Excel",
+                      onClick: (event, rowData) => exporttoExcel(rowData),
+                      isFreeAction: true,
+                      position: "toolbar",
+                    },
+                  ]}
+                />
 
                 <Modal open={modalbuscar} onClose={abrircerrarModalBuscar}>
                   {bodyConsultar}

@@ -11,6 +11,7 @@ import { Modal, TextField, Button } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import FileSaver from "file-saver";
 import XLSX from "sheetjs-style";
+import Swal from "sweetalert2";
 
 const columns = [
   {
@@ -69,14 +70,22 @@ function RSeguros() {
   });
 
   const exporttoExcel = async () => {
-    const fileType =
-      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
-    const fileExtension = ".xlsx";
-    const ws = XLSX.utils.json_to_sheet(data);
-    const wb = { Sheets: { Seguros: ws }, SheetNames: ["Seguros"] };
-    const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
-    const dataex = new Blob([excelBuffer], { type: fileType });
-    FileSaver.saveAs(dataex, `Seguros${fileExtension}`);
+    if (data.length === 0) {
+      Swal.fire({
+        icon: "info",
+        title: "",
+        text: "Debe de generar un reporte primero",
+      });
+    } else {
+      const fileType =
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
+      const fileExtension = ".xlsx";
+      const ws = XLSX.utils.json_to_sheet(data);
+      const wb = { Sheets: { Seguros: ws }, SheetNames: ["Seguros"] };
+      const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+      const dataex = new Blob([excelBuffer], { type: fileType });
+      FileSaver.saveAs(dataex, `Seguros${fileExtension}`);
+    }
   };
 
   const abrircerrarModalBuscar = () => {
@@ -155,7 +164,7 @@ function RSeguros() {
                   title="Seguros"
                   actions={[
                     {
-                      icon: "edit",
+                      icon: "addchart",
                       tooltip: "Exportar a Excel",
                       onClick: (event, rowData) => exporttoExcel(rowData),
                       isFreeAction: true,

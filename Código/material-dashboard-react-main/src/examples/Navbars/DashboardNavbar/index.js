@@ -163,7 +163,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
                   sx={navbarIconButton}
                   onClick={() => Logout()}
                 >
-                  <Icon sx={iconsStyle}>settings</Icon>
+                  <Icon sx={iconsStyle}>login</Icon>
                 </IconButton>
               </Link>
               {/* <IconButton

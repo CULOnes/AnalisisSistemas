@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
     width: 600,
     backgroundColor: theme.palette.background.paper,
     boxShadow: theme.shadows[5],
-    padding: theme.spacing(2, 4, 3),
+    padding: theme.spacing(2, 4, 0),
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
@@ -364,15 +364,15 @@ function Asignaciones() {
     <div className={styles.modal}>
       <MDTypography variant="h3"> Agregar Nueva Asignacion </MDTypography>
       <Divider sx={{ marginTop: 1 }} light={false} />
-      <MDBox pt={2} pb={3}>
+      <MDBox pb={1}>
         <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={2}>
+            <MDBox mb={1}>
               <MDTypography variant="h6"> Usuario: </MDTypography>
             </MDBox>
           </Grid>
           <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={2}>
+            <MDBox mb={1}>
               <select name="usu_Codigo" className="form-control" onChange={handleChange}>
                 <option key="0" value="0">
                   Seleccione Usuario
@@ -388,12 +388,12 @@ function Asignaciones() {
         </Grid>
         <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={2}>
+            <MDBox mb={1}>
               <MDTypography variant="h6"> Inspeccion: </MDTypography>
             </MDBox>
           </Grid>
           <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={2}>
+            <MDBox mb={1}>
               <select name="ins_Codigo" className="form-control" onChange={handleChange}>
                 <option key="0" value="0">
                   Seleccione Inspeccion
@@ -409,12 +409,12 @@ function Asignaciones() {
         </Grid>
         <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={2}>
+            <MDBox mb={1}>
               <MDTypography variant="h6"> Vehiculo: </MDTypography>
             </MDBox>
           </Grid>
           <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={2}>
+            <MDBox mb={1}>
               <select name="veh_Codigo" className="form-control" onChange={handleChange}>
                 <option key="0" value="0">
                   Seleccione Vehiculo
@@ -430,12 +430,12 @@ function Asignaciones() {
         </Grid>
         <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={2}>
+            <MDBox mb={1}>
               <MDTypography variant="h6"> Empleado: </MDTypography>
             </MDBox>
           </Grid>
           <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={2}>
+            <MDBox mb={1}>
               <select name="emp_Codigo" className="form-control" onChange={handleChange}>
                 <option key="0" value="0">
                   Seleccione Empleado
@@ -451,12 +451,12 @@ function Asignaciones() {
         </Grid>
         <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={2}>
+            <MDBox mb={1}>
               <MDTypography variant="h6"> Cliente: </MDTypography>
             </MDBox>
           </Grid>
           <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={2}>
+            <MDBox mb={1}>
               <select name="cli_Codigo" className="form-control" onChange={handleChange}>
                 <option key="0" value="0">
                   Seleccione Cliente
@@ -472,12 +472,12 @@ function Asignaciones() {
         </Grid>
         <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={2}>
+            <MDBox mb={1}>
               <MDTypography variant="h6"> Seguro: </MDTypography>
             </MDBox>
           </Grid>
           <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={2}>
+            <MDBox mb={1}>
               <select name="seg_Codigo" className="form-control" onChange={handleChange}>
                 <option key="0" value="0">
                   Seleccione Seguro
@@ -493,12 +493,12 @@ function Asignaciones() {
         </Grid>
         <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={2}>
+            <MDBox mb={1}>
               <MDTypography variant="h6"> Kilometraje: </MDTypography>
             </MDBox>
           </Grid>
           <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={2}>
+            <MDBox mb={1}>
               <MDInput
                 label="Kilometraje"
                 name="asi_Kilometraje"
@@ -511,36 +511,36 @@ function Asignaciones() {
         </Grid>
         <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={2}>
+            <MDBox mb={1}>
               <MDTypography variant="h6"> Fecha Salida: </MDTypography>
             </MDBox>
           </Grid>
           <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={2}>
+            <MDBox mb={1}>
               <MDInput name="asi_Fechasalida" type="date" onChange={handleChange} size="small" />
             </MDBox>
           </Grid>
         </Grid>
         <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={2}>
+            <MDBox mb={1}>
               <MDTypography variant="h6"> Fecha Entrada: </MDTypography>
             </MDBox>
           </Grid>
           <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={2}>
+            <MDBox mb={1}>
               <MDInput name="asi_Fechaentrada" type="date" onChange={handleChange} size="small" />
             </MDBox>
           </Grid>
         </Grid>
         <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={2}>
+            <MDBox mb={1}>
               <MDTypography variant="h6"> Observaciones: </MDTypography>
             </MDBox>
           </Grid>
           <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={2}>
+            <MDBox mb={1}>
               <MDInput
                 label="Observaciones"
                 name="asi_Observaciones"
@@ -581,12 +581,12 @@ function Asignaciones() {
       <MDBox pt={2} pb={3}>
         <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={2}>
+            <MDBox mb={1}>
               <MDTypography variant="h6"> Usuario: </MDTypography>
             </MDBox>
           </Grid>
           <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={2}>
+            <MDBox mb={1}>
               <select
                 name="usu_Codigo"
                 className="form-control"
@@ -607,12 +607,12 @@ function Asignaciones() {
         </Grid>
         <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={2}>
+            <MDBox mb={1}>
               <MDTypography variant="h6"> Inspeccion: </MDTypography>
             </MDBox>
           </Grid>
           <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={2}>
+            <MDBox mb={1}>
               <select
                 name="ins_Codigo"
                 className="form-control"
@@ -633,12 +633,12 @@ function Asignaciones() {
         </Grid>
         <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={2}>
+            <MDBox mb={1}>
               <MDTypography variant="h6"> Vehiculo: </MDTypography>
             </MDBox>
           </Grid>
           <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={2}>
+            <MDBox mb={1}>
               <select
                 name="veh_Codigo"
                 className="form-control"
@@ -659,12 +659,12 @@ function Asignaciones() {
         </Grid>
         <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={2}>
+            <MDBox mb={1}>
               <MDTypography variant="h6"> Empleado: </MDTypography>
             </MDBox>
           </Grid>
           <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={2}>
+            <MDBox mb={1}>
               <select
                 name="emp_Codigo"
                 className="form-control"
@@ -685,12 +685,12 @@ function Asignaciones() {
         </Grid>
         <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={2}>
+            <MDBox mb={1}>
               <MDTypography variant="h6"> Cliente: </MDTypography>
             </MDBox>
           </Grid>
           <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={2}>
+            <MDBox mb={1}>
               <select
                 name="cli_Codigo"
                 className="form-control"
@@ -711,12 +711,12 @@ function Asignaciones() {
         </Grid>
         <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={2}>
+            <MDBox mb={1}>
               <MDTypography variant="h6"> Seguro: </MDTypography>
             </MDBox>
           </Grid>
           <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={2}>
+            <MDBox mb={1}>
               <select
                 name="seg_Codigo"
                 className="form-control"
@@ -737,12 +737,12 @@ function Asignaciones() {
         </Grid>
         <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={2}>
+            <MDBox mb={1}>
               <MDTypography variant="h6"> Kilometraje: </MDTypography>
             </MDBox>
           </Grid>
           <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={2}>
+            <MDBox mb={1}>
               <MDInput
                 label="Kilometraje"
                 name="asi_Kilometraje"
@@ -756,12 +756,12 @@ function Asignaciones() {
         </Grid>
         <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={2}>
+            <MDBox mb={1}>
               <MDTypography variant="h6"> Fecha Salida: </MDTypography>
             </MDBox>
           </Grid>
           <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={2}>
+            <MDBox mb={1}>
               <MDInput
                 name="asi_Fechasalida"
                 type="date"
@@ -774,12 +774,12 @@ function Asignaciones() {
         </Grid>
         <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={2}>
+            <MDBox mb={1}>
               <MDTypography variant="h6"> Fecha Entrada: </MDTypography>
             </MDBox>
           </Grid>
           <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={2}>
+            <MDBox mb={1}>
               <MDInput
                 name="asi_Fechaentrada"
                 type="date"
@@ -792,12 +792,12 @@ function Asignaciones() {
         </Grid>
         <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={2}>
+            <MDBox mb={1}>
               <MDTypography variant="h6"> Observaciones: </MDTypography>
             </MDBox>
           </Grid>
           <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={2}>
+            <MDBox mb={1}>
               <MDInput
                 label="Observaciones"
                 name="asi_Observaciones"
@@ -947,12 +947,12 @@ export default Asignaciones;
 //         <MDBox pt={6} pb={3}>
 //           <Grid container spacing={3} justifyContent="center">
 //             <Grid item xs={12} md={4} lg={2}>
-//               <MDBox mb={2}>
+//               <MDBox mb={1}>
 //                 <MDTypography variant="h6">Piloto:</MDTypography>
 //               </MDBox>
 //             </Grid>
 //             <Grid item xs={12} md={6} lg={3}>
-//               <MDBox mb={2}>
+//               <MDBox mb={1}>
 //                 <Autocomplete
 //                   disablePortal
 //                   id="combo-box-demo"
@@ -963,7 +963,7 @@ export default Asignaciones;
 //               </MDBox>
 //             </Grid>
 //             <Grid item xs={12} md={4} lg={2}>
-//               <MDBox mb={2}>
+//               <MDBox mb={1}>
 //                 <MDTypography variant="h6">Vehiculo:</MDTypography>
 //               </MDBox>
 //             </Grid>
@@ -979,7 +979,7 @@ export default Asignaciones;
 //           </Grid>
 //           <Grid container spacing={3} justifyContent="center">
 //             <Grid item xs={12} md={4} lg={2}>
-//               <MDBox mb={2}>
+//               <MDBox mb={1}>
 //                 <MDTypography variant="h6">Cliente:</MDTypography>
 //               </MDBox>
 //             </Grid>
@@ -993,24 +993,24 @@ export default Asignaciones;
 //               />
 //             </Grid>
 //             <Grid item xs={12} md={4} lg={2}>
-//               <MDBox mb={2}>
+//               <MDBox mb={1}>
 //                 <MDTypography variant="h6">Kilometraje:</MDTypography>
 //               </MDBox>
 //             </Grid>
 //             <Grid item xs={12} md={6} lg={3}>
-//               <MDBox mb={2}>
+//               <MDBox mb={1}>
 //                 <MDInput type="number" label="Kilometraje" fullWidth />
 //               </MDBox>
 //             </Grid>
 //           </Grid>
 //           <Grid container spacing={3} justifyContent="center">
 //             <Grid item xs={12} md={4} lg={2}>
-//               <MDBox mb={2}>
+//               <MDBox mb={1}>
 //                 <MDTypography variant="h6">Estado del Vehiculo:</MDTypography>
 //               </MDBox>
 //             </Grid>
 //             <Grid item xs={12} md={6} lg={3}>
-//               <MDBox mb={2}>
+//               <MDBox mb={1}>
 //                 <Autocomplete
 //                   disablePortal
 //                   id="combo-box-demo"
@@ -1021,12 +1021,12 @@ export default Asignaciones;
 //               </MDBox>
 //             </Grid>
 //             <Grid item xs={12} md={4} lg={2}>
-//               <MDBox mb={2}>
+//               <MDBox mb={1}>
 //                 <MDTypography variant="h6">Observaciones:</MDTypography>
 //               </MDBox>
 //             </Grid>
 //             <Grid item xs={12} md={6} lg={3}>
-//               <MDBox mb={2}>
+//               <MDBox mb={1}>
 //                 <MDInput type="text" label="Observaciones" fullWidth />
 //               </MDBox>
 //             </Grid>

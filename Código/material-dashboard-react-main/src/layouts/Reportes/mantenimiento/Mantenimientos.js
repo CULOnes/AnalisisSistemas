@@ -9,31 +9,34 @@ import "styles/styles.css";
 import MaterialTable from "material-table";
 import { Modal, TextField, Button } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import FileSaver from "file-saver";
+import XLSX from "sheetjs-style";
+import Swal from "sweetalert2";
 
 const columns = [
   {
     title: "ID",
-    field: "man_codigo",
+    field: "man_Codigo",
   },
   {
     title: "Tipo Reparacion",
-    field: "tir_codigo",
+    field: "tir_Codigo",
   },
   {
     title: "Inspeccion",
-    field: "ins_codigo",
+    field: "ins_Codigo",
   },
   {
     title: "Fecha",
-    field: "man_fecha",
+    field: "man_Fecha",
   },
   {
     title: "Kilometraje",
-    field: "man_kilometraje",
+    field: "man_Kilometraje",
   },
   {
     title: "Estado",
-    field: "man_estado",
+    field: "man_Estado",
   },
 ];
 
@@ -65,6 +68,26 @@ function RMantenimientos() {
     fechainicio: 0,
     fechafin: 0,
   });
+
+  const exporttoExcel = async () => {
+    if (data.length === 0) {
+      Swal.fire({
+        icon: "info",
+        title: "",
+        text: "Debe de generar un reporte primero",
+      });
+    } else {
+      const fileType =
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
+      const fileExtension = ".xlsx";
+      const ws = XLSX.utils.json_to_sheet(data);
+      console.log("aqui");
+      const wb = { Sheets: { Mantenimientos: ws }, SheetNames: ["Mantenimientos"] };
+      const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+      const dataex = new Blob([excelBuffer], { type: fileType });
+      FileSaver.saveAs(dataex, `Mantenimientos${fileExtension}`);
+    }
+  };
 
   const abrircerrarModalBuscar = () => {
     setModalBuscar(!modalbuscar);
@@ -136,7 +159,20 @@ function RMantenimientos() {
                 <Button onClick={() => abrircerrarModalBuscar()}>Consultar Mantenimientos</Button>
                 <br />
                 <br />
-                <MaterialTable columns={columns} data={data} title="Mantenimientos" />
+                <MaterialTable
+                  columns={columns}
+                  data={data}
+                  title="Mantenimientos"
+                  actions={[
+                    {
+                      icon: "addchart",
+                      tooltip: "Exportar a Excel",
+                      onClick: (event, rowData) => exporttoExcel(rowData),
+                      isFreeAction: true,
+                      position: "toolbar",
+                    },
+                  ]}
+                />
 
                 <Modal open={modalbuscar} onClose={abrircerrarModalBuscar}>
                   {bodyConsultar}
