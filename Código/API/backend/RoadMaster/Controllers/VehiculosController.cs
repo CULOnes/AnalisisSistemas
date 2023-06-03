@@ -31,7 +31,7 @@ namespace RoadMaster.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Error interno, contacte administrador");
             }
         }
 
@@ -80,6 +80,18 @@ namespace RoadMaster.Controllers
             try
             {
 
+                int añofuturo = DateTime.Now.Year + 1;
+
+                if (vehiculos.Veh_Año < 1975 || vehiculos.Veh_Año > añofuturo)
+                {
+                    return BadRequest("Debe ingresar un año entre 1975 y " + añofuturo);
+                }
+
+                if (vehiculos.Veh_KilometrajeInicial < 0)
+                {
+                    return BadRequest("Inserte un Kilometraje Valido");
+                }
+
                 var vehiculo = db.Vehiculos.Find(vehiculos.Veh_Codigo);
 
                 vehiculo.TiV_Codigo = vehiculos.TiV_Codigo;
@@ -98,7 +110,7 @@ namespace RoadMaster.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Error interno, contacte administrador");
             }
         }
 
@@ -108,13 +120,20 @@ namespace RoadMaster.Controllers
             try
             {
 
-                //var query = db.Vehiculos.ToArray();
+                int añofuturo = DateTime.Now.Year + 1;
 
-                //var id = query.Count() + 1;
+                if (vehiculos.Veh_Año < 1975 || vehiculos.Veh_Año > añofuturo)
+                {
+                    return BadRequest("Debe ingresar un año entre 1975 y " + añofuturo);
+                }
+
+                if (vehiculos.Veh_KilometrajeInicial < 0)
+                {
+                    return BadRequest("Inserte un Kilometraje Valido");
+                }
 
                 var vehiculo = new Vehiculos
                 {
-                    //Veh_Codigo = id,
                     TiV_Codigo = vehiculos.TiV_Codigo,
                     Com_Codigo = vehiculos.Com_Codigo,
                     Veh_Marca = vehiculos.Veh_Marca,
@@ -132,7 +151,7 @@ namespace RoadMaster.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Error interno, contacte administrador");
             }
         }
 
@@ -152,7 +171,7 @@ namespace RoadMaster.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Error interno, contacte administrador");
             }
         }
     }

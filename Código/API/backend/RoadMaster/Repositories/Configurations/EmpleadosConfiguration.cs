@@ -9,19 +9,19 @@ namespace RoadMaster.Repositories.Configurations
         public void Configure(EntityTypeBuilder<Empleados> builder)
         {
             builder.ToTable("rom_empleados");
-            builder.HasKey(x => x.emp_codigo);
+            builder.HasKey(x => x.emp_Codigo);
 
-            builder.Property(x => x.emp_codigo).HasColumnName("emp_codigo");
-            builder.Property(x => x.pue_codigo).HasColumnName("pue_codigo");
-            builder.Property(x => x.emp_nombre).HasColumnName("emp_nombre");
-            builder.Property(x => x.emp_apellido).HasColumnName("emp_apellido");
-            builder.Property(x => x.emp_direccion).HasColumnName("emp_direccion");
-            builder.Property(x => x.emp_telefono).HasColumnName("emp_telefono");
-            builder.Property(x => x.emp_dpi).HasColumnName("emp_dpi");
-            builder.Property(x => x.emp_edad).HasColumnName("emp_edad");
-            builder.Property(x => x.emp_nacimiento).HasColumnName("emp_nacimiento");
-            builder.Property(x => x.emp_nolicencia).HasColumnName("emp_nolicencia");
-            builder.Property(x => x.emp_tipolicencia).HasColumnName("emp_tipolicencia");
+            builder.Property(x => x.emp_Codigo).HasColumnName("emp_codigo");
+            builder.Property(x => x.pue_Codigo).HasColumnName("pue_codigo");
+            builder.Property(x => x.emp_Nombre).HasColumnName("emp_nombre");
+            builder.Property(x => x.emp_Apellido).HasColumnName("emp_apellido");
+            builder.Property(x => x.emp_Direccion).HasColumnName("emp_direccion");
+            builder.Property(x => x.emp_Telefono).HasColumnName("emp_telefono");
+            builder.Property(x => x.emp_Dpi).HasColumnName("emp_dpi");
+            builder.Property(x => x.emp_Edad).HasColumnName("emp_edad");
+            builder.Property(x => x.emp_Nacimiento).HasColumnName("emp_nacimiento");
+            builder.Property(x => x.emp_Nolicencia).HasColumnName("emp_nolicencia");
+            builder.Property(x => x.emp_Tipolicencia).HasColumnName("emp_tipolicencia");
         }
     }
 }

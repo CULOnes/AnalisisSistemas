@@ -77,6 +77,11 @@ export default function App() {
   const [rtlCache, setRtlCache] = useState(null);
   const { pathname } = useLocation();
 
+  const token = localStorage.getItem("fswToken");
+  if (token == null && pathname !== "/Login/Login") {
+    window.location.href = "/Login/Login";
+  }
+
   // Cache for the rtl
   useMemo(() => {
     const cacheRtl = createCache({
@@ -175,7 +180,7 @@ export default function App() {
         {layout === "vr" && <Configurator />}
         <Routes>
           {getRoutes(routes)}
-          <Route path="*" element={<Navigate to="/Login/Login" />} />
+          <Route path="*" element={<Navigate to="/dashboard" />} />
         </Routes>
       </ThemeProvider>
     </CacheProvider>
@@ -199,7 +204,7 @@ export default function App() {
       {layout === "vr" && <Configurator />}
       <Routes>
         {getRoutes(routes)}
-        <Route path="*" element={<Navigate to="/Login/Login" />} />
+        <Route path="*" element={<Navigate to="/dashboard" />} />
       </Routes>
     </ThemeProvider>
   );

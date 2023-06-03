@@ -31,7 +31,7 @@ namespace RoadMaster.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Error interno, contacte administrador");
             }
         }
 
@@ -41,13 +41,13 @@ namespace RoadMaster.Controllers
         {
             try
             {
-                var busqueda = db.Mantenimientos.Where(x => x.man_fecha >= mantenimientos.fechainicio || x.man_fecha <= mantenimientos.fechafin).ToArray();
+                var busqueda = db.Mantenimientos.Where(x => x.man_Fecha >= mantenimientos.fechainicio || x.man_Fecha <= mantenimientos.fechafin).ToArray();
 
                 return Ok(busqueda);
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Error interno, contacte administrador");
             }
         }
 
@@ -57,13 +57,23 @@ namespace RoadMaster.Controllers
             try
             {
 
-                var mantenimiento = db.Mantenimientos.Find(mantenimientos.man_codigo);
+                if (mantenimientos.man_Kilometraje < 0)
+                {
+                    return BadRequest("El kilometraje no puede ser menor a 0");
+                }
 
-                mantenimiento.tir_codigo = mantenimientos.tir_codigo;
-                mantenimiento.ins_codigo = mantenimientos.ins_codigo;
-                mantenimiento.man_fecha = mantenimientos.man_fecha;
-                mantenimiento.man_kilometraje = mantenimientos.man_kilometraje;
-                mantenimiento.man_estado = mantenimientos.man_estado;
+                if (mantenimientos.man_Fecha > DateTime.Now)
+                {
+                    return BadRequest("La fecha no puede ser mayor a hoy");
+                }
+
+                var mantenimiento = db.Mantenimientos.Find(mantenimientos.man_Codigo);
+
+                mantenimiento.tiR_Codigo = mantenimientos.tiR_Codigo;
+                mantenimiento.ins_Codigo = mantenimientos.ins_Codigo;
+                mantenimiento.man_Fecha = mantenimientos.man_Fecha;
+                mantenimiento.man_Kilometraje = mantenimientos.man_Kilometraje;
+                mantenimiento.man_Estado = mantenimientos.man_Estado;
 
                 db.Entry(mantenimiento).State = EntityState.Modified;
                 db.SaveChanges();
@@ -71,7 +81,7 @@ namespace RoadMaster.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Error interno, contacte administrador");
             }
         }
 
@@ -81,13 +91,25 @@ namespace RoadMaster.Controllers
             try
             {
 
+                
+
+                if (mantenimientos.man_Kilometraje < 0)
+                {
+                    return BadRequest("El kilometraje no puede ser menor a 0");
+                }
+
+                if(mantenimientos.man_Fecha > DateTime.Now)
+                {
+                    return BadRequest("La fecha no puede ser mayor a hoy");
+                }
+
                 var mantenimiento = new Mantenimientos
                 {
-                    tir_codigo = mantenimientos.tir_codigo,
-                    ins_codigo = mantenimientos.ins_codigo,
-                    man_fecha = mantenimientos.man_fecha,
-                    man_kilometraje = mantenimientos.man_kilometraje,
-                    man_estado = mantenimientos.man_estado
+                    tiR_Codigo = mantenimientos.tiR_Codigo,
+                    ins_Codigo = mantenimientos.ins_Codigo,
+                    man_Fecha = mantenimientos.man_Fecha,
+                    man_Kilometraje = mantenimientos.man_Kilometraje,
+                    man_Estado = mantenimientos.man_Estado
                 };
 
                 await db.Mantenimientos.AddAsync(mantenimiento);
@@ -96,7 +118,7 @@ namespace RoadMaster.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Error interno, contacte administrador");
             }
         }
 
@@ -106,7 +128,7 @@ namespace RoadMaster.Controllers
             try
             {
 
-                var mantenimiento = db.Mantenimientos.Find(mantenimientos.man_codigo);
+                var mantenimiento = db.Mantenimientos.Find(mantenimientos.man_Codigo);
                 if (mantenimiento != null)
                 {
                     db.Mantenimientos.Remove(mantenimiento);
@@ -116,7 +138,7 @@ namespace RoadMaster.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Error interno, contacte administrador");
             }
         }
     }

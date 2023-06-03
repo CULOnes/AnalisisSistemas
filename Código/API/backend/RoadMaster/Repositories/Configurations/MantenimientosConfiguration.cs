@@ -9,14 +9,14 @@ namespace RoadMaster.Repositories.Configurations
         public void Configure(EntityTypeBuilder<Mantenimientos> builder)
         {
             builder.ToTable("rom_mantenimiento");
-            builder.HasKey(x => x.man_codigo);
+            builder.HasKey(x => x.man_Codigo);
 
-            builder.Property(x => x.man_codigo).HasColumnName("man_codigo");
-            builder.Property(x => x.tir_codigo).HasColumnName("tir_codigo");
-            builder.Property(x => x.ins_codigo).HasColumnName("ins_codigo");
-            builder.Property(x => x.man_fecha).HasColumnName("man_fecha");
-            builder.Property(x => x.man_kilometraje).HasColumnName("man_kilometraje");
-            builder.Property(x => x.man_estado).HasColumnName("man_estado");
+            builder.Property(x => x.man_Codigo).HasColumnName("man_codigo");
+            builder.Property(x => x.tiR_Codigo).HasColumnName("tir_codigo");
+            builder.Property(x => x.ins_Codigo).HasColumnName("ins_codigo");
+            builder.Property(x => x.man_Fecha).HasColumnName("man_fecha");
+            builder.Property(x => x.man_Kilometraje).HasColumnName("man_kilometraje");
+            builder.Property(x => x.man_Estado).HasColumnName("man_estado");
         }
     }
 }

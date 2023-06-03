@@ -7,22 +7,30 @@ import axios from "axios";
 import MDBox from "components/MDBox";
 import "styles/styles.css";
 import MaterialTable from "material-table";
-import { Modal, TextField, Button } from "@material-ui/core";
+import { Modal } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import Swal from "sweetalert2";
+import MDInput from "components/MDInput";
+import MDTypography from "components/MDTypography";
+import Divider from "@mui/material/Divider";
+import MDButton from "components/MDButton";
+// import Autocomplete from "@mui/material/Autocomplete";
+// import TextField from "@mui/material/TextField";
+// import Box from "@mui/material/Box";
 
 const columns = [
   {
     title: "ID",
     field: "veh_Codigo",
   },
-  {
-    title: "Tipo de vehiculo",
-    field: "tiV_Codigo",
-  },
-  {
-    title: "Combustible",
-    field: "com_Codigo",
-  },
+  // {
+  //   title: "Tipo de vehiculo",
+  //   field: "tiV_Codigo",
+  // },
+  // {
+  //   title: "Combustible",
+  //   field: "com_Codigo",
+  // },
   {
     title: "Marca",
     field: "veh_Marca",
@@ -54,13 +62,17 @@ const columns = [
 ];
 
 const useStyles = makeStyles((theme) => ({
+  select: {
+    appearance: "none",
+    color: "#FF0000",
+  },
   modal: {
+    borderRadius: "5%",
     position: "absolute",
-    width: 400,
+    width: 600,
     backgroundColor: theme.palette.background.paper,
-    border: "2px solid #000",
     boxShadow: theme.shadows[5],
-    padding: theme.spacing(2, 4, 3),
+    padding: theme.spacing(2, 4, 0),
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
@@ -69,7 +81,7 @@ const useStyles = makeStyles((theme) => ({
     cursor: "pointer",
   },
   inputMaterial: {
-    width: "100%",
+    marginTop: "15px",
   },
 }));
 
@@ -81,6 +93,7 @@ function Vehiculos() {
   const [modalinsertar, setModalInsertar] = useState(false);
   const [modaleditar, setModalEditar] = useState(false);
   const [modaleliminar, setModalEliminar] = useState(false);
+  const [showComponent, setShowComponent] = useState(false);
   const [vehiculoseleccionado, setVehiculoSeleccionado] = useState({
     veh_Codigo: 0,
     tiV_Codigo: 0,
@@ -124,68 +137,156 @@ function Vehiculos() {
   };
 
   const peticionpost = async () => {
-    await axios
-      .post("https://localhost:7235/api/Vehiculos/registrovehiculos", vehiculoseleccionado)
-      .then((response) => {
-        setData(data.concat(response.data));
-        abrircerrarModalInsertar();
-      })
-      .catch((error) => {
-        console.log(error);
+    Swal.showLoading();
+    if (
+      vehiculoseleccionado.tiV_Codigo === 0 ||
+      vehiculoseleccionado.com_Codigo === 0 ||
+      vehiculoseleccionado.veh_Marca === "" ||
+      vehiculoseleccionado.veh_Placa === "" ||
+      vehiculoseleccionado.veh_Modelo === "" ||
+      vehiculoseleccionado.veh_Año === 0 ||
+      vehiculoseleccionado.veh_Color === "" ||
+      vehiculoseleccionado.veh_Transmision === ""
+    ) {
+      abrircerrarModalInsertar();
+      Swal.close();
+      Swal.fire({
+        icon: "info",
+        title: "",
+        html: "Debe de llenar <b>todos</b> los campos",
       });
+    } else {
+      abrircerrarModalInsertar();
+      await axios
+        .post("https://localhost:7235/api/Vehiculos/registrovehiculos", vehiculoseleccionado)
+        .then((response) => {
+          setData(data.concat(response.data));
+          Swal.close();
+          Swal.fire({
+            icon: "success",
+            title: "",
+            text: "Vehiculo creado exitosamente",
+            timer: 2500,
+          });
+        })
+        .catch((error) => {
+          Swal.close();
+          Swal.fire({
+            icon: "error",
+            title: "",
+            text: error.response.data,
+            timer: 2500,
+          });
+        });
+    }
   };
 
   const peticionput = async () => {
-    await axios
-      .put("https://localhost:7235/api/Vehiculos/actualizar", vehiculoseleccionado)
-      .then(() => {
-        const copiaArray = [...data];
-        const indice = copiaArray.findIndex(
-          (elemento) => elemento.veh_Codigo === vehiculoseleccionado.veh_Codigo
-        );
-        if (indice !== -1) {
-          copiaArray[indice] = {
-            ...copiaArray[indice],
-            veh_Codigo: vehiculoseleccionado.veh_Codigo,
-            tiV_Codigo: vehiculoseleccionado.tiV_Codigo,
-            com_Codigo: vehiculoseleccionado.com_Codigo,
-            veh_Marca: vehiculoseleccionado.veh_Marca,
-            veh_Placa: vehiculoseleccionado.veh_Placa,
-            veh_Modelo: vehiculoseleccionado.veh_Modelo,
-            veh_Año: vehiculoseleccionado.veh_Año,
-            veh_KilometrajeInicial: vehiculoseleccionado.veh_KilometrajeInicial,
-            veh_Color: vehiculoseleccionado.veh_Color,
-            veh_Transmision: vehiculoseleccionado.veh_Transmision,
-          };
-        }
-        setData(copiaArray);
-        abrircerrarModalEditar();
-      })
-      .catch((error) => {
-        console.log(error);
+    if (
+      vehiculoseleccionado.tiV_Codigo === 0 ||
+      vehiculoseleccionado.com_Codigo === 0 ||
+      vehiculoseleccionado.veh_Marca === "" ||
+      vehiculoseleccionado.veh_Placa === "" ||
+      vehiculoseleccionado.veh_Modelo === "" ||
+      vehiculoseleccionado.veh_Año === 0 ||
+      vehiculoseleccionado.veh_Color === "" ||
+      vehiculoseleccionado.veh_Transmision === ""
+    ) {
+      abrircerrarModalEditar();
+      Swal.close();
+      Swal.fire({
+        icon: "info",
+        title: "",
+        html: "Debe de llenar <b>todos</b> los campos",
       });
+    } else {
+      abrircerrarModalEditar();
+      Swal.showLoading();
+      await axios
+        .put("https://localhost:7235/api/Vehiculos/actualizar", vehiculoseleccionado)
+        .then(() => {
+          const copiaArray = [...data];
+          const indice = copiaArray.findIndex(
+            (elemento) => elemento.veh_Codigo === vehiculoseleccionado.veh_Codigo
+          );
+          if (indice !== -1) {
+            copiaArray[indice] = {
+              ...copiaArray[indice],
+              veh_Codigo: vehiculoseleccionado.veh_Codigo,
+              tiV_Codigo: vehiculoseleccionado.tiV_Codigo,
+              com_Codigo: vehiculoseleccionado.com_Codigo,
+              veh_Marca: vehiculoseleccionado.veh_Marca,
+              veh_Placa: vehiculoseleccionado.veh_Placa,
+              veh_Modelo: vehiculoseleccionado.veh_Modelo,
+              veh_Año: vehiculoseleccionado.veh_Año,
+              veh_KilometrajeInicial: vehiculoseleccionado.veh_KilometrajeInicial,
+              veh_Color: vehiculoseleccionado.veh_Color,
+              veh_Transmision: vehiculoseleccionado.veh_Transmision,
+            };
+          }
+          setData(copiaArray);
+          Swal.close();
+          Swal.fire({
+            icon: "success",
+            title: "",
+            text: "Vehiculo actualizado exitosamente",
+            timer: 2500,
+          });
+        })
+        .catch((error) => {
+          Swal.close();
+          Swal.fire({
+            icon: "error",
+            title: "",
+            text: error.response.data,
+            timer: 2500,
+          });
+        });
+    }
   };
 
   const peticiondelete = async () => {
+    abrircerrarModalEliminar();
+    Swal.showLoading();
     await axios
       .put("https://localhost:7235/api/Vehiculos/eliminar", vehiculoseleccionado)
       .then(() => {
         setData(data.filter((vehiculo) => vehiculo.veh_Codigo !== vehiculoseleccionado.veh_Codigo));
-        abrircerrarModalEliminar();
+        Swal.close();
+        Swal.fire({
+          icon: "success",
+          title: "",
+          text: "Vehiculo eliminado exitosamente",
+          timer: 2500,
+        });
       })
       .catch((error) => {
-        console.log(error);
+        Swal.close();
+        Swal.fire({
+          icon: "error",
+          title: "",
+          text: error.response.data,
+          timer: 2500,
+        });
       });
   };
 
   const peticionget = async () => {
+    Swal.showLoading();
     await axios
       .get("https://localhost:7235/api/Vehiculos/vehiculos")
       .then((response) => {
         setData(response.data);
+        Swal.close();
       })
       .catch((error) => {
-        console.log(error);
+        Swal.close();
+        Swal.fire({
+          icon: "error",
+          title: "",
+          text: error.response.data,
+          timer: 2500,
+        });
       });
   };
 
@@ -195,9 +296,7 @@ function Vehiculos() {
       .then((response) => {
         setDatatv(response.data);
       })
-      .catch((error) => {
-        console.log(error);
-      });
+      .catch();
   };
 
   const peticiongettc = async () => {
@@ -206,203 +305,440 @@ function Vehiculos() {
       .then((response) => {
         setDatatc(response.data);
       })
-      .catch((error) => {
-        console.log(error);
-      });
+      .catch();
   };
 
   useEffect(() => {
     peticionget();
     peticiongettv();
     peticiongettc();
+    setTimeout(() => {
+      setShowComponent(true);
+    }, 100);
   }, []);
+
+  if (!showComponent) {
+    return null;
+  }
 
   const bodyInsertar = (
     <div className={styles.modal}>
-      <h3>Agregar Nuevo Vehiculo</h3>
-
-      <select name="tiV_Codigo" className="form-control" onChange={handleChange}>
-        <option key="0" value="0">
-          Seleccione el Tipo de Vehiculo
-        </option>
-        {datatv.map((element) => (
-          <option key={element.tiV_Codigo} value={element.tiV_Codigo}>
-            {element.tiV_Nombre}
-          </option>
-        ))}
-      </select>
-
-      <br />
-
-      <select name="com_Codigo" className="form-control" onChange={handleChange}>
-        <option key="0" value="0">
-          Seleccione el Tipo de Vehiculo
-        </option>
-        {datatc.map((element) => (
-          <option key={element.com_Codigo} value={element.com_Codigo}>
-            {element.com_TipoCombustible}
-          </option>
-        ))}
-      </select>
-
-      {/* <TextField
-        className={styles.inputMaterial}
-        label="Tipo Vehiculo"
-        name="tiV_Codigo"
-        onChange={handleChange}
-      /> */}
-      {/* <TextField
-        className={styles.inputMaterial}
-        label="Combustible"
-        name="com_Codigo"
-        onChange={handleChange}
-      /> */}
-      <br />
-      <TextField
-        className={styles.inputMaterial}
-        label="Marca"
-        name="veh_Marca"
-        onChange={handleChange}
-      />
-      <br />
-      <TextField
-        className={styles.inputMaterial}
-        label="Placa"
-        name="veh_Placa"
-        onChange={handleChange}
-      />
-      <br />
-      <TextField
-        className={styles.inputMaterial}
-        label="Modelo"
-        name="veh_Modelo"
-        onChange={handleChange}
-      />
-      <br />
-      <TextField
-        className={styles.inputMaterial}
-        label="Año"
-        name="veh_Año"
-        type="number"
-        onChange={handleChange}
-      />
-      <br />
-      <TextField
-        className={styles.inputMaterial}
-        label="Kilometraje"
-        name="veh_KilometrajeInicial"
-        type="number"
-        onChange={handleChange}
-      />
-      <br />
-      <TextField
-        className={styles.inputMaterial}
-        label="Color"
-        name="veh_Color"
-        onChange={handleChange}
-      />
-      <br />
-      <TextField
-        className={styles.inputMaterial}
-        label="Transmision"
-        name="veh_Transmision"
-        onChange={handleChange}
-      />
-      <br />
-      <br />
-      <div align="right">
-        <Button color="primary" onClick={() => peticionpost()}>
-          Insertar
-        </Button>
-        <Button onClick={() => abrircerrarModalInsertar()}>Cancelar</Button>
-      </div>
+      <MDTypography variant="h3"> Agregar Nuevo Vehiculo </MDTypography>
+      <Divider sx={{ marginTop: 1 }} light={false} />
+      <MDBox pb={3}>
+        <Grid container spacing={3} justifyContent="center">
+          <Grid item xs={12} md={4} lg={3}>
+            <MDBox mb={2}>
+              <MDTypography variant="h6"> Tipo de Vehiculo: </MDTypography>
+            </MDBox>
+          </Grid>
+          <Grid item xs={12} md={6} lg={9}>
+            <MDBox mb={2}>
+              <select name="tiV_Codigo" className="form-control" onChange={handleChange}>
+                <option key="0" value="0">
+                  Seleccione el Tipo de Vehiculo
+                </option>
+                {datatv.map((element) => (
+                  <option key={element.tiV_Codigo} value={element.tiV_Codigo}>
+                    {element.tiV_Nombre}
+                  </option>
+                ))}
+              </select>
+            </MDBox>
+          </Grid>
+        </Grid>
+        <Grid container spacing={3} justifyContent="center">
+          <Grid item xs={12} md={4} lg={3}>
+            <MDBox mb={2}>
+              <MDTypography variant="h6"> Combustible: </MDTypography>
+            </MDBox>
+          </Grid>
+          <Grid item xs={12} md={6} lg={9}>
+            <MDBox mb={2}>
+              <select name="com_Codigo" className="select" onChange={handleChange}>
+                <option key="0" value="0">
+                  Seleccione Combustible
+                </option>
+                {datatc.map((element) => (
+                  <option key={element.com_Codigo} value={element.com_Codigo}>
+                    {element.com_TipoCombustible}
+                  </option>
+                ))}
+              </select>
+            </MDBox>
+          </Grid>
+        </Grid>
+        <Grid container spacing={3} justifyContent="center">
+          <Grid item xs={12} md={4} lg={3}>
+            <MDBox mb={2}>
+              <MDTypography variant="h6"> Marca: </MDTypography>
+            </MDBox>
+          </Grid>
+          <Grid item xs={12} md={6} lg={9}>
+            <MDBox mb={2}>
+              <MDInput
+                label="Marca"
+                name="veh_Marca"
+                type="text"
+                onChange={handleChange}
+                size="small"
+              />
+            </MDBox>
+          </Grid>
+        </Grid>
+        <Grid container spacing={3} justifyContent="center">
+          <Grid item xs={12} md={4} lg={3}>
+            <MDBox mb={2}>
+              <MDTypography variant="h6"> Placa: </MDTypography>
+            </MDBox>
+          </Grid>
+          <Grid item xs={12} md={6} lg={9}>
+            <MDBox mb={2}>
+              <MDInput
+                label="Placa"
+                name="veh_Placa"
+                type="text"
+                onChange={handleChange}
+                size="small"
+              />
+            </MDBox>
+          </Grid>
+        </Grid>
+        <Grid container spacing={3} justifyContent="center">
+          <Grid item xs={12} md={4} lg={3}>
+            <MDBox mb={2}>
+              <MDTypography variant="h6"> Modelo: </MDTypography>
+            </MDBox>
+          </Grid>
+          <Grid item xs={12} md={6} lg={9}>
+            <MDBox mb={2}>
+              <MDInput
+                label="Modelo"
+                name="veh_Modelo"
+                type="text"
+                onChange={handleChange}
+                size="small"
+              />
+            </MDBox>
+          </Grid>
+        </Grid>
+        <Grid container spacing={3} justifyContent="center">
+          <Grid item xs={12} md={4} lg={3}>
+            <MDBox mb={2}>
+              <MDTypography variant="h6"> Año: </MDTypography>
+            </MDBox>
+          </Grid>
+          <Grid item xs={12} md={6} lg={9}>
+            <MDBox mb={2}>
+              <MDInput
+                label="Año"
+                name="veh_Año"
+                type="number"
+                onChange={handleChange}
+                size="small"
+              />
+            </MDBox>
+          </Grid>
+        </Grid>
+        <Grid container spacing={3} justifyContent="center">
+          <Grid item xs={12} md={4} lg={3}>
+            <MDBox mb={2}>
+              <MDTypography variant="h6"> Kilometraje: </MDTypography>
+            </MDBox>
+          </Grid>
+          <Grid item xs={12} md={6} lg={9}>
+            <MDBox mb={2}>
+              <MDInput
+                label="Kilometraje"
+                name="veh_KilometrajeInicial"
+                type="number"
+                size="small"
+                onChange={handleChange}
+              />
+            </MDBox>
+          </Grid>
+        </Grid>
+        <Grid container spacing={3} justifyContent="center">
+          <Grid item xs={12} md={4} lg={3}>
+            <MDBox mb={2}>
+              <MDTypography variant="h6"> Color: </MDTypography>
+            </MDBox>
+          </Grid>
+          <Grid item xs={12} md={6} lg={4}>
+            <MDBox mb={2}>
+              <MDInput
+                label="Color"
+                name="veh_Color"
+                type="color"
+                fullWidth
+                size="small"
+                onChange={handleChange}
+              />
+            </MDBox>
+          </Grid>
+          <Grid item xs={12} md={6} lg={5} />
+        </Grid>
+        <Grid container spacing={3} justifyContent="center">
+          <Grid item xs={12} md={4} lg={3}>
+            <MDBox mb={2}>
+              <MDTypography variant="h6"> Transmision: </MDTypography>
+            </MDBox>
+          </Grid>
+          <Grid item xs={12} md={6} lg={9}>
+            <MDBox mb={2}>
+              <select name="veh_Transmision" className="select" onChange={handleChange}>
+                <option key="0" value="none">
+                  Seleccione Transmision
+                </option>
+                <option key="1" value="Automatica">
+                  Automatica
+                </option>
+                <option key="2" value="Mecanica/Manual">
+                  Mecanica/Manual
+                </option>
+              </select>
+            </MDBox>
+          </Grid>
+        </Grid>
+        <Grid container spacing={3} justifyContent="center">
+          <Grid item xs={12} md={4} lg={3}>
+            <MDButton variant="gradient" color="info" fullWidth onClick={() => peticionpost()}>
+              Insertar
+            </MDButton>
+          </Grid>
+          <Grid item xs={12} md={4} lg={3}>
+            <MDButton
+              variant="gradient"
+              color="light"
+              fullWidth
+              onClick={() => abrircerrarModalInsertar()}
+            >
+              Cancelar
+            </MDButton>
+          </Grid>
+        </Grid>
+      </MDBox>
     </div>
   );
 
   const bodyEditar = (
     <div className={styles.modal}>
-      <h3>Editar Vehiculo</h3>
-      <TextField
-        className={styles.inputMaterial}
-        label="Tipo Vehiculo"
-        name="tiV_Codigo"
-        onChange={handleChange}
-        value={vehiculoseleccionado && vehiculoseleccionado.tiV_Codigo}
-      />
-      <br />
-      <TextField
-        className={styles.inputMaterial}
-        label="Combustible"
-        name="com_Codigo"
-        onChange={handleChange}
-        value={vehiculoseleccionado && vehiculoseleccionado.com_Codigo}
-      />
-      <br />
-      <TextField
-        className={styles.inputMaterial}
-        label="Marca"
-        name="veh_Marca"
-        onChange={handleChange}
-        value={vehiculoseleccionado && vehiculoseleccionado.veh_Marca}
-      />
-      <br />
-      <TextField
-        className={styles.inputMaterial}
-        label="Placa"
-        name="veh_Placa"
-        onChange={handleChange}
-        value={vehiculoseleccionado && vehiculoseleccionado.veh_Placa}
-      />
-      <br />
-      <TextField
-        className={styles.inputMaterial}
-        label="Modelo"
-        name="veh_Modelo"
-        onChange={handleChange}
-        value={vehiculoseleccionado && vehiculoseleccionado.veh_Modelo}
-      />
-      <br />
-      <TextField
-        className={styles.inputMaterial}
-        label="Año"
-        name="veh_Año"
-        type="number"
-        onChange={handleChange}
-        value={vehiculoseleccionado && vehiculoseleccionado.veh_Año}
-      />
-      <br />
-      <TextField
-        className={styles.inputMaterial}
-        label="Kilometraje"
-        name="veh_KilometrajeInicial"
-        type="number"
-        onChange={handleChange}
-        value={vehiculoseleccionado && vehiculoseleccionado.veh_KilometrajeInicial}
-      />
-      <br />
-      <TextField
-        className={styles.inputMaterial}
-        label="Color"
-        name="veh_Color"
-        onChange={handleChange}
-        value={vehiculoseleccionado && vehiculoseleccionado.veh_Color}
-      />
-      <br />
-      <TextField
-        className={styles.inputMaterial}
-        label="Transmision"
-        name="veh_Transmision"
-        onChange={handleChange}
-        value={vehiculoseleccionado && vehiculoseleccionado.veh_Transmision}
-      />
-      <br />
-      <br />
-      <div align="right">
-        <Button color="primary" onClick={() => peticionput()}>
-          Editar
-        </Button>
-        <Button onClick={() => abrircerrarModalEditar()}>Cancelar</Button>
-      </div>
+      <MDTypography variant="h3"> Editar Vehiculo </MDTypography>
+      <Divider sx={{ marginTop: 1 }} light={false} />
+      <MDBox pb={3}>
+        <Grid container spacing={3} justifyContent="center">
+          <Grid item xs={12} md={4} lg={3}>
+            <MDBox mb={2}>
+              <MDTypography variant="h6"> Tipo de Vehiculo: </MDTypography>
+            </MDBox>
+          </Grid>
+          <Grid item xs={12} md={6} lg={9}>
+            <MDBox mb={2}>
+              <select
+                name="tiV_Codigo"
+                className="form-control"
+                onChange={handleChange}
+                value={vehiculoseleccionado && vehiculoseleccionado.tiV_Codigo}
+              >
+                <option key="0" value="0">
+                  Seleccione el Tipo de Vehiculo
+                </option>
+                {datatv.map((element) => (
+                  <option key={element.tiV_Codigo} value={element.tiV_Codigo}>
+                    {element.tiV_Nombre}
+                  </option>
+                ))}
+              </select>
+            </MDBox>
+          </Grid>
+        </Grid>
+        <Grid container spacing={3} justifyContent="center">
+          <Grid item xs={12} md={4} lg={3}>
+            <MDBox mb={2}>
+              <MDTypography variant="h6"> Combustible: </MDTypography>
+            </MDBox>
+          </Grid>
+          <Grid item xs={12} md={6} lg={9}>
+            <MDBox mb={2}>
+              <select
+                name="com_Codigo"
+                className="select"
+                onChange={handleChange}
+                value={vehiculoseleccionado && vehiculoseleccionado.com_Codigo}
+              >
+                <option key="0" value="0">
+                  Seleccione Combustible
+                </option>
+                {datatc.map((element) => (
+                  <option key={element.com_Codigo} value={element.com_Codigo}>
+                    {element.com_TipoCombustible}
+                  </option>
+                ))}
+              </select>
+            </MDBox>
+          </Grid>
+        </Grid>
+        <Grid container spacing={3} justifyContent="center">
+          <Grid item xs={12} md={4} lg={3}>
+            <MDBox mb={2}>
+              <MDTypography variant="h6"> Marca: </MDTypography>
+            </MDBox>
+          </Grid>
+          <Grid item xs={12} md={6} lg={9}>
+            <MDBox mb={2}>
+              <MDInput
+                label="Marca"
+                name="veh_Marca"
+                type="text"
+                onChange={handleChange}
+                size="small"
+                value={vehiculoseleccionado && vehiculoseleccionado.veh_Marca}
+              />
+            </MDBox>
+          </Grid>
+        </Grid>
+        <Grid container spacing={3} justifyContent="center">
+          <Grid item xs={12} md={4} lg={3}>
+            <MDBox mb={2}>
+              <MDTypography variant="h6"> Placa: </MDTypography>
+            </MDBox>
+          </Grid>
+          <Grid item xs={12} md={6} lg={9}>
+            <MDBox mb={2}>
+              <MDInput
+                label="Placa"
+                name="veh_Placa"
+                type="text"
+                onChange={handleChange}
+                size="small"
+                value={vehiculoseleccionado && vehiculoseleccionado.veh_Placa}
+              />
+            </MDBox>
+          </Grid>
+        </Grid>
+        <Grid container spacing={3} justifyContent="center">
+          <Grid item xs={12} md={4} lg={3}>
+            <MDBox mb={2}>
+              <MDTypography variant="h6"> Modelo: </MDTypography>
+            </MDBox>
+          </Grid>
+          <Grid item xs={12} md={6} lg={9}>
+            <MDBox mb={2}>
+              <MDInput
+                label="Modelo"
+                name="veh_Modelo"
+                type="text"
+                onChange={handleChange}
+                size="small"
+                value={vehiculoseleccionado && vehiculoseleccionado.veh_Modelo}
+              />
+            </MDBox>
+          </Grid>
+        </Grid>
+        <Grid container spacing={3} justifyContent="center">
+          <Grid item xs={12} md={4} lg={3}>
+            <MDBox mb={2}>
+              <MDTypography variant="h6"> Año: </MDTypography>
+            </MDBox>
+          </Grid>
+          <Grid item xs={12} md={6} lg={9}>
+            <MDBox mb={2}>
+              <MDInput
+                label="Año"
+                name="veh_Año"
+                type="number"
+                onChange={handleChange}
+                size="small"
+                value={vehiculoseleccionado && vehiculoseleccionado.veh_Año}
+              />
+            </MDBox>
+          </Grid>
+        </Grid>
+        <Grid container spacing={3} justifyContent="center">
+          <Grid item xs={12} md={4} lg={3}>
+            <MDBox mb={2}>
+              <MDTypography variant="h6"> Kilometraje: </MDTypography>
+            </MDBox>
+          </Grid>
+          <Grid item xs={12} md={6} lg={9}>
+            <MDBox mb={2}>
+              <MDInput
+                label="Kilometraje"
+                name="veh_KilometrajeInicial"
+                type="number"
+                size="small"
+                onChange={handleChange}
+                value={vehiculoseleccionado && vehiculoseleccionado.veh_KilometrajeInicial}
+              />
+            </MDBox>
+          </Grid>
+        </Grid>
+        <Grid container spacing={3} justifyContent="center">
+          <Grid item xs={12} md={4} lg={3}>
+            <MDBox mb={2}>
+              <MDTypography variant="h6"> Color: </MDTypography>
+            </MDBox>
+          </Grid>
+          <Grid item xs={12} md={6} lg={4}>
+            <MDBox mb={2}>
+              <MDInput
+                label="Color"
+                name="veh_Color"
+                type="color"
+                fullWidth
+                size="small"
+                onChange={handleChange}
+                value={vehiculoseleccionado && vehiculoseleccionado.veh_Color}
+              />
+            </MDBox>
+          </Grid>
+          <Grid item xs={12} md={6} lg={5} />
+        </Grid>
+        <Grid container spacing={3} justifyContent="center">
+          <Grid item xs={12} md={4} lg={3}>
+            <MDBox mb={2}>
+              <MDTypography variant="h6"> Transmision: </MDTypography>
+            </MDBox>
+          </Grid>
+          <Grid item xs={12} md={6} lg={9}>
+            <MDBox mb={2}>
+              <select
+                name="veh_Transmision"
+                className="select"
+                onChange={handleChange}
+                value={vehiculoseleccionado && vehiculoseleccionado.veh_Transmision}
+              >
+                <option key="0" value="none">
+                  Seleccione Transmision
+                </option>
+                <option key="1" value="Automatica">
+                  Automatica
+                </option>
+                <option key="2" value="Mecanica/Manual">
+                  Mecanica/Manual
+                </option>
+              </select>
+            </MDBox>
+          </Grid>
+        </Grid>
+        <Grid container spacing={3} justifyContent="center">
+          <Grid item xs={12} md={4} lg={3}>
+            <MDButton variant="gradient" color="info" fullWidth onClick={() => peticionput()}>
+              Actualizar
+            </MDButton>
+          </Grid>
+          <Grid item xs={12} md={4} lg={3}>
+            <MDButton
+              variant="gradient"
+              color="light"
+              fullWidth
+              onClick={() => abrircerrarModalInsertar()}
+            >
+              Cancelar
+            </MDButton>
+          </Grid>
+        </Grid>
+      </MDBox>
     </div>
   );
 
@@ -410,13 +746,13 @@ function Vehiculos() {
     <div className={styles.modal}>
       <p>
         Deseas Eliminar el Vehiculo
-        <b> {vehiculoseleccionado && vehiculoseleccionado.veh_Marca}</b>?
+        <b> {vehiculoseleccionado && vehiculoseleccionado.cli_Nombre}</b>?
       </p>
       <div align="right">
-        <Button color="secondary" onClick={() => peticiondelete()}>
+        <MDButton color="secondary" onClick={() => peticiondelete()}>
           Si
-        </Button>
-        <Button onClick={() => abrircerrarModalEliminar()}>No</Button>
+        </MDButton>
+        <MDButton onClick={() => abrircerrarModalEliminar()}>No</MDButton>
       </div>
     </div>
   );
@@ -430,7 +766,13 @@ function Vehiculos() {
             <Card>
               <div className="App">
                 <br />
-                <Button onClick={() => abrircerrarModalInsertar()}>Insertar Vehiculo</Button>
+                <MDButton
+                  variant="gradient"
+                  color="success"
+                  onClick={() => abrircerrarModalInsertar()}
+                >
+                  Insertar Vehiculo
+                </MDButton>
                 <br />
                 <br />
                 <MaterialTable
@@ -480,187 +822,3 @@ function Vehiculos() {
 }
 
 export default Vehiculos;
-
-// // import PropTypes from 'prop-types'
-// import React from "react";
-// import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
-// import DashboardNavbar from "examples/Navbars/DashboardNavbar";
-
-// import Grid from "@mui/material/Grid";
-// import Card from "@mui/material/Card";
-
-// // Material Dashboard 2 React components
-// import MDBox from "components/MDBox";
-// import MDInput from "components/MDInput";
-// import MDTypography from "components/MDTypography";
-// import MDButton from "components/MDButton";
-
-// // Material Dashboard 2 React example components
-// import DataTable from "examples/Tables/DataTable";
-
-// // Data
-// import TablaVehiculos from "layouts/Catalogos/Vehiculos/TablaVehiculos";
-// import TextField from "@mui/material/TextField";
-// import Autocomplete from "@mui/material/Autocomplete";
-
-// function Vehiculos() {
-//   const { columns, rows } = TablaVehiculos();
-//   const listatipov = [
-//     { label: "Sedan" },
-//     { label: "SUV" },
-//     { label: "Pick-up" },
-//     { label: "Camion" },
-//     { label: "Trailer" },
-//   ];
-//   return (
-//     <DashboardLayout>
-//       <DashboardNavbar />
-//       <Card>
-//         <MDBox pt={6} pb={3}>
-//           <Grid container spacing={3} justifyContent="center">
-//             <Grid item xs={12} md={4} lg={2}>
-//               <MDBox mb={2}>
-//                 <MDTypography variant="h6">Marca:</MDTypography>
-//               </MDBox>
-//             </Grid>
-//             <Grid item xs={12} md={6} lg={3}>
-//               <MDBox mb={2}>
-//                 <MDInput type="text" label="Marca del Vehiculo" fullWidth />
-//               </MDBox>
-//             </Grid>
-//             <Grid item xs={12} md={4} lg={2}>
-//               <MDBox mb={2}>
-//                 <MDTypography variant="h6">Placa:</MDTypography>
-//               </MDBox>
-//             </Grid>
-//             <Grid item xs={12} md={6} lg={3}>
-//               <MDBox mb={2}>
-//                 <MDInput type="text" label="Placa del Vehiculo" fullWidth />
-//               </MDBox>
-//             </Grid>
-//           </Grid>
-//           <Grid container spacing={3} justifyContent="center">
-//             <Grid item xs={12} md={4} lg={2}>
-//               <MDBox mb={2}>
-//                 <MDTypography variant="h6">Modelo:</MDTypography>
-//               </MDBox>
-//             </Grid>
-//             <Grid item xs={12} md={6} lg={3}>
-//               <MDBox mb={2}>
-//                 <MDInput type="text" label="Modelo del Vehiculo" fullWidth />
-//               </MDBox>
-//             </Grid>
-//             <Grid item xs={12} md={4} lg={2}>
-//               <MDBox mb={2}>
-//                 <MDTypography variant="h6">Año:</MDTypography>
-//               </MDBox>
-//             </Grid>
-//             <Grid item xs={12} md={6} lg={3}>
-//               <MDBox mb={2}>
-//                 <MDInput type="text" label="Año del vehiculo" fullWidth />
-//               </MDBox>
-//             </Grid>
-//           </Grid>
-//           <Grid container spacing={3} justifyContent="center">
-//             <Grid item xs={12} md={4} lg={2}>
-//               <MDBox mb={2}>
-//                 <MDTypography variant="h6">Tipo de Combustible:</MDTypography>
-//               </MDBox>
-//             </Grid>
-//             <Grid item xs={12} md={6} lg={3}>
-//               <MDBox mb={2}>
-//                 <MDInput type="text" label="Tipo de Combustible" fullWidth />
-//               </MDBox>
-//             </Grid>
-//             <Grid item xs={12} md={4} lg={2}>
-//               <MDBox mb={2}>
-//                 <MDTypography variant="h6">Kilometraje:</MDTypography>
-//               </MDBox>
-//             </Grid>
-//             <Grid item xs={12} md={6} lg={3}>
-//               <MDBox mb={2}>
-//                 <MDInput type="number" label="Kilometraje" fullWidth />
-//               </MDBox>
-//             </Grid>
-//           </Grid>
-//           <Grid container spacing={3} justifyContent="center">
-//             <Grid item xs={12} md={4} lg={2}>
-//               <MDBox mb={2}>
-//                 <MDTypography variant="h6">Color:</MDTypography>
-//               </MDBox>
-//             </Grid>
-//             <Grid item xs={12} md={6} lg={3}>
-//               <MDBox mb={2}>
-//                 <MDInput type="text" label="Color" fullWidth />
-//               </MDBox>
-//             </Grid>
-//             <Grid item xs={12} md={4} lg={2}>
-//               <MDBox mb={2}>
-//                 <MDTypography variant="h6">Transmision:</MDTypography>
-//               </MDBox>
-//             </Grid>
-//             <Grid item xs={12} md={6} lg={3}>
-//               <MDBox mb={2}>
-//                 <MDInput type="text" label="Transmision" fullWidth />
-//               </MDBox>
-//             </Grid>
-//           </Grid>
-//           <Grid container spacing={3} justifyContent="center">
-//             <Grid item xs={12} md={4} lg={2}>
-//               <MDBox mb={2}>
-//                 <MDTypography variant="h6">Tipo de Vehiculo:</MDTypography>
-//               </MDBox>
-//             </Grid>
-//             <Grid item xs={12} md={6} lg={3}>
-//               <MDBox mb={2}>
-//                 <Autocomplete
-//                   disablePortal
-//                   id="combo-box-demo"
-//                   options={listatipov}
-//                   fullWidth
-//                   renderInput={(params) => <TextField {...params} label="Tipo de Vehiculo" />}
-//                 />
-//               </MDBox>
-//             </Grid>
-//             <Grid item xs={12} md={4} lg={2}>
-//               <MDBox mb={2}>
-//                 <MDTypography variant="h6">Tipo de Llantas:</MDTypography>
-//               </MDBox>
-//             </Grid>
-//             <Grid item xs={12} md={6} lg={3}>
-//               <MDBox mb={2}>
-//                 <MDInput type="text" label="Tipo de Llantas" fullWidth />
-//               </MDBox>
-//             </Grid>
-//           </Grid>
-//           <Grid container spacing={3} justifyContent="center">
-//             <Grid item xs={12} md={4} lg={2}>
-//               <MDButton variant="gradient" color="info" fullWidth>
-//                 Crear
-//               </MDButton>
-//             </Grid>
-//           </Grid>
-//         </MDBox>
-//       </Card>
-//       <MDBox pt={6} pb={3}>
-//         <Grid container spacing={6}>
-//           <Grid item xs={12}>
-//             <Card>
-//               <MDBox pt={3}>
-//                 <DataTable
-//                   table={{ columns, rows }}
-//                   isSorted={false}
-//                   entriesPerPage={false}
-//                   showTotalEntries={false}
-//                   noEndBorder
-//                 />
-//               </MDBox>
-//             </Card>
-//           </Grid>
-//         </Grid>
-//       </MDBox>
-//     </DashboardLayout>
-//   );
-// }
-
-// export default Vehiculos;

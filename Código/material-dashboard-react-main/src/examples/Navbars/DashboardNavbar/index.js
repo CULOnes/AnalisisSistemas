@@ -16,7 +16,8 @@ Coded by www.creative-tim.com
 import { useState, useEffect } from "react";
 
 // react-router components
-import { useLocation /* , Link */ } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
+import { Logout } from "layouts/utils/Token";
 
 // prop-types is a library for typechecking of props.
 import PropTypes from "prop-types";
@@ -41,7 +42,7 @@ import {
   navbar,
   navbarContainer,
   navbarRow,
-  // navbarIconButton,
+  navbarIconButton,
   navbarMobileMenu,
 } from "examples/Navbars/DashboardNavbar/styles";
 
@@ -56,8 +57,7 @@ import {
 function DashboardNavbar({ absolute, light, isMini }) {
   const [navbarType, setNavbarType] = useState();
   const [controller, dispatch] = useMaterialUIController();
-  const { miniSidenav, transparentNavbar, fixedNavbar, /* openConfigurator, */ darkMode } =
-    controller;
+  const { miniSidenav, transparentNavbar, fixedNavbar, darkMode } = controller;
   const [openMenu, setOpenMenu] = useState(false);
   const route = useLocation().pathname.split("/").slice(1);
 
@@ -156,15 +156,16 @@ function DashboardNavbar({ absolute, light, isMini }) {
                   {miniSidenav ? "menu_open" : "menu"}
                 </Icon>
               </IconButton>
-              {/* <IconButton
-                size="small"
-                disableRipple
-                color="inherit"
-                sx={navbarIconButton}
-                onClick={handleConfiguratorOpen}
-              >
-                <Icon sx={iconsStyle}>settings</Icon>
-              </IconButton> */}
+              <Link to="/Login/Login">
+                <IconButton
+                  size="small"
+                  color="inherit"
+                  sx={navbarIconButton}
+                  onClick={() => Logout()}
+                >
+                  <Icon sx={iconsStyle}>settings</Icon>
+                </IconButton>
+              </Link>
               {/* <IconButton
                 size="small"
                 disableRipple

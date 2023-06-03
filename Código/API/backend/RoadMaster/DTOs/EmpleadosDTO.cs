@@ -2,16 +2,16 @@
 {
     public class EmpleadosDTO
     {
-        public int emp_codigo { get; set; }
-        public int pue_codigo { get; set; }
-        public string emp_nombre { get; set; }
-        public string emp_apellido { get; set; }
-        public string emp_direccion { get; set; }
-        public int emp_telefono { get; set; }
-        public string emp_dpi { get; set; }
-        public int emp_edad { get; set; }
-        public DateTime emp_nacimiento { get; set; }
-        public string emp_nolicencia { get; set; }
-        public string emp_tipolicencia { get; set; }
+        public int emp_Codigo { get; set; }
+        public int pue_Codigo { get; set; }
+        public string emp_Nombre { get; set; }
+        public string emp_Apellido { get; set; }
+        public string emp_Direccion { get; set; }
+        public int emp_Telefono { get; set; }
+        public string emp_Dpi { get; set; }
+        public int emp_Edad { get; set; }
+        public DateTime emp_Nacimiento { get; set; }
+        public string? emp_Nolicencia { get; set; }
+        public string? emp_Tipolicencia { get; set; }
     }
 }

@@ -46,13 +46,13 @@ namespace RoadMaster.Controllers
                 switch (empleados.tipobusqueda)
                 {
                     case 1:
-                        busqueda = db.Empleados.Where(x => x.emp_dpi == empleados.valor).ToArray();
+                        busqueda = db.Empleados.Where(x => x.emp_Dpi == empleados.valor).ToArray();
                         break;
                     case 2:
-                        busqueda = db.Empleados.Where(x => x.emp_nolicencia == empleados.valor).ToArray();
+                        busqueda = db.Empleados.Where(x => x.emp_Nolicencia == empleados.valor).ToArray();
                         break;
                     case 3:
-                        busqueda = db.Empleados.Where(x => x.emp_tipolicencia == empleados.valor).ToArray();
+                        busqueda = db.Empleados.Where(x => x.emp_Tipolicencia == empleados.valor).ToArray();
                         break;
                     default:
                         break;
@@ -72,18 +72,40 @@ namespace RoadMaster.Controllers
             try
             {
 
-                var empleado = db.Empleados.Find(empleados.emp_codigo);
+                DateTime fechamenor = DateTime.Now.AddYears(-18);
 
-                empleado.pue_codigo = empleados.pue_codigo;
-                empleado.emp_nombre = empleados.emp_nombre;
-                empleado.emp_apellido = empleados.emp_apellido;
-                empleado.emp_direccion = empleados.emp_direccion;
-                empleado.emp_telefono = empleados.emp_telefono;
-                empleado.emp_dpi = empleados.emp_dpi;
-                empleado.emp_edad = empleados.emp_edad;
-                empleado.emp_nacimiento = empleados.emp_nacimiento;
-                empleado.emp_nolicencia = empleados.emp_nolicencia;
-                empleado.emp_tipolicencia = empleados.emp_tipolicencia;
+                if (empleados.emp_Telefono < 0 || empleados.emp_Telefono.ToString().Length > 8 || empleados.emp_Telefono.ToString().Length < 8)
+                {
+                    return BadRequest("El numero de Telefono debe de contener 8 digitos y no pueden ser numeros negativos");
+                }
+
+                if (Int64.Parse(empleados.emp_Dpi) < 0 || empleados.emp_Dpi.Length > 13 || empleados.emp_Dpi.Length < 13)
+                {
+                    return BadRequest("Ingrese un numero de DPI Valido");
+                }
+
+                if (empleados.emp_Edad < 18 || empleados.emp_Telefono.ToString().Length > 75)
+                {
+                    return BadRequest("Ingrese una edad valida");
+                }
+
+                if (empleados.emp_Nacimiento > fechamenor)
+                {
+                    return BadRequest("La fecha de nacimiento no es valida");
+                }
+
+                var empleado = db.Empleados.Find(empleados.emp_Codigo);
+
+                empleado.pue_Codigo = empleados.pue_Codigo;
+                empleado.emp_Nombre = empleados.emp_Nombre;
+                empleado.emp_Apellido = empleados.emp_Apellido;
+                empleado.emp_Direccion = empleados.emp_Direccion;
+                empleado.emp_Telefono = empleados.emp_Telefono;
+                empleado.emp_Dpi = empleados.emp_Dpi;
+                empleado.emp_Edad = empleados.emp_Edad;
+                empleado.emp_Nacimiento = empleados.emp_Nacimiento;
+                empleado.emp_Nolicencia = empleados.emp_Nolicencia;
+                empleado.emp_Tipolicencia = empleados.emp_Tipolicencia;
 
                 db.Entry(empleado).State = EntityState.Modified;
                 db.SaveChanges();
@@ -101,23 +123,41 @@ namespace RoadMaster.Controllers
             try
             {
 
-                //var query = db.Vehiculos.ToArray();
+                DateTime fechamenor = DateTime.Now.AddYears(-18);
 
-                //var id = query.Count() + 1;
+                if (empleados.emp_Telefono < 0 || empleados.emp_Telefono.ToString().Length > 8 || empleados.emp_Telefono.ToString().Length < 8)
+                {
+                    return BadRequest("El numero de Telefono debe de contener 8 digitos y no pueden ser numeros negativos");
+                }
+
+                if (Int64.Parse(empleados.emp_Dpi) < 0 || empleados.emp_Dpi.Length > 13 || empleados.emp_Dpi.Length < 13)
+                {
+                    return BadRequest("Ingrese un numero de DPI Valido");
+                }
+
+                if (empleados.emp_Edad < 18 || empleados.emp_Telefono.ToString().Length > 75)
+                {
+                    return BadRequest("Ingrese una edad valida");
+                }
+
+                if(empleados.emp_Nacimiento > fechamenor)
+                {
+                    return BadRequest("La fecha de nacimiento no es valida");
+                }
 
                 var empleado = new Empleados
                 {
                     //Veh_Codigo = id,
-                    pue_codigo = empleados.pue_codigo,
-                    emp_nombre = empleados.emp_nombre,
-                    emp_apellido = empleados.emp_apellido,
-                    emp_direccion = empleados.emp_direccion,
-                    emp_telefono = empleados.emp_telefono,
-                    emp_dpi = empleados.emp_dpi,
-                    emp_edad = empleados.emp_edad,
-                    emp_nacimiento = empleados.emp_nacimiento,
-                    emp_nolicencia = empleados.emp_nolicencia,
-                    emp_tipolicencia = empleados.emp_tipolicencia
+                    pue_Codigo = empleados.pue_Codigo,
+                    emp_Nombre = empleados.emp_Nombre,
+                    emp_Apellido = empleados.emp_Apellido,
+                    emp_Direccion = empleados.emp_Direccion,
+                    emp_Telefono = empleados.emp_Telefono,
+                    emp_Dpi = empleados.emp_Dpi,
+                    emp_Edad = empleados.emp_Edad,
+                    emp_Nacimiento = empleados.emp_Nacimiento,
+                    emp_Nolicencia = empleados.emp_Nolicencia,
+                    emp_Tipolicencia = empleados.emp_Tipolicencia
                 };
 
                 await db.Empleados.AddAsync(empleado);
@@ -136,7 +176,7 @@ namespace RoadMaster.Controllers
             try
             {
 
-                var empleado = db.Empleados.Find(empleados.emp_codigo);
+                var empleado = db.Empleados.Find(empleados.emp_Codigo);
                 if (empleado != null)
                 {
                     db.Empleados.Remove(empleado);

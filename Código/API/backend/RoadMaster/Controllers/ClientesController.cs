@@ -31,7 +31,7 @@ namespace RoadMaster.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Error interno, contacte administrador");
             }
         }
 
@@ -59,7 +59,7 @@ namespace RoadMaster.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Error interno, contacte administrador");
             }
         }
 
@@ -68,6 +68,16 @@ namespace RoadMaster.Controllers
         {
             try
             {
+
+                if (clientes.Cli_TelefonoCelular < 0 || clientes.Cli_TelefonoCelular.ToString().Length > 8 || clientes.Cli_TelefonoCelular.ToString().Length < 8)
+                {
+                    return BadRequest("El numero de Telefono debe de contener 8 digitos y no pueden ser numeros negativos");
+                }
+
+                if (clientes.Cli_TelefonoSecundario < 0 || clientes.Cli_TelefonoSecundario.ToString().Length > 8 || clientes.Cli_TelefonoSecundario.ToString().Length < 8)
+                {
+                    return BadRequest("El numero de Telefono debe de contener 8 digitos y no pueden ser numeros negativos");
+                }
 
                 var cliente = db.Clientes.Find(clientes.Cli_Codigo);
 
@@ -84,7 +94,7 @@ namespace RoadMaster.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Error interno, contacte administrador");
             }
         }
 
@@ -94,9 +104,15 @@ namespace RoadMaster.Controllers
             try
             {
 
-                //var query = db.Clientes.ToArray();
+                if (clientes.Cli_TelefonoCelular < 0 || clientes.Cli_TelefonoCelular.ToString().Length > 8 || clientes.Cli_TelefonoCelular.ToString().Length < 8)
+                {
+                    return BadRequest("El numero de Telefono debe de contener 8 digitos y no pueden ser numeros negativos");
+                }
 
-                //var id = query.Count() + 1;
+                if (clientes.Cli_TelefonoSecundario < 0 || clientes.Cli_TelefonoSecundario.ToString().Length > 8 || clientes.Cli_TelefonoSecundario.ToString().Length < 8)
+                {
+                    return BadRequest("El numero de Telefono debe de contener 8 digitos y no pueden ser numeros negativos");
+                }
 
                 var cliente = new Clientes
                 {
@@ -115,7 +131,7 @@ namespace RoadMaster.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Error interno, contacte administrador");
             }
         }
 
@@ -135,7 +151,7 @@ namespace RoadMaster.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Error interno, contacte administrador");
             }
         }
     }

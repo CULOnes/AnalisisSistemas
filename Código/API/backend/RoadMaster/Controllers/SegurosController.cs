@@ -70,6 +70,11 @@ namespace RoadMaster.Controllers
         {
             try
             {
+                if (seguros.Seg_Telefono < 0 || seguros.Seg_Telefono.ToString().Length > 8 || seguros.Seg_Telefono.ToString().Length < 8)
+                {
+                    return BadRequest("El numero de Telefono debe de contener 8 digitos y no pueden ser numeros negativos");
+                }
+
                 var seguro = db.Seguros.Find(seguros.Seg_Codigo);
 
                 seguro.TiS_Codigo = seguros.TiS_Codigo;
@@ -93,6 +98,11 @@ namespace RoadMaster.Controllers
         {
             try
             {
+
+                if (seguros.Seg_Telefono < 0 || seguros.Seg_Telefono.ToString().Length > 8 || seguros.Seg_Telefono.ToString().Length < 8)
+                {
+                    return BadRequest("El numero de Telefono debe de contener 8 digitos y no pueden ser numeros negativos");
+                }
 
                 //var query = db.Seguros.ToArray();
 

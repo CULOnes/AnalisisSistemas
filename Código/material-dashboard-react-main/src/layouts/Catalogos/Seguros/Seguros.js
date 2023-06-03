@@ -7,18 +7,23 @@ import axios from "axios";
 import MDBox from "components/MDBox";
 import "styles/styles.css";
 import MaterialTable from "material-table";
-import { Modal, TextField, Button } from "@material-ui/core";
+import { Modal } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import Swal from "sweetalert2";
+import MDInput from "components/MDInput";
+import MDTypography from "components/MDTypography";
+import Divider from "@mui/material/Divider";
+import MDButton from "components/MDButton";
 
 const columns = [
   {
     title: "ID",
     field: "seg_Codigo",
   },
-  {
-    title: "Tipo Seguro",
-    field: "tiS_Codigo",
-  },
+  // {
+  //   title: "Tipo Seguro",
+  //   field: "tiS_Codigo",
+  // },
   {
     title: "Compañia",
     field: "seg_Compañia",
@@ -39,10 +44,10 @@ const columns = [
 
 const useStyles = makeStyles((theme) => ({
   modal: {
+    borderRadius: "5%",
     position: "absolute",
-    width: 400,
+    width: 600,
     backgroundColor: theme.palette.background.paper,
-    border: "2px solid #000",
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
     top: "50%",
@@ -53,20 +58,22 @@ const useStyles = makeStyles((theme) => ({
     cursor: "pointer",
   },
   inputMaterial: {
-    width: "100%",
+    marginTop: "15px",
   },
 }));
 
 function Seguros() {
   const styles = useStyles();
   const [data, setData] = useState([]);
+  const [datats, setDatats] = useState([]);
   const [modalinsertar, setModalInsertar] = useState(false);
   const [modaleditar, setModalEditar] = useState(false);
   const [modaleliminar, setModalEliminar] = useState(false);
+  const [showComponent, setShowComponent] = useState(false);
   const [seguroseleccionado, setSeguroSeleccionado] = useState({
     seg_Codigo: 0,
     tiS_Codigo: 0,
-    seg_Compañia: "123",
+    seg_Compañia: "",
     seg_Cobertura: "",
     seg_Telefono: 0,
     seg_Vigencia: "",
@@ -81,6 +88,22 @@ function Seguros() {
   };
 
   const abrircerrarModalEliminar = () => {
+    // Swal.fire({
+    //   title: "",
+    //   html: `Estas seguro que deseas eliminar <b>${
+    //     seguroseleccionado && seguroseleccionado.cli_Nombre
+    //   }</b>`,
+    //   icon: "warning",
+    //   showCancelButton: true,
+    //   cancelButtonText: "Cancelar",
+    //   confirmButtonColor: "#3085d6",
+    //   cancelButtonColor: "#d33",
+    //   confirmButtonText: "Eliminar",
+    // }).then((result) => {
+    //   if (result.isConfirmed) {
+    //     peticiondelete();
+    //   }
+    // });
     setModalEliminar(!modaleliminar);
   };
 
@@ -95,6 +118,7 @@ function Seguros() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    console.log(seguroseleccionado);
     setSeguroSeleccionado((prevState) => ({
       ...prevState,
       [name]: value,
@@ -102,168 +126,385 @@ function Seguros() {
   };
 
   const peticionpost = async () => {
-    await axios
-      .post("https://localhost:7235/api/Seguros/registroseguros", seguroseleccionado)
-      .then((response) => {
-        setData(data.concat(response.data));
-        abrircerrarModalInsertar();
-      })
-      .catch((error) => {
-        console.log(error);
+    Swal.showLoading();
+    if (
+      seguroseleccionado.tiS_Codigo === 0 ||
+      seguroseleccionado.seg_Compañia === "" ||
+      seguroseleccionado.seg_Cobertura === "" ||
+      seguroseleccionado.seg_Telefono === 0 ||
+      seguroseleccionado.seg_Vigencia === ""
+    ) {
+      abrircerrarModalInsertar();
+      Swal.close();
+      Swal.fire({
+        icon: "info",
+        title: "",
+        html: "Debe de llenar <b>todos</b> los campos",
       });
+    } else {
+      abrircerrarModalInsertar();
+      await axios
+        .post("https://localhost:7235/api/Seguros/registroseguros", seguroseleccionado)
+        .then((response) => {
+          setData(data.concat(response.data));
+          Swal.close();
+          Swal.fire({
+            icon: "success",
+            title: "",
+            text: "Seguro creado exitosamente",
+            timer: 2500,
+          });
+        })
+        .catch((error) => {
+          Swal.close();
+          Swal.fire({
+            icon: "error",
+            title: "",
+            text: error.response.data,
+            timer: 2500,
+          });
+        });
+    }
   };
 
   const peticionput = async () => {
-    await axios
-      .put("https://localhost:7235/api/Seguros/actualizar", seguroseleccionado)
-      .then(() => {
-        const copiaArray = [...data];
-        const indice = copiaArray.findIndex(
-          (elemento) => elemento.seg_Codigo === seguroseleccionado.seg_Codigo
-        );
-        if (indice !== -1) {
-          copiaArray[indice] = {
-            ...copiaArray[indice],
-            tiS_Codigo: seguroseleccionado.tiS_Codigo,
-            seg_Compañia: seguroseleccionado.seg_Compañia,
-            seg_Cobertura: seguroseleccionado.seg_Cobertura,
-            seg_Telefono: seguroseleccionado.seg_Telefono,
-            seg_Vigencia: seguroseleccionado.seg_Vigencia,
-          };
-        }
-        setData(copiaArray);
-        abrircerrarModalEditar();
-      })
-      .catch((error) => {
-        console.log(error);
+    if (
+      seguroseleccionado.tiS_Codigo === 0 ||
+      seguroseleccionado.seg_Compañia === "" ||
+      seguroseleccionado.seg_Cobertura === "" ||
+      seguroseleccionado.seg_Telefono === 0 ||
+      seguroseleccionado.seg_Vigencia === ""
+    ) {
+      abrircerrarModalEditar();
+      Swal.close();
+      Swal.fire({
+        icon: "info",
+        title: "",
+        html: "Debe de llenar <b>todos</b> los campos",
       });
+    } else {
+      abrircerrarModalEditar();
+      Swal.showLoading();
+      await axios
+        .put("https://localhost:7235/api/Seguros/actualizar", seguroseleccionado)
+        .then(() => {
+          const copiaArray = [...data];
+          const indice = copiaArray.findIndex(
+            (elemento) => elemento.seg_Codigo === seguroseleccionado.seg_Codigo
+          );
+          if (indice !== -1) {
+            copiaArray[indice] = {
+              ...copiaArray[indice],
+              tiS_Codigo: seguroseleccionado.tiS_Codigo,
+              seg_Compañia: seguroseleccionado.seg_Compañia,
+              seg_Cobertura: seguroseleccionado.seg_Cobertura,
+              seg_Telefono: seguroseleccionado.seg_Telefono,
+              seg_Vigencia: seguroseleccionado.seg_Vigencia,
+            };
+          }
+          setData(copiaArray);
+          Swal.close();
+          Swal.fire({
+            icon: "success",
+            title: "",
+            text: "Seguro actualizado exitosamente",
+            timer: 2500,
+          });
+        })
+        .catch((error) => {
+          Swal.close();
+          Swal.fire({
+            icon: "error",
+            title: "",
+            text: error.response.data,
+            timer: 2500,
+          });
+        });
+    }
   };
 
   const peticiondelete = async () => {
+    abrircerrarModalEliminar();
+    Swal.showLoading();
     await axios
       .put("https://localhost:7235/api/Seguros/eliminar", seguroseleccionado)
       .then(() => {
         setData(data.filter((seguro) => seguro.seg_Codigo !== seguroseleccionado.seg_Codigo));
-        abrircerrarModalEliminar();
+        Swal.close();
+        Swal.fire({
+          icon: "success",
+          title: "",
+          text: "Seguro eliminado exitosamente",
+          timer: 2500,
+        });
       })
       .catch((error) => {
-        console.log(error);
+        Swal.close();
+        Swal.fire({
+          icon: "error",
+          title: "",
+          text: error.response.data,
+          timer: 2500,
+        });
       });
   };
 
   const peticionget = async () => {
+    Swal.showLoading();
     await axios
       .get("https://localhost:7235/api/Seguros/seguros")
       .then((response) => {
         setData(response.data);
+        Swal.close();
       })
       .catch((error) => {
-        console.log(error);
+        Swal.close();
+        Swal.fire({
+          icon: "error",
+          title: "",
+          text: error.response.data,
+          timer: 2500,
+        });
       });
+  };
+
+  const peticiongetts = async () => {
+    await axios
+      .get("https://localhost:7235/api/TiposSeguros/tiposseguros")
+      .then((response) => {
+        setDatats(response.data);
+      })
+      .catch();
   };
 
   useEffect(() => {
     peticionget();
+    peticiongetts();
+    setTimeout(() => {
+      setShowComponent(true);
+    }, 100);
   }, []);
+
+  if (!showComponent) {
+    return null;
+  }
 
   const bodyInsertar = (
     <div className={styles.modal}>
-      <h3>Agregar Nuevo Seguro</h3>
-      <TextField
-        className={styles.inputMaterial}
-        label="Tipo Seguro"
-        name="tiS_Codigo"
-        onChange={handleChange}
-      />
-      <br />
-      <TextField
-        className={styles.inputMaterial}
-        label="Compañia"
-        name="seg_Compañia"
-        onChange={handleChange}
-      />
-      <br />
-      <TextField
-        className={styles.inputMaterial}
-        label="Cobertura"
-        name="seg_Cobertura"
-        onChange={handleChange}
-      />
-      <br />
-      <TextField
-        className={styles.inputMaterial}
-        label="Telefono"
-        name="seg_Telefono"
-        onChange={handleChange}
-      />
-      <br />
-      <TextField
-        className={styles.inputMaterial}
-        label="Vigencia"
-        name="seg_Vigencia"
-        onChange={handleChange}
-      />
-      <br />
-      <br />
-      <div align="right">
-        <Button color="primary" onClick={() => peticionpost()}>
-          Insertar
-        </Button>
-        <Button onClick={() => abrircerrarModalInsertar()}>Cancelar</Button>
-      </div>
+      <MDTypography variant="h3"> Agregar Nuevo Seguro </MDTypography>
+      <Divider sx={{ marginTop: 1 }} light={false} />
+      <MDBox pt={2} pb={3}>
+        <Grid container spacing={3} justifyContent="center">
+          <Grid item xs={12} md={4} lg={3}>
+            <MDBox mb={2}>
+              <MDTypography variant="h6"> Tipo Seguro: </MDTypography>
+            </MDBox>
+          </Grid>
+          <Grid item xs={12} md={6} lg={9}>
+            <MDBox mb={2}>
+              <select name="tiS_Codigo" className="form-control" onChange={handleChange}>
+                <option key="0" value="0">
+                  Seleccione el Tipo de Seguro
+                </option>
+                {datats.map((element) => (
+                  <option key={element.tiS_Codigo} value={element.tiS_Codigo}>
+                    {element.tiS_Nombre}
+                  </option>
+                ))}
+              </select>
+            </MDBox>
+          </Grid>
+        </Grid>
+        <Grid container spacing={3} justifyContent="center">
+          <Grid item xs={12} md={4} lg={3}>
+            <MDBox mb={2}>
+              <MDTypography variant="h6"> Compañia: </MDTypography>
+            </MDBox>
+          </Grid>
+          <Grid item xs={12} md={6} lg={9}>
+            <MDBox mb={2}>
+              <MDInput type="text" label="Compañia" name="seg_Compañia" onChange={handleChange} />
+            </MDBox>
+          </Grid>
+        </Grid>
+        <Grid container spacing={3} justifyContent="center">
+          <Grid item xs={12} md={4} lg={3}>
+            <MDBox mb={2}>
+              <MDTypography variant="h6"> Cobertura: </MDTypography>
+            </MDBox>
+          </Grid>
+          <Grid item xs={12} md={6} lg={9}>
+            <MDBox mb={2}>
+              <MDInput label="Cobertura" name="seg_Cobertura" type="text" onChange={handleChange} />
+            </MDBox>
+          </Grid>
+        </Grid>
+        <Grid container spacing={3} justifyContent="center">
+          <Grid item xs={12} md={4} lg={3}>
+            <MDBox mb={2}>
+              <MDTypography variant="h6"> Telefono: </MDTypography>
+            </MDBox>
+          </Grid>
+          <Grid item xs={12} md={6} lg={9}>
+            <MDBox mb={2}>
+              <MDInput label="Telefono" name="seg_Telefono" type="number" onChange={handleChange} />
+            </MDBox>
+          </Grid>
+        </Grid>
+        <Grid container spacing={3} justifyContent="center">
+          <Grid item xs={12} md={4} lg={3}>
+            <MDBox mb={2}>
+              <MDTypography variant="h6"> Vigencia: </MDTypography>
+            </MDBox>
+          </Grid>
+          <Grid item xs={12} md={6} lg={9}>
+            <MDBox mb={2}>
+              <MDInput label="Vigencia" name="seg_Vigencia" type="text" onChange={handleChange} />
+            </MDBox>
+          </Grid>
+        </Grid>
+        <Grid container spacing={3} justifyContent="center">
+          <Grid item xs={12} md={4} lg={3}>
+            <MDButton variant="gradient" color="info" fullWidth onClick={() => peticionpost()}>
+              Insertar
+            </MDButton>
+          </Grid>
+          <Grid item xs={12} md={4} lg={3}>
+            <MDButton
+              variant="gradient"
+              color="light"
+              fullWidth
+              onClick={() => abrircerrarModalInsertar()}
+            >
+              Cancelar
+            </MDButton>
+          </Grid>
+        </Grid>
+      </MDBox>
     </div>
   );
 
   const bodyEditar = (
     <div className={styles.modal}>
-      <h3>Editar Seguro</h3>
-      <TextField
-        className={styles.inputMaterial}
-        label="Tipo Seguro"
-        name="tiS_Codigo"
-        onChange={handleChange}
-        value={seguroseleccionado && seguroseleccionado.tiS_Codigo}
-      />
-      <br />
-      <TextField
-        className={styles.inputMaterial}
-        label="Compañia"
-        name="seg_Compañia"
-        onChange={handleChange}
-        value={seguroseleccionado && seguroseleccionado.seg_Compañia}
-      />
-      <br />
-      <TextField
-        className={styles.inputMaterial}
-        label="cobertura"
-        name="seg_Cobertura"
-        onChange={handleChange}
-        value={seguroseleccionado && seguroseleccionado.seg_Cobertura}
-      />
-      <br />
-      <TextField
-        className={styles.inputMaterial}
-        label="Telefono"
-        name="seg_Telefono"
-        onChange={handleChange}
-        value={seguroseleccionado && seguroseleccionado.seg_Telefono}
-      />
-      <br />
-      <TextField
-        className={styles.inputMaterial}
-        label="Vigencia"
-        name="seg_Vigencia"
-        onChange={handleChange}
-        value={seguroseleccionado && seguroseleccionado.seg_Vigencia}
-      />
-      <br />
-      <br />
-      <div align="right">
-        <Button color="primary" onClick={() => peticionput()}>
-          Editar
-        </Button>
-        <Button onClick={() => abrircerrarModalEditar()}>Cancelar</Button>
-      </div>
+      <MDTypography variant="h3"> Editar Seguro </MDTypography>
+      <Divider sx={{ marginTop: 1 }} light={false} />
+      <MDBox pt={2} pb={3}>
+        <Grid container spacing={3} justifyContent="center">
+          <Grid item xs={12} md={4} lg={3}>
+            <MDBox mb={2}>
+              <MDTypography variant="h6"> Tipo Seguro: </MDTypography>
+            </MDBox>
+          </Grid>
+          <Grid item xs={12} md={6} lg={9}>
+            <MDBox mb={2}>
+              <select
+                name="tiS_Codigo"
+                className="form-control"
+                onChange={handleChange}
+                value={seguroseleccionado && seguroseleccionado.tiS_Codigo}
+              >
+                <option key="0" value="0">
+                  Seleccione el Tipo de Seguro
+                </option>
+                {datats.map((element) => (
+                  <option key={element.tiS_Codigo} value={element.tiS_Codigo}>
+                    {element.tiS_Nombre}
+                  </option>
+                ))}
+              </select>
+            </MDBox>
+          </Grid>
+        </Grid>
+        <Grid container spacing={3} justifyContent="center">
+          <Grid item xs={12} md={4} lg={3}>
+            <MDBox mb={2}>
+              <MDTypography variant="h6"> Compañia: </MDTypography>
+            </MDBox>
+          </Grid>
+          <Grid item xs={12} md={6} lg={9}>
+            <MDBox mb={2}>
+              <MDInput
+                type="text"
+                label="Compañia"
+                name="seg_Compañia"
+                onChange={handleChange}
+                value={seguroseleccionado && seguroseleccionado.seg_Compañia}
+              />
+            </MDBox>
+          </Grid>
+        </Grid>
+        <Grid container spacing={3} justifyContent="center">
+          <Grid item xs={12} md={4} lg={3}>
+            <MDBox mb={2}>
+              <MDTypography variant="h6"> Cobertura: </MDTypography>
+            </MDBox>
+          </Grid>
+          <Grid item xs={12} md={6} lg={9}>
+            <MDBox mb={2}>
+              <MDInput
+                label="Cobertura"
+                name="seg_Cobertura"
+                type="text"
+                onChange={handleChange}
+                value={seguroseleccionado && seguroseleccionado.seg_Cobertura}
+              />
+            </MDBox>
+          </Grid>
+        </Grid>
+        <Grid container spacing={3} justifyContent="center">
+          <Grid item xs={12} md={4} lg={3}>
+            <MDBox mb={2}>
+              <MDTypography variant="h6"> Telefono: </MDTypography>
+            </MDBox>
+          </Grid>
+          <Grid item xs={12} md={6} lg={9}>
+            <MDBox mb={2}>
+              <MDInput
+                label="Telefono"
+                name="seg_Telefono"
+                type="number"
+                onChange={handleChange}
+                value={seguroseleccionado && seguroseleccionado.seg_Telefono}
+              />
+            </MDBox>
+          </Grid>
+        </Grid>
+        <Grid container spacing={3} justifyContent="center">
+          <Grid item xs={12} md={4} lg={3}>
+            <MDBox mb={2}>
+              <MDTypography variant="h6"> Vigencia: </MDTypography>
+            </MDBox>
+          </Grid>
+          <Grid item xs={12} md={6} lg={9}>
+            <MDBox mb={2}>
+              <MDInput
+                label="Vigencia"
+                name="seg_Vigencia"
+                type="text"
+                onChange={handleChange}
+                value={seguroseleccionado && seguroseleccionado.seg_Vigencia}
+              />
+            </MDBox>
+          </Grid>
+        </Grid>
+        <Grid container spacing={3} justifyContent="center">
+          <Grid item xs={12} md={4} lg={3}>
+            <MDButton variant="gradient" color="info" fullWidth onClick={() => peticionput()}>
+              Actualizar
+            </MDButton>
+          </Grid>
+          <Grid item xs={12} md={4} lg={3}>
+            <MDButton
+              variant="gradient"
+              color="light"
+              fullWidth
+              onClick={() => abrircerrarModalEditar()}
+            >
+              Cancelar
+            </MDButton>
+          </Grid>
+        </Grid>
+      </MDBox>
     </div>
   );
 
@@ -271,13 +512,13 @@ function Seguros() {
     <div className={styles.modal}>
       <p>
         Deseas Eliminar el Seguro
-        <b> {seguroseleccionado && seguroseleccionado.seg_Codigo}</b>?
+        <b> {seguroseleccionado && seguroseleccionado.seg_Cobertura}</b>?
       </p>
       <div align="right">
-        <Button color="secondary" onClick={() => peticiondelete()}>
+        <MDButton color="secondary" onClick={() => peticiondelete()}>
           Si
-        </Button>
-        <Button onClick={() => abrircerrarModalEliminar()}>No</Button>
+        </MDButton>
+        <MDButton onClick={() => abrircerrarModalEliminar()}>No</MDButton>
       </div>
     </div>
   );
@@ -291,7 +532,13 @@ function Seguros() {
             <Card>
               <div className="App">
                 <br />
-                <Button onClick={() => abrircerrarModalInsertar()}>Insertar Seguro</Button>
+                <MDButton
+                  variant="gradient"
+                  color="success"
+                  onClick={() => abrircerrarModalInsertar()}
+                >
+                  Insertar Seguro
+                </MDButton>
                 <br />
                 <br />
                 <MaterialTable
@@ -341,3 +588,347 @@ function Seguros() {
 }
 
 export default Seguros;
+
+// import React, { useEffect, useState } from "react";
+// import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
+// import DashboardNavbar from "examples/Navbars/DashboardNavbar";
+// import Grid from "@mui/material/Grid";
+// import Card from "@mui/material/Card";
+// import axios from "axios";
+// import MDBox from "components/MDBox";
+// import "styles/styles.css";
+// import MaterialTable from "material-table";
+// import { Modal, TextField, Button } from "@material-ui/core";
+// import { makeStyles } from "@material-ui/core/styles";
+
+// const columns = [
+//   {
+//     title: "ID",
+//     field: "seg_Codigo",
+//   },
+//   // {
+//   //   title: "Tipo Seguro",
+//   //   field: "tiS_Codigo",
+//   // },
+//   {
+//     title: "Compañia",
+//     field: "seg_Compañia",
+//   },
+//   {
+//     title: "Cobertura",
+//     field: "seg_Cobertura",
+//   },
+//   {
+//     title: "Telefono",
+//     field: "seg_Telefono",
+//   },
+//   {
+//     title: "Vigencia",
+//     field: "seg_Vigencia",
+//   },
+// ];
+
+// const useStyles = makeStyles((theme) => ({
+//   modal: {
+//     position: "absolute",
+//     width: 400,
+//     backgroundColor: theme.palette.background.paper,
+//     border: "2px solid #000",
+//     boxShadow: theme.shadows[5],
+//     padding: theme.spacing(2, 4, 3),
+//     top: "50%",
+//     left: "50%",
+//     transform: "translate(-50%, -50%)",
+//   },
+//   iconos: {
+//     cursor: "pointer",
+//   },
+//   inputMaterial: {
+//     width: "100%",
+//   },
+// }));
+
+// function Seguros() {
+//   const styles = useStyles();
+//   const [data, setData] = useState([]);
+//   const [modalinsertar, setModalInsertar] = useState(false);
+//   const [modaleditar, setModalEditar] = useState(false);
+//   const [modaleliminar, setModalEliminar] = useState(false);
+//   const [seguroseleccionado, setSeguroSeleccionado] = useState({
+//     seg_Codigo: 0,
+//     tiS_Codigo: 0,
+//     seg_Compañia: "123",
+//     seg_Cobertura: "",
+//     seg_Telefono: 0,
+//     seg_Vigencia: "",
+//   });
+
+//   const abrircerrarModalInsertar = () => {
+//     setModalInsertar(!modalinsertar);
+//   };
+
+//   const abrircerrarModalEditar = () => {
+//     setModalEditar(!modaleditar);
+//   };
+
+//   const abrircerrarModalEliminar = () => {
+//     setModalEliminar(!modaleliminar);
+//   };
+
+//   const seleccionarSeguro = (seguro, caso) => {
+//     setSeguroSeleccionado(seguro);
+//     if (caso === "Editar") {
+//       abrircerrarModalEditar();
+//     } else {
+//       abrircerrarModalEliminar();
+//     }
+//   };
+
+//   const handleChange = (e) => {
+//     const { name, value } = e.target;
+//     setSeguroSeleccionado((prevState) => ({
+//       ...prevState,
+//       [name]: value,
+//     }));
+//   };
+
+//   const peticionpost = async () => {
+//     await axios
+//       .post("https://localhost:7235/api/Seguros/registroseguros", seguroseleccionado)
+//       .then((response) => {
+//         setData(data.concat(response.data));
+//         abrircerrarModalInsertar();
+//       })
+//       .catch((error) => {
+//         console.log(error);
+//       });
+//   };
+
+//   const peticionput = async () => {
+//     await axios
+//       .put("https://localhost:7235/api/Seguros/actualizar", seguroseleccionado)
+//       .then(() => {
+//         const copiaArray = [...data];
+//         const indice = copiaArray.findIndex(
+//           (elemento) => elemento.seg_Codigo === seguroseleccionado.seg_Codigo
+//         );
+//         if (indice !== -1) {
+//           copiaArray[indice] = {
+//             ...copiaArray[indice],
+//             tiS_Codigo: seguroseleccionado.tiS_Codigo,
+//             seg_Compañia: seguroseleccionado.seg_Compañia,
+//             seg_Cobertura: seguroseleccionado.seg_Cobertura,
+//             seg_Telefono: seguroseleccionado.seg_Telefono,
+//             seg_Vigencia: seguroseleccionado.seg_Vigencia,
+//           };
+//         }
+//         setData(copiaArray);
+//         abrircerrarModalEditar();
+//       })
+//       .catch((error) => {
+//         console.log(error);
+//       });
+//   };
+
+//   const peticiondelete = async () => {
+//     await axios
+//       .put("https://localhost:7235/api/Seguros/eliminar", seguroseleccionado)
+//       .then(() => {
+//         setData(data.filter((seguro) => seguro.seg_Codigo !== seguroseleccionado.seg_Codigo));
+//         abrircerrarModalEliminar();
+//       })
+//       .catch((error) => {
+//         console.log(error);
+//       });
+//   };
+
+//   const peticionget = async () => {
+//     await axios
+//       .get("https://localhost:7235/api/Seguros/seguros")
+//       .then((response) => {
+//         setData(response.data);
+//       })
+//       .catch((error) => {
+//         console.log(error);
+//       });
+//   };
+
+//   useEffect(() => {
+//     peticionget();
+//   }, []);
+
+//   const bodyInsertar = (
+//     <div className={styles.modal}>
+//       <h3>Agregar Nuevo Seguro</h3>
+//       <TextField
+//         className={styles.inputMaterial}
+//         label="Tipo Seguro"
+//         name="tiS_Codigo"
+//         onChange={handleChange}
+//       />
+//       <br />
+//       <TextField
+//         className={styles.inputMaterial}
+//         label="Compañia"
+//         name="seg_Compañia"
+//         onChange={handleChange}
+//       />
+//       <br />
+//       <TextField
+//         className={styles.inputMaterial}
+//         label="Cobertura"
+//         name="seg_Cobertura"
+//         onChange={handleChange}
+//       />
+//       <br />
+//       <TextField
+//         className={styles.inputMaterial}
+//         label="Telefono"
+//         name="seg_Telefono"
+//         onChange={handleChange}
+//       />
+//       <br />
+//       <TextField
+//         className={styles.inputMaterial}
+//         label="Vigencia"
+//         name="seg_Vigencia"
+//         onChange={handleChange}
+//       />
+//       <br />
+//       <br />
+//       <div align="right">
+//         <Button color="primary" onClick={() => peticionpost()}>
+//           Insertar
+//         </Button>
+//         <Button onClick={() => abrircerrarModalInsertar()}>Cancelar</Button>
+//       </div>
+//     </div>
+//   );
+
+//   const bodyEditar = (
+//     <div className={styles.modal}>
+//       <h3>Editar Seguro</h3>
+//       <TextField
+//         className={styles.inputMaterial}
+//         label="Tipo Seguro"
+//         name="tiS_Codigo"
+//         onChange={handleChange}
+//         value={seguroseleccionado && seguroseleccionado.tiS_Codigo}
+//       />
+//       <br />
+//       <TextField
+//         className={styles.inputMaterial}
+//         label="Compañia"
+//         name="seg_Compañia"
+//         onChange={handleChange}
+//         value={seguroseleccionado && seguroseleccionado.seg_Compañia}
+//       />
+//       <br />
+//       <TextField
+//         className={styles.inputMaterial}
+//         label="cobertura"
+//         name="seg_Cobertura"
+//         onChange={handleChange}
+//         value={seguroseleccionado && seguroseleccionado.seg_Cobertura}
+//       />
+//       <br />
+//       <TextField
+//         className={styles.inputMaterial}
+//         label="Telefono"
+//         name="seg_Telefono"
+//         onChange={handleChange}
+//         value={seguroseleccionado && seguroseleccionado.seg_Telefono}
+//       />
+//       <br />
+//       <TextField
+//         className={styles.inputMaterial}
+//         label="Vigencia"
+//         name="seg_Vigencia"
+//         onChange={handleChange}
+//         value={seguroseleccionado && seguroseleccionado.seg_Vigencia}
+//       />
+//       <br />
+//       <br />
+//       <div align="right">
+//         <Button color="primary" onClick={() => peticionput()}>
+//           Editar
+//         </Button>
+//         <Button onClick={() => abrircerrarModalEditar()}>Cancelar</Button>
+//       </div>
+//     </div>
+//   );
+
+//   const bodyEliminar = (
+//     <div className={styles.modal}>
+//       <p>
+//         Deseas Eliminar el Seguro
+//         <b> {seguroseleccionado && seguroseleccionado.seg_Codigo}</b>?
+//       </p>
+//       <div align="right">
+//         <Button color="secondary" onClick={() => peticiondelete()}>
+//           Si
+//         </Button>
+//         <Button onClick={() => abrircerrarModalEliminar()}>No</Button>
+//       </div>
+//     </div>
+//   );
+
+//   return (
+//     <DashboardLayout>
+//       <DashboardNavbar />
+//       <MDBox pt={6} pb={3}>
+//         <Grid container spacing={6}>
+//           <Grid item xs={12}>
+//             <Card>
+//               <div className="App">
+//                 <br />
+//                 <Button onClick={() => abrircerrarModalInsertar()}>Insertar Seguro</Button>
+//                 <br />
+//                 <br />
+//                 <MaterialTable
+//                   columns={columns}
+//                   data={data}
+//                   title="Seguros"
+//                   actions={[
+//                     {
+//                       icon: "edit",
+//                       tooltip: "Editar Seguro",
+//                       onClick: (event, rowData) => seleccionarSeguro(rowData, "Editar"),
+//                     },
+//                     {
+//                       icon: "delete",
+//                       tooltip: "Eliminar Seguro",
+//                       onClick: (event, rowData) => seleccionarSeguro(rowData, "Eliminar"),
+//                     },
+//                   ]}
+//                   options={{
+//                     actionsColumnIndex: -1,
+//                   }}
+//                   localization={{
+//                     header: {
+//                       actions: "Acciones",
+//                     },
+//                   }}
+//                 />
+
+//                 <Modal open={modalinsertar} onClose={abrircerrarModalInsertar}>
+//                   {bodyInsertar}
+//                 </Modal>
+
+//                 <Modal open={modaleditar} onClose={abrircerrarModalEditar}>
+//                   {bodyEditar}
+//                 </Modal>
+
+//                 <Modal open={modaleliminar} onClose={abrircerrarModalEliminar}>
+//                   {bodyEliminar}
+//                 </Modal>
+//               </div>
+//             </Card>
+//           </Grid>
+//         </Grid>
+//       </MDBox>
+//     </DashboardLayout>
+//   );
+// }
+
+// export default Seguros;

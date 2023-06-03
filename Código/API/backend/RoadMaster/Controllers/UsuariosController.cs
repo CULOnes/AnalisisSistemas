@@ -1,10 +1,16 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using RoadMaster.DTOs.Request;
 using RoadMaster.DTOs.Responses;
 using RoadMaster.Repositories;
 using RoadMaster.Repositories.Entities;
+using RoadMaster.Utils;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+//using RoadMaster.Utils;
 
 namespace RoadMaster.Controllers
 {
@@ -13,12 +19,13 @@ namespace RoadMaster.Controllers
     public class UsuariosController : ControllerBase
     {
         private readonly AppDBContext db;
-        private readonly IConfiguration configuration;
+        private readonly IConfiguration Configuration;
+        private readonly Login log = new Login();
 
         public UsuariosController(AppDBContext context, IConfiguration configuration)
         {
             db = context;
-            configuration = configuration;
+            Configuration = configuration;
         }
 
         [HttpGet("usuarios")]
@@ -28,6 +35,29 @@ namespace RoadMaster.Controllers
             {
                 var usuarios = db.Usuarios.ToArray();
                 return Ok(usuarios);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost("login")]
+        public async ValueTask<ActionResult<LoginResponse>> Login(LoginRequets login)
+        {            
+            try
+            {
+
+                var encriptedPassword = log.encripter(login.contraseña);
+                var query = db.Usuarios.Where(x => x.Usu_NombreUsuario == login.usuario && x.Usu_Contrasena == encriptedPassword).FirstOrDefault();
+
+                if (query == null)
+                {
+                    return NotFound("No ha sido posible identificar al Usuario");
+                }
+
+                return Ok(log.Token(query, Configuration));
+
             }
             catch (Exception ex)
             {
@@ -69,6 +99,8 @@ namespace RoadMaster.Controllers
 
                 //var id = query.Count() + 1;
 
+                var encriptedpassword = log.encripter(usuarios.Usu_Contrasena);
+
                 var usuario = new Usuarios
                 {
                     //Usu_Codigo = id,
@@ -76,7 +108,7 @@ namespace RoadMaster.Controllers
                     Usu_Nombre = usuarios.Usu_Nombre,
                     Usu_Apellido = usuarios.Usu_Apellido,
                     Usu_Correo = usuarios.Usu_Correo,
-                    Usu_Contrasena = usuarios.Usu_Contrasena
+                    Usu_Contrasena = encriptedpassword
                 };
 
                 await db.Usuarios.AddAsync(usuario);
@@ -108,5 +140,16 @@ namespace RoadMaster.Controllers
                 return BadRequest(ex.Message);
             }
         }
+    }
+
+    public class LoginRequets
+    {
+        public string usuario { get; set; }
+        public string contraseña { get; set; }
+    }
+
+    public class LoginResponse
+    {
+        public string Token { get; set; }
     }
 }

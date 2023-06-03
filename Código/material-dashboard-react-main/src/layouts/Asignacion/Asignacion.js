@@ -43,7 +43,7 @@ function Asignaciones() {
                   id="combo-box-demo"
                   options={listapilotos}
                   fullWidth
-                  renderInput={(params) => <TextField {...params} label="Piloto" />}
+                  renderInput={(params) => <TextField {...params} label="Pilotos" />}
                 />
               </MDBox>
             </Grid>

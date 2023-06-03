@@ -58,7 +58,7 @@ import RSalidas from "layouts/Reportes/salidas/Salidas";
 import Asignaciones from "layouts/Asignacion/Asignacion";
 import REmpleados from "layouts/Reportes/empleados/Empleados";
 import RSeguros from "layouts/Reportes/Seguros/Seguros";
-import RClientes from "layouts/Reportes/clientes/Clientes";
+import RClientes from "layouts/Reportes/clientes/RClientes";
 
 // @mui icons
 import Icon from "@mui/material/Icon";
@@ -252,7 +252,7 @@ const routes = [
   {
     type: "title",
     name: "RepClientes",
-    key: "clientes",
+    key: "repclientes",
     icon: <Icon fontSize="small">format_textdirection_r_to_l</Icon>,
     route: "/reportes/repclientes",
     component: <RClientes />,
