@@ -59,7 +59,7 @@ function Footer({ light }) {
             por
             <Link href="https://www.google.com/" target="_blank">
               <MDTypography variant="button" fontWeight="medium" color={light ? "white" : "dark"}>
-                &nbsp;RoadMaster&nbsp;
+                &nbsp;Activos Fijos&nbsp;
               </MDTypography>
             </Link>
             Flotilla de vehiculos.
@@ -88,7 +88,7 @@ function Footer({ light }) {
                   fontWeight="regular"
                   color={light ? "white" : "dark"}
                 >
-                  RoadMaster
+                  Activos Fijos
                 </MDTypography>
               </Link>
             </MDBox>
