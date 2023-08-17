@@ -34,7 +34,12 @@ function Menureportes() {
         <Grid container spacing={3}>
           <Grid item xs={12} md={6} lg={3}>
             <MDBox mb={1.5}>
-              <ComplexStatisticsCard color="dark" icon="near_me" title="Salidas" route="RSalidas" />
+              <ComplexStatisticsCard
+                color="dark"
+                icon="near_me"
+                title="Reporte de Activos"
+                route="ReporteActivos"
+              />
             </MDBox>
           </Grid>
           <Grid item xs={12} md={6} lg={3}>
@@ -42,8 +47,8 @@ function Menureportes() {
               <ComplexStatisticsCard
                 color="error"
                 icon="arrow_downward"
-                title="Entradas"
-                route="REntradas"
+                title="Depreciacion Anual"
+                route="DepreciacionAnual"
               />
             </MDBox>
           </Grid>
@@ -53,7 +58,7 @@ function Menureportes() {
                 color="secondary"
                 icon="car_repair"
                 title="Mantenimientos"
-                route="RMantenimientos"
+                route="MantenimientosPendientes"
               />
             </MDBox>
           </Grid>
@@ -62,8 +67,8 @@ function Menureportes() {
               <ComplexStatisticsCard
                 color="success"
                 icon="inventory"
-                title="Inspecciones"
-                route="RInspecciones"
+                title="Garantias"
+                route="GarantiasVencer"
               />
             </MDBox>
           </Grid>
@@ -76,38 +81,8 @@ function Menureportes() {
               <ComplexStatisticsCard
                 color="warning"
                 icon="badge"
-                title="Empleados"
-                route="REmpleados"
-              />
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={3}>
-            <MDBox mb={1.5}>
-              <ComplexStatisticsCard
-                color="info"
-                icon="local_shipping"
-                title="Vehiculos"
-                route="RepVehiculos"
-              />
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={3}>
-            <MDBox mb={1.5}>
-              <ComplexStatisticsCard
-                color="success"
-                icon="shield"
-                title="Seguros"
-                route="RepSeguros"
-              />
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={3}>
-            <MDBox mb={1.5}>
-              <ComplexStatisticsCard
-                color="primary"
-                icon="person"
-                title="Clientes"
-                route="RepClientes"
+                title="Activos Eliminados"
+                route="ActivosEliminados"
               />
             </MDBox>
           </Grid>

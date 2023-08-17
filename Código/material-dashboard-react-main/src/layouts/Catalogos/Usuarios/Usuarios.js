@@ -3,13 +3,13 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
-import axios from "axios";
+// import axios from "axios";
 import MDBox from "components/MDBox";
 import "styles/styles.css";
 import MaterialTable from "material-table";
 import { Modal } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import Swal from "sweetalert2";
+// import Swal from "sweetalert2";
 import MDInput from "components/MDInput";
 import MDTypography from "components/MDTypography";
 import Divider from "@mui/material/Divider";
@@ -29,12 +29,8 @@ const columns = [
     field: "usu_Nombre",
   },
   {
-    title: "Apellido",
-    field: "usu_Apellido",
-  },
-  {
-    title: "Correo",
-    field: "usu_Correo",
+    title: "Clave",
+    field: "usu_Clave",
   },
 ];
 
@@ -60,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
 
 function Usuarios() {
   const styles = useStyles();
-  const [data, setData] = useState([]);
+  const [data /* , setData */] = useState([]);
   const [modalinsertar, setModalInsertar] = useState(false);
   const [modaleditar, setModalEditar] = useState(false);
   const [modaleliminar, setModalEliminar] = useState(false);
@@ -83,22 +79,6 @@ function Usuarios() {
   };
 
   const abrircerrarModalEliminar = () => {
-    // Swal.fire({
-    //   title: "",
-    //   html: `Estas seguro que deseas eliminar <b>${
-    //     clienteseleccionado && clienteseleccionado.cli_Nombre
-    //   }</b>`,
-    //   icon: "warning",
-    //   showCancelButton: true,
-    //   cancelButtonText: "Cancelar",
-    //   confirmButtonColor: "#3085d6",
-    //   cancelButtonColor: "#d33",
-    //   confirmButtonText: "Eliminar",
-    // }).then((result) => {
-    //   if (result.isConfirmed) {
-    //     peticiondelete();
-    //   }
-    // });
     setModalEliminar(!modaleliminar);
   };
 
@@ -120,143 +100,143 @@ function Usuarios() {
   };
 
   const peticionpost = async () => {
-    Swal.showLoading();
-    if (
-      usuarioseleccionado.usu_Apellido === "" ||
-      usuarioseleccionado.usu_Correo === "" ||
-      usuarioseleccionado.usu_Nombre === "" ||
-      usuarioseleccionado.usu_NombreUsuario === ""
-    ) {
-      abrircerrarModalInsertar();
-      Swal.close();
-      Swal.fire({
-        icon: "info",
-        title: "",
-        html: "Debe de llenar <b>todos</b> los campos",
-      });
-    } else {
-      abrircerrarModalInsertar();
-      await axios
-        .post("https://localhost:7235/api/Usuarios/registrousuarios", usuarioseleccionado)
-        .then((response) => {
-          setData(data.concat(response.data));
-          Swal.close();
-          Swal.fire({
-            icon: "success",
-            title: "",
-            text: "Usuario creado exitosamente",
-            timer: 2500,
-          });
-        })
-        .catch((error) => {
-          Swal.close();
-          Swal.fire({
-            icon: "error",
-            title: "",
-            text: error.response.data,
-            timer: 2500,
-          });
-        });
-    }
+    // Swal.showLoading();
+    // if (
+    //   usuarioseleccionado.usu_Apellido === "" ||
+    //   usuarioseleccionado.usu_Correo === "" ||
+    //   usuarioseleccionado.usu_Nombre === "" ||
+    //   usuarioseleccionado.usu_NombreUsuario === ""
+    // ) {
+    //   abrircerrarModalInsertar();
+    //   Swal.close();
+    //   Swal.fire({
+    //     icon: "info",
+    //     title: "",
+    //     html: "Debe de llenar <b>todos</b> los campos",
+    //   });
+    // } else {
+    //   abrircerrarModalInsertar();
+    //   await axios
+    //     .post("https://localhost:7235/api/Usuarios/registrousuarios", usuarioseleccionado)
+    //     .then((response) => {
+    //       setData(data.concat(response.data));
+    //       Swal.close();
+    //       Swal.fire({
+    //         icon: "success",
+    //         title: "",
+    //         text: "Usuario creado exitosamente",
+    //         timer: 2500,
+    //       });
+    //     })
+    //     .catch((error) => {
+    //       Swal.close();
+    //       Swal.fire({
+    //         icon: "error",
+    //         title: "",
+    //         text: error.response.data,
+    //         timer: 2500,
+    //       });
+    //     });
+    // }
   };
 
   const peticionput = async () => {
-    if (
-      usuarioseleccionado.usu_Apellido === "" ||
-      usuarioseleccionado.usu_Correo === "" ||
-      usuarioseleccionado.usu_Nombre === "" ||
-      usuarioseleccionado.usu_NombreUsuario === ""
-    ) {
-      abrircerrarModalEditar();
-      Swal.close();
-      Swal.fire({
-        icon: "info",
-        title: "",
-        html: "Debe de llenar <b>todos</b> los campos",
-      });
-    } else {
-      abrircerrarModalEditar();
-      Swal.showLoading();
-      await axios
-        .put("https://localhost:7235/api/Usuarios/actualizar", usuarioseleccionado)
-        .then(() => {
-          const copiaArray = [...data];
-          const indice = copiaArray.findIndex(
-            (elemento) => elemento.usu_Codigo === usuarioseleccionado.usu_Codigo
-          );
-          if (indice !== -1) {
-            copiaArray[indice] = {
-              ...copiaArray[indice],
-              usu_Nombre: usuarioseleccionado.usu_Nombre,
-              usu_Apellido: usuarioseleccionado.usu_Apellido,
-              usu_Correo: usuarioseleccionado.usu_Correo,
-              usu_NombreUsuario: usuarioseleccionado.usu_NombreUsuario,
-            };
-          }
-          setData(copiaArray);
-          Swal.close();
-          Swal.fire({
-            icon: "success",
-            title: "",
-            text: "Usuario actualizado exitosamente",
-            timer: 2500,
-          });
-        })
-        .catch((error) => {
-          Swal.close();
-          Swal.fire({
-            icon: "error",
-            title: "",
-            text: error.response.data,
-            timer: 2500,
-          });
-        });
-    }
+    // if (
+    //   usuarioseleccionado.usu_Apellido === "" ||
+    //   usuarioseleccionado.usu_Correo === "" ||
+    //   usuarioseleccionado.usu_Nombre === "" ||
+    //   usuarioseleccionado.usu_NombreUsuario === ""
+    // ) {
+    //   abrircerrarModalEditar();
+    //   Swal.close();
+    //   Swal.fire({
+    //     icon: "info",
+    //     title: "",
+    //     html: "Debe de llenar <b>todos</b> los campos",
+    //   });
+    // } else {
+    //   abrircerrarModalEditar();
+    //   Swal.showLoading();
+    //   await axios
+    //     .put("https://localhost:7235/api/Usuarios/actualizar", usuarioseleccionado)
+    //     .then(() => {
+    //       const copiaArray = [...data];
+    //       const indice = copiaArray.findIndex(
+    //         (elemento) => elemento.usu_Codigo === usuarioseleccionado.usu_Codigo
+    //       );
+    //       if (indice !== -1) {
+    //         copiaArray[indice] = {
+    //           ...copiaArray[indice],
+    //           usu_Nombre: usuarioseleccionado.usu_Nombre,
+    //           usu_Apellido: usuarioseleccionado.usu_Apellido,
+    //           usu_Correo: usuarioseleccionado.usu_Correo,
+    //           usu_NombreUsuario: usuarioseleccionado.usu_NombreUsuario,
+    //         };
+    //       }
+    //       setData(copiaArray);
+    //       Swal.close();
+    //       Swal.fire({
+    //         icon: "success",
+    //         title: "",
+    //         text: "Usuario actualizado exitosamente",
+    //         timer: 2500,
+    //       });
+    //     })
+    //     .catch((error) => {
+    //       Swal.close();
+    //       Swal.fire({
+    //         icon: "error",
+    //         title: "",
+    //         text: error.response.data,
+    //         timer: 2500,
+    //       });
+    //     });
+    // }
   };
 
   const peticiondelete = async () => {
-    abrircerrarModalEliminar();
-    Swal.showLoading();
-    await axios
-      .put("https://localhost:7235/api/Usuarios/eliminar", usuarioseleccionado)
-      .then(() => {
-        setData(data.filter((usuario) => usuario.usu_Codigo !== usuarioseleccionado.usu_Codigo));
-        Swal.close();
-        Swal.fire({
-          icon: "success",
-          title: "",
-          text: "Usuario eliminado exitosamente",
-          timer: 2500,
-        });
-      })
-      .catch((error) => {
-        Swal.close();
-        Swal.fire({
-          icon: "error",
-          title: "",
-          text: error.response.data,
-          timer: 2500,
-        });
-      });
+    // abrircerrarModalEliminar();
+    // Swal.showLoading();
+    // await axios
+    //   .put("https://localhost:7235/api/Usuarios/eliminar", usuarioseleccionado)
+    //   .then(() => {
+    //     setData(data.filter((usuario) => usuario.usu_Codigo !== usuarioseleccionado.usu_Codigo));
+    //     Swal.close();
+    //     Swal.fire({
+    //       icon: "success",
+    //       title: "",
+    //       text: "Usuario eliminado exitosamente",
+    //       timer: 2500,
+    //     });
+    //   })
+    //   .catch((error) => {
+    //     Swal.close();
+    //     Swal.fire({
+    //       icon: "error",
+    //       title: "",
+    //       text: error.response.data,
+    //       timer: 2500,
+    //     });
+    //   });
   };
 
   const peticionget = async () => {
-    Swal.showLoading();
-    await axios
-      .get("https://localhost:7235/api/Usuarios/usuarios")
-      .then((response) => {
-        setData(response.data);
-        Swal.close();
-      })
-      .catch((error) => {
-        Swal.close();
-        Swal.fire({
-          icon: "error",
-          title: "",
-          text: error.response.data,
-          timer: 2500,
-        });
-      });
+    // Swal.showLoading();
+    // await axios
+    //   .get("https://localhost:7235/api/Usuarios/usuarios")
+    //   .then((response) => {
+    //     setData(response.data);
+    //     Swal.close();
+    //   })
+    //   .catch((error) => {
+    //     Swal.close();
+    //     Swal.fire({
+    //       icon: "error",
+    //       title: "",
+    //       text: error.response.data,
+    //       timer: 2500,
+    //     });
+    //   });
   };
 
   useEffect(() => {
@@ -319,12 +299,29 @@ function Usuarios() {
         <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} md={4} lg={3}>
             <MDBox mb={2}>
-              <MDTypography variant="h6"> Correo: </MDTypography>
+              <MDTypography variant="h6"> Clave: </MDTypography>
             </MDBox>
           </Grid>
           <Grid item xs={12} md={6} lg={9}>
             <MDBox mb={2}>
-              <MDInput label="Correo" name="usu_Correo" type="email" onChange={handleChange} />
+              <MDInput label="Clave" name="usu_Clave" type="password" onChange={handleChange} />
+            </MDBox>
+          </Grid>
+        </Grid>
+        <Grid container spacing={3} justifyContent="center">
+          <Grid item xs={12} md={4} lg={3}>
+            <MDBox mb={2}>
+              <MDTypography variant="h6"> Confirmar Clave: </MDTypography>
+            </MDBox>
+          </Grid>
+          <Grid item xs={12} md={6} lg={9}>
+            <MDBox mb={2}>
+              <MDInput
+                label="Confirmar Clave"
+                name="usu_Confirmar"
+                type="password"
+                onChange={handleChange}
+              />
             </MDBox>
           </Grid>
         </Grid>

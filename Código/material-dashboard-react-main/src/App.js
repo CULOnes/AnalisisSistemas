@@ -77,10 +77,10 @@ export default function App() {
   const [rtlCache, setRtlCache] = useState(null);
   const { pathname } = useLocation();
 
-  const token = localStorage.getItem("fswToken");
-  if (token == null && pathname !== "/Login/Login") {
-    window.location.href = "/Login/Login";
-  }
+  // const token = localStorage.getItem("fswToken");
+  // if (token == null && pathname !== "/Login/Login") {
+  //   window.location.href = "/Login/Login";
+  // }
 
   // Cache for the rtl
   useMemo(() => {
@@ -168,7 +168,7 @@ export default function App() {
             <Sidenav
               color={sidenavColor}
               brand={(transparentSidenav && !darkMode) || whiteSidenav ? brandDark : brandWhite}
-              brandName="RoadMaster"
+              brandName="Activos Fijos"
               routes={routes}
               onMouseEnter={handleOnMouseEnter}
               onMouseLeave={handleOnMouseLeave}
@@ -192,7 +192,7 @@ export default function App() {
           <Sidenav
             color={sidenavColor}
             brand={(transparentSidenav && !darkMode) || whiteSidenav ? brandDark : brandWhite}
-            brandName="RoadMaster"
+            brandName="Activos Fijos"
             routes={routes}
             onMouseEnter={handleOnMouseEnter}
             onMouseLeave={handleOnMouseLeave}
