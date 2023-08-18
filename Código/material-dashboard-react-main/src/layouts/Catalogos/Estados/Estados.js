@@ -3,13 +3,13 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
-import axios from "axios";
+// import axios from "axios";
 import MDBox from "components/MDBox";
 import "styles/styles.css";
 import MaterialTable from "material-table";
 import { Modal } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import Swal from "sweetalert2";
+// import Swal from "sweetalert2";
 import MDInput from "components/MDInput";
 import MDTypography from "components/MDTypography";
 import Divider from "@mui/material/Divider";
@@ -21,11 +21,11 @@ const columns = [
     field: "com_Codigo",
   },
   {
-    title: "Nombre",
+    title: "Descripcion",
     field: "com_TipoCombustible",
   },
   {
-    title: "Marca",
+    title: "Dado de baja?",
     field: "com_Marca",
   },
 ];
@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
 
 function Estados() {
   const styles = useStyles();
-  const [data, setData] = useState([]);
+  const [data /* , setData */] = useState([]);
   const [modalinsertar, setModalInsertar] = useState(false);
   const [modaleditar, setModalEditar] = useState(false);
   const [modaleliminar, setModalEliminar] = useState(false);
@@ -109,144 +109,144 @@ function Estados() {
   };
 
   const peticionpost = async () => {
-    Swal.showLoading();
-    if (
-      combustibleseleccionado.com_TipoCombustible === "" ||
-      combustibleseleccionado.com_Marca === ""
-    ) {
-      abrircerrarModalInsertar();
-      Swal.close();
-      Swal.fire({
-        icon: "info",
-        title: "",
-        html: "Debe de llenar <b>todos</b> los campos",
-      });
-    } else {
-      abrircerrarModalInsertar();
-      await axios
-        .post(
-          "https://localhost:7235/api/Combustibles/registrocombustibles",
-          combustibleseleccionado
-        )
-        .then((response) => {
-          setData(data.concat(response.data));
-          Swal.close();
-          Swal.fire({
-            icon: "success",
-            title: "",
-            text: "Combustible creado exitosamente",
-            timer: 2500,
-          });
-        })
-        .catch((error) => {
-          Swal.close();
-          Swal.fire({
-            icon: "error",
-            title: "",
-            text: error.response.data,
-            timer: 2500,
-          });
-        });
-    }
+    // Swal.showLoading();
+    // if (
+    //   combustibleseleccionado.com_TipoCombustible === "" ||
+    //   combustibleseleccionado.com_Marca === ""
+    // ) {
+    //   abrircerrarModalInsertar();
+    //   Swal.close();
+    //   Swal.fire({
+    //     icon: "info",
+    //     title: "",
+    //     html: "Debe de llenar <b>todos</b> los campos",
+    //   });
+    // } else {
+    //   abrircerrarModalInsertar();
+    //   await axios
+    //     .post(
+    //       "https://localhost:7235/api/Combustibles/registrocombustibles",
+    //       combustibleseleccionado
+    //     )
+    //     .then((response) => {
+    //       setData(data.concat(response.data));
+    //       Swal.close();
+    //       Swal.fire({
+    //         icon: "success",
+    //         title: "",
+    //         text: "Combustible creado exitosamente",
+    //         timer: 2500,
+    //       });
+    //     })
+    //     .catch((error) => {
+    //       Swal.close();
+    //       Swal.fire({
+    //         icon: "error",
+    //         title: "",
+    //         text: error.response.data,
+    //         timer: 2500,
+    //       });
+    //     });
+    // }
   };
 
   const peticionput = async () => {
-    if (
-      combustibleseleccionado.com_TipoCombustible === "" ||
-      combustibleseleccionado.com_Marca === ""
-    ) {
-      abrircerrarModalEditar();
-      Swal.close();
-      Swal.fire({
-        icon: "info",
-        title: "",
-        html: "Debe de llenar <b>todos</b> los campos",
-      });
-    } else {
-      abrircerrarModalEditar();
-      Swal.showLoading();
-      await axios
-        .put("https://localhost:7235/api/Combustibles/actualizar", combustibleseleccionado)
-        .then(() => {
-          const copiaArray = [...data];
-          const indice = copiaArray.findIndex(
-            (elemento) => elemento.com_Codigo === combustibleseleccionado.com_Codigo
-          );
-          if (indice !== -1) {
-            copiaArray[indice] = {
-              ...copiaArray[indice],
-              com_TipoCombustible: combustibleseleccionado.com_TipoCombustible,
-              com_Marca: combustibleseleccionado.com_Marca,
-            };
-          }
-          setData(copiaArray);
-          Swal.close();
-          Swal.fire({
-            icon: "success",
-            title: "",
-            text: "Combustible actualizado exitosamente",
-            timer: 2500,
-          });
-        })
-        .catch((error) => {
-          Swal.close();
-          Swal.fire({
-            icon: "error",
-            title: "",
-            text: error.response.data,
-            timer: 2500,
-          });
-        });
-    }
+    // if (
+    //   combustibleseleccionado.com_TipoCombustible === "" ||
+    //   combustibleseleccionado.com_Marca === ""
+    // ) {
+    //   abrircerrarModalEditar();
+    //   Swal.close();
+    //   Swal.fire({
+    //     icon: "info",
+    //     title: "",
+    //     html: "Debe de llenar <b>todos</b> los campos",
+    //   });
+    // } else {
+    //   abrircerrarModalEditar();
+    //   Swal.showLoading();
+    //   await axios
+    //     .put("https://localhost:7235/api/Combustibles/actualizar", combustibleseleccionado)
+    //     .then(() => {
+    //       const copiaArray = [...data];
+    //       const indice = copiaArray.findIndex(
+    //         (elemento) => elemento.com_Codigo === combustibleseleccionado.com_Codigo
+    //       );
+    //       if (indice !== -1) {
+    //         copiaArray[indice] = {
+    //           ...copiaArray[indice],
+    //           com_TipoCombustible: combustibleseleccionado.com_TipoCombustible,
+    //           com_Marca: combustibleseleccionado.com_Marca,
+    //         };
+    //       }
+    //       setData(copiaArray);
+    //       Swal.close();
+    //       Swal.fire({
+    //         icon: "success",
+    //         title: "",
+    //         text: "Combustible actualizado exitosamente",
+    //         timer: 2500,
+    //       });
+    //     })
+    //     .catch((error) => {
+    //       Swal.close();
+    //       Swal.fire({
+    //         icon: "error",
+    //         title: "",
+    //         text: error.response.data,
+    //         timer: 2500,
+    //       });
+    //     });
+    // }
   };
 
   const peticiondelete = async () => {
-    abrircerrarModalEliminar();
-    Swal.showLoading();
-    await axios
-      .put("https://localhost:7235/api/Combustibles/eliminar", combustibleseleccionado)
-      .then(() => {
-        setData(
-          data.filter(
-            (combustible) => combustible.com_Codigo !== combustibleseleccionado.com_Codigo
-          )
-        );
-        Swal.close();
-        Swal.fire({
-          icon: "success",
-          title: "",
-          text: "Combustible eliminado exitosamente",
-          timer: 2500,
-        });
-      })
-      .catch((error) => {
-        Swal.close();
-        Swal.fire({
-          icon: "error",
-          title: "",
-          text: error.response.data,
-          timer: 2500,
-        });
-      });
+    // abrircerrarModalEliminar();
+    // Swal.showLoading();
+    // await axios
+    //   .put("https://localhost:7235/api/Combustibles/eliminar", combustibleseleccionado)
+    //   .then(() => {
+    //     setData(
+    //       data.filter(
+    //         (combustible) => combustible.com_Codigo !== combustibleseleccionado.com_Codigo
+    //       )
+    //     );
+    //     Swal.close();
+    //     Swal.fire({
+    //       icon: "success",
+    //       title: "",
+    //       text: "Combustible eliminado exitosamente",
+    //       timer: 2500,
+    //     });
+    //   })
+    //   .catch((error) => {
+    //     Swal.close();
+    //     Swal.fire({
+    //       icon: "error",
+    //       title: "",
+    //       text: error.response.data,
+    //       timer: 2500,
+    //     });
+    //   });
   };
 
   const peticionget = async () => {
-    Swal.showLoading();
-    await axios
-      .get("https://localhost:7235/api/Combustibles/combustibles")
-      .then((response) => {
-        setData(response.data);
-        Swal.close();
-      })
-      .catch((error) => {
-        Swal.close();
-        Swal.fire({
-          icon: "error",
-          title: "",
-          text: error.response.data,
-          timer: 2500,
-        });
-      });
+    // Swal.showLoading();
+    // await axios
+    //   .get("https://localhost:7235/api/Combustibles/combustibles")
+    //   .then((response) => {
+    //     setData(response.data);
+    //     Swal.close();
+    //   })
+    //   .catch((error) => {
+    //     Swal.close();
+    //     Swal.fire({
+    //       icon: "error",
+    //       title: "",
+    //       text: error.response.data,
+    //       timer: 2500,
+    //     });
+    //   });
   };
 
   useEffect(() => {
@@ -262,20 +262,20 @@ function Estados() {
 
   const bodyInsertar = (
     <div className={styles.modal}>
-      <MDTypography variant="h3"> Agregar Nuevo Combustible </MDTypography>
+      <MDTypography variant="h3"> Agregar Nuevo Estado </MDTypography>
       <Divider sx={{ marginTop: 1 }} light={false} />
       <MDBox pt={2} pb={3}>
         <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} md={4} lg={3}>
             <MDBox mb={2}>
-              <MDTypography variant="h6"> Nombre: </MDTypography>
+              <MDTypography variant="h6"> Descripcion: </MDTypography>
             </MDBox>
           </Grid>
           <Grid item xs={12} md={6} lg={9}>
             <MDBox mb={2}>
               <MDInput
                 type="text"
-                label="Nombre"
+                label="Descripcion"
                 name="com_TipoCombustible"
                 onChange={handleChange}
               />
@@ -283,14 +283,31 @@ function Estados() {
           </Grid>
         </Grid>
         <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
+          <Grid item xs={12} md={4} lg={5}>
             <MDBox mb={2}>
-              <MDTypography variant="h6"> Marca: </MDTypography>
+              <MDTypography variant="h6">
+                En este estado, el activo se considera como dado de baja?
+              </MDTypography>
             </MDBox>
           </Grid>
-          <Grid item xs={12} md={6} lg={9}>
+          <Grid item xs={12} md={6} lg={7}>
             <MDBox mb={2}>
-              <MDInput type="text" label="Desccripcion" name="com_Marca" onChange={handleChange} />
+              <select name="pue_Codigo" className="form-control" onChange={handleChange}>
+                <option key="0" value="0">
+                  Seleccione una opcion
+                </option>
+                <option key="0" value="0">
+                  Si
+                </option>
+                <option key="0" value="0">
+                  No
+                </option>
+                {/* {datatp.map((element) => (
+                  <option key={element.pue_Codigo} value={element.pue_Codigo}>
+                    {element.pue_Nombre}
+                  </option>
+                ))} */}
+              </select>
             </MDBox>
           </Grid>
         </Grid>
@@ -317,13 +334,13 @@ function Estados() {
 
   const bodyEditar = (
     <div className={styles.modal}>
-      <MDTypography variant="h3"> Editar Combustible </MDTypography>
+      <MDTypography variant="h3"> Editar Estado </MDTypography>
       <Divider sx={{ marginTop: 1 }} light={false} />
       <MDBox pt={2} pb={3}>
         <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} md={4} lg={3}>
             <MDBox mb={2}>
-              <MDTypography variant="h6"> Nombre: </MDTypography>
+              <MDTypography variant="h6"> Descripcion: </MDTypography>
             </MDBox>
           </Grid>
           <Grid item xs={12} md={6} lg={9}>
@@ -380,7 +397,7 @@ function Estados() {
   const bodyEliminar = (
     <div className={styles.modal}>
       <p>
-        Deseas Eliminar el Combustible
+        Deseas Eliminar el Estado
         <b> {combustibleseleccionado && combustibleseleccionado.com_TipoCombustible}</b>?
       </p>
       <div align="right">
@@ -406,14 +423,14 @@ function Estados() {
                   color="success"
                   onClick={() => abrircerrarModalInsertar()}
                 >
-                  Insertar Combustible
+                  Insertar Estado
                 </MDButton>
                 <br />
                 <br />
                 <MaterialTable
                   columns={columns}
                   data={data}
-                  title="Combustibles"
+                  title="Estados"
                   actions={[
                     {
                       icon: "edit",

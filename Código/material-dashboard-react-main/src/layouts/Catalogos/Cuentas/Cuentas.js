@@ -3,13 +3,13 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
-import axios from "axios";
+// import axios from "axios";
 import MDBox from "components/MDBox";
 import "styles/styles.css";
 import MaterialTable from "material-table";
 import { Modal } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import Swal from "sweetalert2";
+// import Swal from "sweetalert2";
 import MDInput from "components/MDInput";
 import MDTypography from "components/MDTypography";
 import Divider from "@mui/material/Divider";
@@ -25,15 +25,19 @@ const columns = [
     field: "emp_Nombre",
   },
   {
-    title: "Apellido",
+    title: "Descripcion",
+    field: "emp_Nombre",
+  },
+  {
+    title: "Tipo de cuenta",
     field: "emp_Apellido",
   },
   {
-    title: "Telefono",
+    title: "Meses de vida util",
     field: "emp_Telefono",
   },
   {
-    title: "Edad",
+    title: "valor residual",
     field: "emp_Edad",
   },
 ];
@@ -60,8 +64,8 @@ const useStyles = makeStyles((theme) => ({
 
 function Cuentas() {
   const styles = useStyles();
-  const [data, setData] = useState([]);
-  const [datatp, setDatatp] = useState([]);
+  const [data /* , setData */] = useState([]);
+  const [datatp /* , setDatatp */] = useState([]);
   const [modalinsertar, setModalInsertar] = useState(false);
   const [modaleditar, setModalEditar] = useState(false);
   const [showComponent, setShowComponent] = useState(false);
@@ -126,166 +130,166 @@ function Cuentas() {
   };
 
   const peticionpost = async () => {
-    Swal.showLoading();
-    if (
-      empleadoseleccionado.pue_Codigo === 0 ||
-      empleadoseleccionado.emp_Nombre === "" ||
-      empleadoseleccionado.emp_Apellido === "" ||
-      empleadoseleccionado.emp_Direccion === "" ||
-      empleadoseleccionado.emp_Telefono === 0 ||
-      empleadoseleccionado.emp_Dpi === "" ||
-      empleadoseleccionado.emp_Edad === 0 ||
-      empleadoseleccionado.emp_Nacimiento === 0
-    ) {
-      abrircerrarModalInsertar();
-      Swal.close();
-      Swal.fire({
-        icon: "info",
-        title: "",
-        html: "Debe de llenar <b>todos</b> los campos",
-      });
-    } else {
-      abrircerrarModalInsertar();
-      await axios
-        .post("https://localhost:7235/api/Empleados/registroempleados", empleadoseleccionado)
-        .then((response) => {
-          setData(data.concat(response.data));
-          Swal.close();
-          Swal.fire({
-            icon: "success",
-            title: "",
-            text: "Empleado creado exitosamente",
-            timer: 2500,
-          });
-        })
-        .catch((error) => {
-          Swal.close();
-          Swal.fire({
-            icon: "error",
-            title: "",
-            text: error.response.data,
-            timer: 2500,
-          });
-        });
-    }
+    // Swal.showLoading();
+    // if (
+    //   empleadoseleccionado.pue_Codigo === 0 ||
+    //   empleadoseleccionado.emp_Nombre === "" ||
+    //   empleadoseleccionado.emp_Apellido === "" ||
+    //   empleadoseleccionado.emp_Direccion === "" ||
+    //   empleadoseleccionado.emp_Telefono === 0 ||
+    //   empleadoseleccionado.emp_Dpi === "" ||
+    //   empleadoseleccionado.emp_Edad === 0 ||
+    //   empleadoseleccionado.emp_Nacimiento === 0
+    // ) {
+    //   abrircerrarModalInsertar();
+    //   Swal.close();
+    //   Swal.fire({
+    //     icon: "info",
+    //     title: "",
+    //     html: "Debe de llenar <b>todos</b> los campos",
+    //   });
+    // } else {
+    //   abrircerrarModalInsertar();
+    //   await axios
+    //     .post("https://localhost:7235/api/Empleados/registroempleados", empleadoseleccionado)
+    //     .then((response) => {
+    //       setData(data.concat(response.data));
+    //       Swal.close();
+    //       Swal.fire({
+    //         icon: "success",
+    //         title: "",
+    //         text: "Empleado creado exitosamente",
+    //         timer: 2500,
+    //       });
+    //     })
+    //     .catch((error) => {
+    //       Swal.close();
+    //       Swal.fire({
+    //         icon: "error",
+    //         title: "",
+    //         text: error.response.data,
+    //         timer: 2500,
+    //       });
+    //     });
+    // }
   };
 
   const peticionput = async () => {
-    if (
-      empleadoseleccionado.pue_Codigo === 0 ||
-      empleadoseleccionado.emp_Nombre === "" ||
-      empleadoseleccionado.emp_Apellido === "" ||
-      empleadoseleccionado.emp_Direccion === "" ||
-      empleadoseleccionado.emp_Telefono === 0 ||
-      empleadoseleccionado.emp_Dpi === "" ||
-      empleadoseleccionado.emp_Edad === 0 ||
-      empleadoseleccionado.emp_Nacimiento === 0
-    ) {
-      abrircerrarModalEditar();
-      Swal.close();
-      Swal.fire({
-        icon: "info",
-        title: "",
-        html: "Debe de llenar <b>todos</b> los campos",
-      });
-    } else {
-      abrircerrarModalEditar();
-      Swal.showLoading();
-      await axios
-        .put("https://localhost:7235/api/Empleados/actualizar", empleadoseleccionado)
-        .then(() => {
-          const copiaArray = [...data];
-          const indice = copiaArray.findIndex(
-            (elemento) => elemento.emp_Codigo === empleadoseleccionado.emp_Codigo
-          );
-          if (indice !== -1) {
-            copiaArray[indice] = {
-              ...copiaArray[indice],
-              pue_Codigo: empleadoseleccionado.pue_Codigo,
-              emp_Nombre: empleadoseleccionado.emp_Nombre,
-              emp_Apellido: empleadoseleccionado.emp_Apellido,
-              emp_Direccion: empleadoseleccionado.emp_Direccion,
-              emp_Telefono: empleadoseleccionado.emp_Telefono,
-              emp_Dpi: empleadoseleccionado.emp_Dpi,
-              emp_Edad: empleadoseleccionado.emp_Edad,
-              emp_Nacimiento: empleadoseleccionado.emp_Nacimiento,
-              emp_Nolicencia: empleadoseleccionado.emp_Nolicencia,
-              emp_Tipolicencia: empleadoseleccionado.emp_Tipolicencia,
-            };
-          }
-          setData(copiaArray);
-          Swal.close();
-          Swal.fire({
-            icon: "success",
-            title: "",
-            text: "Empleado actualizado exitosamente",
-            timer: 2500,
-          });
-        })
-        .catch((error) => {
-          Swal.close();
-          Swal.fire({
-            icon: "error",
-            title: "",
-            text: error.response.data,
-            timer: 2500,
-          });
-        });
-    }
+    // if (
+    //   empleadoseleccionado.pue_Codigo === 0 ||
+    //   empleadoseleccionado.emp_Nombre === "" ||
+    //   empleadoseleccionado.emp_Apellido === "" ||
+    //   empleadoseleccionado.emp_Direccion === "" ||
+    //   empleadoseleccionado.emp_Telefono === 0 ||
+    //   empleadoseleccionado.emp_Dpi === "" ||
+    //   empleadoseleccionado.emp_Edad === 0 ||
+    //   empleadoseleccionado.emp_Nacimiento === 0
+    // ) {
+    //   abrircerrarModalEditar();
+    //   Swal.close();
+    //   Swal.fire({
+    //     icon: "info",
+    //     title: "",
+    //     html: "Debe de llenar <b>todos</b> los campos",
+    //   });
+    // } else {
+    //   abrircerrarModalEditar();
+    //   Swal.showLoading();
+    //   await axios
+    //     .put("https://localhost:7235/api/Empleados/actualizar", empleadoseleccionado)
+    //     .then(() => {
+    //       const copiaArray = [...data];
+    //       const indice = copiaArray.findIndex(
+    //         (elemento) => elemento.emp_Codigo === empleadoseleccionado.emp_Codigo
+    //       );
+    //       if (indice !== -1) {
+    //         copiaArray[indice] = {
+    //           ...copiaArray[indice],
+    //           pue_Codigo: empleadoseleccionado.pue_Codigo,
+    //           emp_Nombre: empleadoseleccionado.emp_Nombre,
+    //           emp_Apellido: empleadoseleccionado.emp_Apellido,
+    //           emp_Direccion: empleadoseleccionado.emp_Direccion,
+    //           emp_Telefono: empleadoseleccionado.emp_Telefono,
+    //           emp_Dpi: empleadoseleccionado.emp_Dpi,
+    //           emp_Edad: empleadoseleccionado.emp_Edad,
+    //           emp_Nacimiento: empleadoseleccionado.emp_Nacimiento,
+    //           emp_Nolicencia: empleadoseleccionado.emp_Nolicencia,
+    //           emp_Tipolicencia: empleadoseleccionado.emp_Tipolicencia,
+    //         };
+    //       }
+    //       setData(copiaArray);
+    //       Swal.close();
+    //       Swal.fire({
+    //         icon: "success",
+    //         title: "",
+    //         text: "Empleado actualizado exitosamente",
+    //         timer: 2500,
+    //       });
+    //     })
+    //     .catch((error) => {
+    //       Swal.close();
+    //       Swal.fire({
+    //         icon: "error",
+    //         title: "",
+    //         text: error.response.data,
+    //         timer: 2500,
+    //       });
+    //     });
+    // }
   };
 
   const peticiondelete = async () => {
-    abrircerrarModalEliminar();
-    Swal.showLoading();
-    await axios
-      .put("https://localhost:7235/api/Empleados/eliminar", empleadoseleccionado)
-      .then(() => {
-        setData(data.filter((empleado) => empleado.emp_Codigo !== empleadoseleccionado.emp_Codigo));
-        Swal.close();
-        Swal.fire({
-          icon: "success",
-          title: "",
-          text: "Empleado eliminado exitosamente",
-          timer: 2500,
-        });
-      })
-      .catch((error) => {
-        Swal.close();
-        Swal.fire({
-          icon: "error",
-          title: "",
-          text: error.response.data,
-          timer: 2500,
-        });
-      });
+    // abrircerrarModalEliminar();
+    // Swal.showLoading();
+    // await axios
+    //   .put("https://localhost:7235/api/Empleados/eliminar", empleadoseleccionado)
+    //   .then(() => {
+    //     setData(data.filter((empleado) => empleado.emp_Codigo !== empleadoseleccionado.emp_Codigo));
+    //     Swal.close();
+    //     Swal.fire({
+    //       icon: "success",
+    //       title: "",
+    //       text: "Empleado eliminado exitosamente",
+    //       timer: 2500,
+    //     });
+    //   })
+    //   .catch((error) => {
+    //     Swal.close();
+    //     Swal.fire({
+    //       icon: "error",
+    //       title: "",
+    //       text: error.response.data,
+    //       timer: 2500,
+    //     });
+    //   });
   };
 
   const peticionget = async () => {
-    Swal.showLoading();
-    await axios
-      .get("https://localhost:7235/api/Empleados/empleados")
-      .then((response) => {
-        setData(response.data);
-        Swal.close();
-      })
-      .catch((error) => {
-        Swal.close();
-        Swal.fire({
-          icon: "error",
-          title: "",
-          text: error.response.data,
-          timer: 2500,
-        });
-      });
+    // Swal.showLoading();
+    // await axios
+    //   .get("https://localhost:7235/api/Empleados/empleados")
+    //   .then((response) => {
+    //     setData(response.data);
+    //     Swal.close();
+    //   })
+    //   .catch((error) => {
+    //     Swal.close();
+    //     Swal.fire({
+    //       icon: "error",
+    //       title: "",
+    //       text: error.response.data,
+    //       timer: 2500,
+    //     });
+    //   });
   };
 
   const peticiongettp = async () => {
-    await axios
-      .get("https://localhost:7235/api/Puestos/puestos")
-      .then((response) => {
-        setDatatp(response.data);
-      })
-      .catch();
+    // await axios
+    //   .get("https://localhost:7235/api/Puestos/puestos")
+    //   .then((response) => {
+    //     setDatatp(response.data);
+    //   })
+    //   .catch();
   };
 
   useEffect(() => {
@@ -302,30 +306,9 @@ function Cuentas() {
 
   const bodyInsertar = (
     <div className={styles.modal}>
-      <MDTypography variant="h3"> Agregar Nuevo Empleado </MDTypography>
+      <MDTypography variant="h3"> Agregar Nueva Cuenta </MDTypography>
       <Divider sx={{ marginTop: 1 }} light={false} />
       <MDBox pb={1}>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={1}>
-              <MDTypography variant="h6"> Puesto: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={1}>
-              <select name="pue_Codigo" className="form-control" onChange={handleChange}>
-                <option key="0" value="0">
-                  Seleccione el Puesto
-                </option>
-                {datatp.map((element) => (
-                  <option key={element.pue_Codigo} value={element.pue_Codigo}>
-                    {element.pue_Nombre}
-                  </option>
-                ))}
-              </select>
-            </MDBox>
-          </Grid>
-        </Grid>
         <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} md={4} lg={3}>
             <MDBox mb={1}>
@@ -347,13 +330,13 @@ function Cuentas() {
         <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} md={4} lg={3}>
             <MDBox mb={1}>
-              <MDTypography variant="h6"> Apellido: </MDTypography>
+              <MDTypography variant="h6"> Descripcion: </MDTypography>
             </MDBox>
           </Grid>
           <Grid item xs={12} md={6} lg={9}>
             <MDBox mb={1}>
               <MDInput
-                label="Apellido"
+                label="Descripcion"
                 name="emp_Apellido"
                 type="text"
                 onChange={handleChange}
@@ -363,51 +346,42 @@ function Cuentas() {
           </Grid>
         </Grid>
         <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={1}>
-              <MDTypography variant="h6"> Telefono: </MDTypography>
+          <Grid item xs={12} md={6} lg={3}>
+            <MDBox mb={2}>
+              <MDTypography variant="h6"> Tipo de cuenta: </MDTypography>
             </MDBox>
           </Grid>
           <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={1}>
-              <MDInput
-                label="Telefono"
-                name="emp_Telefono"
-                type="number"
-                size="small"
-                onChange={handleChange}
-              />
+            <MDBox mb={2}>
+              <select name="pue_Codigo" className="form-control" onChange={handleChange}>
+                <option key="0" value="0">
+                  Seleccione una opcion
+                </option>
+                <option key="0" value="0">
+                  activo de control
+                </option>
+                <option key="0" value="0">
+                  activo fijo
+                </option>
+                {/* {datatp.map((element) => (
+                  <option key={element.pue_Codigo} value={element.pue_Codigo}>
+                    {element.pue_Nombre}
+                  </option>
+                ))} */}
+              </select>
             </MDBox>
           </Grid>
         </Grid>
         <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} md={4} lg={3}>
             <MDBox mb={1}>
-              <MDTypography variant="h6"> DPI: </MDTypography>
+              <MDTypography variant="h6"> Meses de vida util: </MDTypography>
             </MDBox>
           </Grid>
           <Grid item xs={12} md={6} lg={9}>
             <MDBox mb={1}>
               <MDInput
-                label="DPI"
-                name="emp_Dpi"
-                type="text"
-                size="small"
-                onChange={handleChange}
-              />
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={1}>
-              <MDTypography variant="h6"> Edad: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={1}>
-              <MDInput
-                label="Edad"
+                label="Meses"
                 name="emp_Edad"
                 type="number"
                 size="small"
@@ -419,67 +393,17 @@ function Cuentas() {
         <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} md={4} lg={3}>
             <MDBox mb={1}>
-              <MDTypography variant="h6"> Fecha Nacimiento: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={1}>
-              <MDInput name="emp_Nacimiento" type="date" size="small" onChange={handleChange} />
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={1}>
-              <MDTypography variant="h6"> Numero Licencia: </MDTypography>
+              <MDTypography variant="h6"> Valor Residual: </MDTypography>
             </MDBox>
           </Grid>
           <Grid item xs={12} md={6} lg={9}>
             <MDBox mb={1}>
               <MDInput
-                label="Numero Licencia"
-                name="emp_Nolicencia"
-                type="text"
-                size="small"
+                label="valor residual"
+                name="emp_Apellido"
+                type="number"
                 onChange={handleChange}
-              />
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={1}>
-              <MDTypography variant="h6"> Tipo Licencia: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={1}>
-              <MDInput
-                label="Tipo Licencia"
-                name="emp_Tipolicencia"
-                type="text"
                 size="small"
-                onChange={handleChange}
-              />
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={1}>
-              <MDTypography variant="h6"> Direccion: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={1}>
-              <MDInput
-                label="Direccion"
-                name="emp_Direccion"
-                type="text"
-                size="small"
-                multiline
-                rows={2}
-                onChange={handleChange}
               />
             </MDBox>
           </Grid>
@@ -733,7 +657,7 @@ function Cuentas() {
   const bodyEliminar = (
     <div className={styles.modal}>
       <p>
-        Deseas Eliminar el Empleado
+        Deseas Eliminar la cuenta
         <b> {empleadoseleccionado && empleadoseleccionado.emp_Nombre}</b>?
       </p>
       <div align="right">
@@ -759,7 +683,7 @@ function Cuentas() {
                   color="success"
                   onClick={() => abrircerrarModalInsertar()}
                 >
-                  Insertar Empleado
+                  Insertar Cuenta
                 </MDButton>
                 <br />
                 <br />

@@ -3,13 +3,13 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
-import axios from "axios";
+// import axios from "axios";
 import MDBox from "components/MDBox";
 import "styles/styles.css";
 import MaterialTable from "material-table";
 import { Modal } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import Swal from "sweetalert2";
+// import Swal from "sweetalert2";
 import MDInput from "components/MDInput";
 import MDTypography from "components/MDTypography";
 import Divider from "@mui/material/Divider";
@@ -21,25 +21,25 @@ const columns = [
     field: "ins_Codigo",
   },
   {
-    title: "Kilometraje",
+    title: "Nombre",
     field: "ins_KilometrajeActual",
   },
-  {
-    title: "Aprobacion",
-    field: "ins_Aprobacion",
-  },
-  {
-    title: "Estado",
-    field: "ins_Estado",
-  },
-  {
-    title: "Fecha",
-    field: "ins_Fecha",
-  },
-  {
-    title: "Descripcion",
-    field: "ins_Descripcion",
-  },
+  // {
+  //   title: "Aprobacion",
+  //   field: "ins_Aprobacion",
+  // },
+  // {
+  //   title: "Estado",
+  //   field: "ins_Estado",
+  // },
+  // {
+  //   title: "Fecha",
+  //   field: "ins_Fecha",
+  // },
+  // {
+  //   title: "Descripcion",
+  //   field: "ins_Descripcion",
+  // },
 ];
 
 const useStyles = makeStyles((theme) => ({
@@ -64,9 +64,9 @@ const useStyles = makeStyles((theme) => ({
 
 function Sucursales() {
   const styles = useStyles();
-  const [data, setData] = useState([]);
-  const [dataus, setDataus] = useState([]);
-  const [datave, setDatave] = useState([]);
+  const [data /* , setData */] = useState([]);
+  const [dataus /* , setDataus */] = useState([]);
+  const [datave /* , setDatave */] = useState([]);
   const [modalinsertar, setModalInsertar] = useState(false);
   const [modaleditar, setModalEditar] = useState(false);
   const [modaleliminar, setModalEliminar] = useState(false);
@@ -128,176 +128,176 @@ function Sucursales() {
   };
 
   const peticionpost = async () => {
-    console.log(inspeccionseleccionado);
-    Swal.showLoading();
-    if (
-      inspeccionseleccionado.usu_Codigo === 0 ||
-      inspeccionseleccionado.veh_Codigo === 0 ||
-      inspeccionseleccionado.ins_KilometrajeActual === 0 ||
-      inspeccionseleccionado.ins_Aprobacion === "" ||
-      inspeccionseleccionado.ins_Estado === "" ||
-      inspeccionseleccionado.ins_Fecha === 0 ||
-      inspeccionseleccionado.ins_Descripcion === ""
-    ) {
-      abrircerrarModalInsertar();
-      Swal.close();
-      Swal.fire({
-        icon: "info",
-        title: "",
-        html: "Debe de llenar <b>todos</b> los campos",
-      });
-    } else {
-      abrircerrarModalInsertar();
-      await axios
-        .post(
-          "https://localhost:7235/api/Inspecciones/registroinspecciones",
-          inspeccionseleccionado
-        )
-        .then((response) => {
-          setData(data.concat(response.data));
-          Swal.close();
-          Swal.fire({
-            icon: "success",
-            title: "",
-            text: "Inspeccion creada exitosamente",
-            timer: 2500,
-          });
-        })
-        .catch((error) => {
-          Swal.close();
-          Swal.fire({
-            icon: "error",
-            title: "",
-            text: error.response.data,
-            timer: 2500,
-          });
-        });
-    }
+    // console.log(inspeccionseleccionado);
+    // Swal.showLoading();
+    // if (
+    //   inspeccionseleccionado.usu_Codigo === 0 ||
+    //   inspeccionseleccionado.veh_Codigo === 0 ||
+    //   inspeccionseleccionado.ins_KilometrajeActual === 0 ||
+    //   inspeccionseleccionado.ins_Aprobacion === "" ||
+    //   inspeccionseleccionado.ins_Estado === "" ||
+    //   inspeccionseleccionado.ins_Fecha === 0 ||
+    //   inspeccionseleccionado.ins_Descripcion === ""
+    // ) {
+    //   abrircerrarModalInsertar();
+    //   Swal.close();
+    //   Swal.fire({
+    //     icon: "info",
+    //     title: "",
+    //     html: "Debe de llenar <b>todos</b> los campos",
+    //   });
+    // } else {
+    //   abrircerrarModalInsertar();
+    //   await axios
+    //     .post(
+    //       "https://localhost:7235/api/Inspecciones/registroinspecciones",
+    //       inspeccionseleccionado
+    //     )
+    //     .then((response) => {
+    //       setData(data.concat(response.data));
+    //       Swal.close();
+    //       Swal.fire({
+    //         icon: "success",
+    //         title: "",
+    //         text: "Inspeccion creada exitosamente",
+    //         timer: 2500,
+    //       });
+    //     })
+    //     .catch((error) => {
+    //       Swal.close();
+    //       Swal.fire({
+    //         icon: "error",
+    //         title: "",
+    //         text: error.response.data,
+    //         timer: 2500,
+    //       });
+    //     });
+    // }
   };
 
   const peticionput = async () => {
-    if (
-      inspeccionseleccionado.usu_Codigo === 0 ||
-      inspeccionseleccionado.veh_Codigo === 0 ||
-      inspeccionseleccionado.ins_KilometrajeActual === 0 ||
-      inspeccionseleccionado.ins_Aprobacion === "" ||
-      inspeccionseleccionado.ins_Estado === "" ||
-      inspeccionseleccionado.ins_Fecha === 0 ||
-      inspeccionseleccionado.ins_Descripcion === ""
-    ) {
-      abrircerrarModalEditar();
-      Swal.close();
-      Swal.fire({
-        icon: "info",
-        title: "",
-        html: "Debe de llenar <b>todos</b> los campos",
-      });
-    } else {
-      abrircerrarModalEditar();
-      Swal.showLoading();
-      await axios
-        .put("https://localhost:7235/api/Inspecciones/actualizar", inspeccionseleccionado)
-        .then(() => {
-          const copiaArray = [...data];
-          const indice = copiaArray.findIndex(
-            (elemento) => elemento.ins_Codigo === inspeccionseleccionado.ins_Codigo
-          );
-          if (indice !== -1) {
-            copiaArray[indice] = {
-              ...copiaArray[indice],
-              usu_Codigo: inspeccionseleccionado.usu_Codigo,
-              veh_Codigo: inspeccionseleccionado.veh_Codigo,
-              ins_KilometrajeActual: inspeccionseleccionado.ins_KilometrajeActual,
-              ins_Aprobacion: inspeccionseleccionado.ins_Aprobacion,
-              ins_Estado: inspeccionseleccionado.ins_Estado,
-              ins_Fecha: inspeccionseleccionado.ins_Fecha,
-              ins_Descripcion: inspeccionseleccionado.ins_Descripcion,
-            };
-          }
-          setData(copiaArray);
-          Swal.close();
-          Swal.fire({
-            icon: "success",
-            title: "",
-            text: "Inspeccion actualizada exitosamente",
-            timer: 2500,
-          });
-        })
-        .catch((error) => {
-          Swal.close();
-          Swal.fire({
-            icon: "error",
-            title: "",
-            text: error.response.data,
-            timer: 2500,
-          });
-        });
-    }
+    // if (
+    //   inspeccionseleccionado.usu_Codigo === 0 ||
+    //   inspeccionseleccionado.veh_Codigo === 0 ||
+    //   inspeccionseleccionado.ins_KilometrajeActual === 0 ||
+    //   inspeccionseleccionado.ins_Aprobacion === "" ||
+    //   inspeccionseleccionado.ins_Estado === "" ||
+    //   inspeccionseleccionado.ins_Fecha === 0 ||
+    //   inspeccionseleccionado.ins_Descripcion === ""
+    // ) {
+    //   abrircerrarModalEditar();
+    //   Swal.close();
+    //   Swal.fire({
+    //     icon: "info",
+    //     title: "",
+    //     html: "Debe de llenar <b>todos</b> los campos",
+    //   });
+    // } else {
+    //   abrircerrarModalEditar();
+    //   Swal.showLoading();
+    //   await axios
+    //     .put("https://localhost:7235/api/Inspecciones/actualizar", inspeccionseleccionado)
+    //     .then(() => {
+    //       const copiaArray = [...data];
+    //       const indice = copiaArray.findIndex(
+    //         (elemento) => elemento.ins_Codigo === inspeccionseleccionado.ins_Codigo
+    //       );
+    //       if (indice !== -1) {
+    //         copiaArray[indice] = {
+    //           ...copiaArray[indice],
+    //           usu_Codigo: inspeccionseleccionado.usu_Codigo,
+    //           veh_Codigo: inspeccionseleccionado.veh_Codigo,
+    //           ins_KilometrajeActual: inspeccionseleccionado.ins_KilometrajeActual,
+    //           ins_Aprobacion: inspeccionseleccionado.ins_Aprobacion,
+    //           ins_Estado: inspeccionseleccionado.ins_Estado,
+    //           ins_Fecha: inspeccionseleccionado.ins_Fecha,
+    //           ins_Descripcion: inspeccionseleccionado.ins_Descripcion,
+    //         };
+    //       }
+    //       setData(copiaArray);
+    //       Swal.close();
+    //       Swal.fire({
+    //         icon: "success",
+    //         title: "",
+    //         text: "Inspeccion actualizada exitosamente",
+    //         timer: 2500,
+    //       });
+    //     })
+    //     .catch((error) => {
+    //       Swal.close();
+    //       Swal.fire({
+    //         icon: "error",
+    //         title: "",
+    //         text: error.response.data,
+    //         timer: 2500,
+    //       });
+    //     });
+    // }
   };
 
   const peticiondelete = async () => {
-    abrircerrarModalEliminar();
-    Swal.showLoading();
-    await axios
-      .put("https://localhost:7235/api/Inspecciones/eliminar", inspeccionseleccionado)
-      .then(() => {
-        setData(
-          data.filter((inspeccion) => inspeccion.ins_Codigo !== inspeccionseleccionado.ins_Codigo)
-        );
-        Swal.close();
-        Swal.fire({
-          icon: "success",
-          title: "",
-          text: "Inspeccion eliminada exitosamente",
-          timer: 2500,
-        });
-      })
-      .catch((error) => {
-        Swal.close();
-        Swal.fire({
-          icon: "error",
-          title: "",
-          text: error.response.data,
-          timer: 2500,
-        });
-      });
+    // abrircerrarModalEliminar();
+    // Swal.showLoading();
+    // await axios
+    //   .put("https://localhost:7235/api/Inspecciones/eliminar", inspeccionseleccionado)
+    //   .then(() => {
+    //     setData(
+    //       data.filter((inspeccion) => inspeccion.ins_Codigo !== inspeccionseleccionado.ins_Codigo)
+    //     );
+    //     Swal.close();
+    //     Swal.fire({
+    //       icon: "success",
+    //       title: "",
+    //       text: "Inspeccion eliminada exitosamente",
+    //       timer: 2500,
+    //     });
+    //   })
+    //   .catch((error) => {
+    //     Swal.close();
+    //     Swal.fire({
+    //       icon: "error",
+    //       title: "",
+    //       text: error.response.data,
+    //       timer: 2500,
+    //     });
+    //   });
   };
 
   const peticionget = async () => {
-    Swal.showLoading();
-    await axios
-      .get("https://localhost:7235/api/Inspecciones/inspecciones")
-      .then((response) => {
-        setData(response.data);
-        Swal.close();
-      })
-      .catch((error) => {
-        Swal.close();
-        Swal.fire({
-          icon: "error",
-          title: "",
-          text: error.response.data,
-          timer: 2500,
-        });
-      });
+    // Swal.showLoading();
+    // await axios
+    //   .get("https://localhost:7235/api/Inspecciones/inspecciones")
+    //   .then((response) => {
+    //     setData(response.data);
+    //     Swal.close();
+    //   })
+    //   .catch((error) => {
+    //     Swal.close();
+    //     Swal.fire({
+    //       icon: "error",
+    //       title: "",
+    //       text: error.response.data,
+    //       timer: 2500,
+    //     });
+    //   });
   };
 
   const peticiongetus = async () => {
-    await axios
-      .get("https://localhost:7235/api/Usuarios/usuarios")
-      .then((response) => {
-        setDataus(response.data);
-      })
-      .catch();
+    // await axios
+    //   .get("https://localhost:7235/api/Usuarios/usuarios")
+    //   .then((response) => {
+    //     setDataus(response.data);
+    //   })
+    //   .catch();
   };
 
   const peticiongetve = async () => {
-    await axios
-      .get("https://localhost:7235/api/Vehiculos/vehiculos")
-      .then((response) => {
-        setDatave(response.data);
-      })
-      .catch();
+    // await axios
+    //   .get("https://localhost:7235/api/Vehiculos/vehiculos")
+    //   .then((response) => {
+    //     setDatave(response.data);
+    //   })
+    //   .catch();
   };
 
   useEffect(() => {
@@ -315,13 +315,13 @@ function Sucursales() {
 
   const bodyInsertar = (
     <div className={styles.modal}>
-      <MDTypography variant="h3"> Agregar Nueva Inspeccion </MDTypography>
+      <MDTypography variant="h3"> Agregar Nueva sucursal </MDTypography>
       <Divider sx={{ marginTop: 1 }} light={false} />
       <MDBox pt={2} pb={3}>
-        <Grid container spacing={3} justifyContent="center">
+        {/* <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} md={4} lg={3}>
             <MDBox mb={2}>
-              <MDTypography variant="h6"> Usuario: </MDTypography>
+              <MDTypography variant="h6"> Nombre: </MDTypography>
             </MDBox>
           </Grid>
           <Grid item xs={12} md={6} lg={9}>
@@ -359,25 +359,25 @@ function Sucursales() {
               </select>
             </MDBox>
           </Grid>
-        </Grid>
+        </Grid> */}
         <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} md={4} lg={3}>
             <MDBox mb={2}>
-              <MDTypography variant="h6"> Kilometraje: </MDTypography>
+              <MDTypography variant="h6"> Nombre: </MDTypography>
             </MDBox>
           </Grid>
           <Grid item xs={12} md={6} lg={9}>
             <MDBox mb={2}>
               <MDInput
-                label="Kilometraje"
+                label="Nombre"
                 name="ins_KilometrajeActual"
-                type="number"
+                type="text"
                 onChange={handleChange}
               />
             </MDBox>
           </Grid>
         </Grid>
-        <Grid container spacing={3} justifyContent="center">
+        {/* <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} md={4} lg={3}>
             <MDBox mb={2}>
               <MDTypography variant="h6"> Fecha: </MDTypography>
@@ -441,7 +441,7 @@ function Sucursales() {
               />
             </MDBox>
           </Grid>
-        </Grid>
+        </Grid> */}
         <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} md={4} lg={3}>
             <MDButton variant="gradient" color="info" fullWidth onClick={() => peticionpost()}>
@@ -465,7 +465,7 @@ function Sucursales() {
 
   const bodyEditar = (
     <div className={styles.modal}>
-      <MDTypography variant="h3"> Editar Inspeccion </MDTypography>
+      <MDTypography variant="h3"> Editar sucursal </MDTypography>
       <Divider sx={{ marginTop: 1 }} light={false} />
       <MDBox pt={2} pb={3}>
         <Grid container spacing={3} justifyContent="center">
@@ -639,7 +639,7 @@ function Sucursales() {
   const bodyEliminar = (
     <div className={styles.modal}>
       <p>
-        Deseas Eliminar el Vehiculo
+        Deseas Eliminar la sucursal
         <b> {inspeccionseleccionado && inspeccionseleccionado.ins_Codigo}</b>?
       </p>
       <div align="right">
@@ -665,7 +665,7 @@ function Sucursales() {
                   color="success"
                   onClick={() => abrircerrarModalInsertar()}
                 >
-                  Insertar Inspeccion
+                  Insertar sucursal
                 </MDButton>
                 <br />
                 <br />
