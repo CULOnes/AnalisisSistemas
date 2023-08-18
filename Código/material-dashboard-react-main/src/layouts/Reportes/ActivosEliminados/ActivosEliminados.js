@@ -20,6 +20,7 @@ const columns = [
     title: "ID",
     field: "emp_Codigo",
   },
+  
   {
     title: "Nombre",
     field: "emp_Nombre",

@@ -126,157 +126,157 @@ function MantenimientosPendientes() {
   };
 
   const peticionpost = async () => {
-    Swal.showLoading();
-    if (
-      empleadoseleccionado.pue_Codigo === 0 ||
-      empleadoseleccionado.emp_Nombre === "" ||
-      empleadoseleccionado.emp_Apellido === "" ||
-      empleadoseleccionado.emp_Direccion === "" ||
-      empleadoseleccionado.emp_Telefono === 0 ||
-      empleadoseleccionado.emp_Dpi === "" ||
-      empleadoseleccionado.emp_Edad === 0 ||
-      empleadoseleccionado.emp_Nacimiento === 0
-    ) {
-      abrircerrarModalInsertar();
-      Swal.close();
-      Swal.fire({
-        icon: "info",
-        title: "",
-        html: "Debe de llenar <b>todos</b> los campos",
-      });
-    } else {
-      abrircerrarModalInsertar();
-      await axios
-        .post("https://localhost:7235/api/Empleados/registroempleados", empleadoseleccionado)
-        .then((response) => {
-          setData(data.concat(response.data));
-          Swal.close();
-          Swal.fire({
-            icon: "success",
-            title: "",
-            text: "Empleado creado exitosamente",
-            timer: 2500,
-          });
-        })
-        .catch((error) => {
-          Swal.close();
-          Swal.fire({
-            icon: "error",
-            title: "",
-            text: error.response.data,
-            timer: 2500,
-          });
-        });
-    }
+    // Swal.showLoading();
+    // if (
+    //   empleadoseleccionado.pue_Codigo === 0 ||
+    //   empleadoseleccionado.emp_Nombre === "" ||
+    //   empleadoseleccionado.emp_Apellido === "" ||
+    //   empleadoseleccionado.emp_Direccion === "" ||
+    //   empleadoseleccionado.emp_Telefono === 0 ||
+    //   empleadoseleccionado.emp_Dpi === "" ||
+    //   empleadoseleccionado.emp_Edad === 0 ||
+    //   empleadoseleccionado.emp_Nacimiento === 0
+    // ) {
+    //   abrircerrarModalInsertar();
+    //   Swal.close();
+    //   Swal.fire({
+    //     icon: "info",
+    //     title: "",
+    //     html: "Debe de llenar <b>todos</b> los campos",
+    //   });
+    // } else {
+    //   abrircerrarModalInsertar();
+    //   await axios
+    //     .post("https://localhost:7235/api/Empleados/registroempleados", empleadoseleccionado)
+    //     .then((response) => {
+    //       setData(data.concat(response.data));
+    //       Swal.close();
+    //       Swal.fire({
+    //         icon: "success",
+    //         title: "",
+    //         text: "Empleado creado exitosamente",
+    //         timer: 2500,
+    //       });
+    //     })
+    //     .catch((error) => {
+    //       Swal.close();
+    //       Swal.fire({
+    //         icon: "error",
+    //         title: "",
+    //         text: error.response.data,
+    //         timer: 2500,
+    //       });
+    //     });
+    // }
   };
 
   const peticionput = async () => {
-    if (
-      empleadoseleccionado.pue_Codigo === 0 ||
-      empleadoseleccionado.emp_Nombre === "" ||
-      empleadoseleccionado.emp_Apellido === "" ||
-      empleadoseleccionado.emp_Direccion === "" ||
-      empleadoseleccionado.emp_Telefono === 0 ||
-      empleadoseleccionado.emp_Dpi === "" ||
-      empleadoseleccionado.emp_Edad === 0 ||
-      empleadoseleccionado.emp_Nacimiento === 0
-    ) {
-      abrircerrarModalEditar();
-      Swal.close();
-      Swal.fire({
-        icon: "info",
-        title: "",
-        html: "Debe de llenar <b>todos</b> los campos",
-      });
-    } else {
-      abrircerrarModalEditar();
-      Swal.showLoading();
-      await axios
-        .put("https://localhost:7235/api/Empleados/actualizar", empleadoseleccionado)
-        .then(() => {
-          const copiaArray = [...data];
-          const indice = copiaArray.findIndex(
-            (elemento) => elemento.emp_Codigo === empleadoseleccionado.emp_Codigo
-          );
-          if (indice !== -1) {
-            copiaArray[indice] = {
-              ...copiaArray[indice],
-              pue_Codigo: empleadoseleccionado.pue_Codigo,
-              emp_Nombre: empleadoseleccionado.emp_Nombre,
-              emp_Apellido: empleadoseleccionado.emp_Apellido,
-              emp_Direccion: empleadoseleccionado.emp_Direccion,
-              emp_Telefono: empleadoseleccionado.emp_Telefono,
-              emp_Dpi: empleadoseleccionado.emp_Dpi,
-              emp_Edad: empleadoseleccionado.emp_Edad,
-              emp_Nacimiento: empleadoseleccionado.emp_Nacimiento,
-              emp_Nolicencia: empleadoseleccionado.emp_Nolicencia,
-              emp_Tipolicencia: empleadoseleccionado.emp_Tipolicencia,
-            };
-          }
-          setData(copiaArray);
-          Swal.close();
-          Swal.fire({
-            icon: "success",
-            title: "",
-            text: "Empleado actualizado exitosamente",
-            timer: 2500,
-          });
-        })
-        .catch((error) => {
-          Swal.close();
-          Swal.fire({
-            icon: "error",
-            title: "",
-            text: error.response.data,
-            timer: 2500,
-          });
-        });
-    }
+    // if (
+    //   empleadoseleccionado.pue_Codigo === 0 ||
+    //   empleadoseleccionado.emp_Nombre === "" ||
+    //   empleadoseleccionado.emp_Apellido === "" ||
+    //   empleadoseleccionado.emp_Direccion === "" ||
+    //   empleadoseleccionado.emp_Telefono === 0 ||
+    //   empleadoseleccionado.emp_Dpi === "" ||
+    //   empleadoseleccionado.emp_Edad === 0 ||
+    //   empleadoseleccionado.emp_Nacimiento === 0
+    // ) {
+    //   abrircerrarModalEditar();
+    //   Swal.close();
+    //   Swal.fire({
+    //     icon: "info",
+    //     title: "",
+    //     html: "Debe de llenar <b>todos</b> los campos",
+    //   });
+    // } else {
+    //   abrircerrarModalEditar();
+    //   Swal.showLoading();
+    //   await axios
+    //     .put("https://localhost:7235/api/Empleados/actualizar", empleadoseleccionado)
+    //     .then(() => {
+    //       const copiaArray = [...data];
+    //       const indice = copiaArray.findIndex(
+    //         (elemento) => elemento.emp_Codigo === empleadoseleccionado.emp_Codigo
+    //       );
+    //       if (indice !== -1) {
+    //         copiaArray[indice] = {
+    //           ...copiaArray[indice],
+    //           pue_Codigo: empleadoseleccionado.pue_Codigo,
+    //           emp_Nombre: empleadoseleccionado.emp_Nombre,
+    //           emp_Apellido: empleadoseleccionado.emp_Apellido,
+    //           emp_Direccion: empleadoseleccionado.emp_Direccion,
+    //           emp_Telefono: empleadoseleccionado.emp_Telefono,
+    //           emp_Dpi: empleadoseleccionado.emp_Dpi,
+    //           emp_Edad: empleadoseleccionado.emp_Edad,
+    //           emp_Nacimiento: empleadoseleccionado.emp_Nacimiento,
+    //           emp_Nolicencia: empleadoseleccionado.emp_Nolicencia,
+    //           emp_Tipolicencia: empleadoseleccionado.emp_Tipolicencia,
+    //         };
+    //       }
+    //       setData(copiaArray);
+    //       Swal.close();
+    //       Swal.fire({
+    //         icon: "success",
+    //         title: "",
+    //         text: "Empleado actualizado exitosamente",
+    //         timer: 2500,
+    //       });
+    //     })
+    //     .catch((error) => {
+    //       Swal.close();
+    //       Swal.fire({
+    //         icon: "error",
+    //         title: "",
+    //         text: error.response.data,
+    //         timer: 2500,
+    //       });
+    //     });
+    // }
   };
 
   const peticiondelete = async () => {
-    abrircerrarModalEliminar();
-    Swal.showLoading();
-    await axios
-      .put("https://localhost:7235/api/Empleados/eliminar", empleadoseleccionado)
-      .then(() => {
-        setData(data.filter((empleado) => empleado.emp_Codigo !== empleadoseleccionado.emp_Codigo));
-        Swal.close();
-        Swal.fire({
-          icon: "success",
-          title: "",
-          text: "Empleado eliminado exitosamente",
-          timer: 2500,
-        });
-      })
-      .catch((error) => {
-        Swal.close();
-        Swal.fire({
-          icon: "error",
-          title: "",
-          text: error.response.data,
-          timer: 2500,
-        });
-      });
+    // abrircerrarModalEliminar();
+    // Swal.showLoading();
+    // await axios
+    //   .put("https://localhost:7235/api/Empleados/eliminar", empleadoseleccionado)
+    //   .then(() => {
+    //     setData(data.filter((empleado) => empleado.emp_Codigo !== empleadoseleccionado.emp_Codigo));
+    //     Swal.close();
+    //     Swal.fire({
+    //       icon: "success",
+    //       title: "",
+    //       text: "Empleado eliminado exitosamente",
+    //       timer: 2500,
+    //     });
+    //   })
+    //   .catch((error) => {
+    //     Swal.close();
+    //     Swal.fire({
+    //       icon: "error",
+    //       title: "",
+    //       text: error.response.data,
+    //       timer: 2500,
+    //     });
+    //   });
   };
 
   const peticionget = async () => {
-    Swal.showLoading();
-    await axios
-      .get("https://localhost:7235/api/Empleados/empleados")
-      .then((response) => {
-        setData(response.data);
-        Swal.close();
-      })
-      .catch((error) => {
-        Swal.close();
-        Swal.fire({
-          icon: "error",
-          title: "",
-          text: error.response.data,
-          timer: 2500,
-        });
-      });
+    // Swal.showLoading();
+    // await axios
+    //   .get("https://localhost:7235/api/Empleados/empleados")
+    //   .then((response) => {
+    //     setData(response.data);
+    //     Swal.close();
+    //   })
+    //   .catch((error) => {
+    //     Swal.close();
+    //     Swal.fire({
+    //       icon: "error",
+    //       title: "",
+    //       text: error.response.data,
+    //       timer: 2500,
+    //     });
+    //   });
   };
 
   const peticiongettp = async () => {
