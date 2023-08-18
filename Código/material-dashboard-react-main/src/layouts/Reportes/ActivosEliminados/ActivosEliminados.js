@@ -672,7 +672,7 @@ function ActivosEliminados() {
         <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} md={4} lg={3}>
             <MDBox mb={1}>
-              <MDTypography variant="h6"> Tipo Licencia: </MDTypography>
+              <MDTypography variant="h6"> Tipo Licencia </MDTypography>
             </MDBox>
           </Grid>
           <Grid item xs={12} md={6} lg={9}>
