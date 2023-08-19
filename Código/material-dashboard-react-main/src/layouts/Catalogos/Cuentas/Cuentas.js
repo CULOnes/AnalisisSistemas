@@ -32,14 +32,6 @@ const columns = [
     title: "Tipo de cuenta",
     field: "emp_Apellido",
   },
-  {
-    title: "Meses de vida util",
-    field: "emp_Telefono",
-  },
-  {
-    title: "valor residual",
-    field: "emp_Edad",
-  },
 ];
 
 const useStyles = makeStyles((theme) => ({
@@ -310,12 +302,12 @@ function Cuentas() {
       <Divider sx={{ marginTop: 1 }} light={false} />
       <MDBox pb={1}>
         <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={1}>
+          <Grid item xs={12} md={4} lg={4}>
+            <MDBox mb={1} pb={4}>
               <MDTypography variant="h6"> Nombre: </MDTypography>
             </MDBox>
           </Grid>
-          <Grid item xs={12} md={6} lg={9}>
+          <Grid item xs={12} md={6} lg={8}>
             <MDBox mb={1}>
               <MDInput
                 type="text"
@@ -328,12 +320,12 @@ function Cuentas() {
           </Grid>
         </Grid>
         <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={1}>
+          <Grid item xs={12} md={4} lg={4}>
+            <MDBox mb={1} pb={4}>
               <MDTypography variant="h6"> Descripcion: </MDTypography>
             </MDBox>
           </Grid>
-          <Grid item xs={12} md={6} lg={9}>
+          <Grid item xs={12} md={6} lg={8}>
             <MDBox mb={1}>
               <MDInput
                 label="Descripcion"
@@ -346,12 +338,12 @@ function Cuentas() {
           </Grid>
         </Grid>
         <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={6} lg={3}>
-            <MDBox mb={2}>
+          <Grid item xs={12} md={6} lg={4}>
+            <MDBox mb={2} pb={4}>
               <MDTypography variant="h6"> Tipo de cuenta: </MDTypography>
             </MDBox>
           </Grid>
-          <Grid item xs={12} md={6} lg={9}>
+          <Grid item xs={12} md={6} lg={8}>
             <MDBox mb={2}>
               <select name="pue_Codigo" className="form-control" onChange={handleChange}>
                 <option key="0" value="0">
@@ -372,7 +364,7 @@ function Cuentas() {
             </MDBox>
           </Grid>
         </Grid>
-        <Grid container spacing={3} justifyContent="center">
+        {/* <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} md={4} lg={3}>
             <MDBox mb={1}>
               <MDTypography variant="h6"> Meses de vida util: </MDTypography>
@@ -407,7 +399,7 @@ function Cuentas() {
               />
             </MDBox>
           </Grid>
-        </Grid>
+        </Grid> */}
         <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} md={4} lg={3}>
             <MDButton variant="gradient" color="info" fullWidth onClick={() => peticionpost()}>
@@ -690,7 +682,7 @@ function Cuentas() {
                 <MaterialTable
                   columns={columns}
                   data={data}
-                  title="Empleados"
+                  title="Cuentas"
                   actions={[
                     {
                       icon: "edit",

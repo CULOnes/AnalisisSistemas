@@ -317,7 +317,7 @@ function Sucursales() {
     <div className={styles.modal}>
       <MDTypography variant="h3"> Agregar Nueva sucursal </MDTypography>
       <Divider sx={{ marginTop: 1 }} light={false} />
-      <MDBox pt={2} pb={3}>
+      <MDBox pt={2} pb={1}>
         {/* <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} md={4} lg={3}>
             <MDBox mb={2}>
@@ -361,12 +361,12 @@ function Sucursales() {
           </Grid>
         </Grid> */}
         <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
+          <Grid item xs={12} md={4} lg={4}>
             <MDBox mb={2}>
               <MDTypography variant="h6"> Nombre: </MDTypography>
             </MDBox>
           </Grid>
-          <Grid item xs={12} md={6} lg={9}>
+          <Grid item xs={12} md={6} lg={8}>
             <MDBox mb={2}>
               <MDInput
                 label="Nombre"
@@ -442,6 +442,13 @@ function Sucursales() {
             </MDBox>
           </Grid>
         </Grid> */}
+        <Grid container spacing={3} justifyContent="center">
+          <Grid item xs={12} md={4} lg={3}>
+            <MDBox mb={2}>
+              <MDTypography variant="h6"> </MDTypography>
+            </MDBox>
+          </Grid>
+        </Grid>
         <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} md={4} lg={3}>
             <MDButton variant="gradient" color="info" fullWidth onClick={() => peticionpost()}>
@@ -672,7 +679,7 @@ function Sucursales() {
                 <MaterialTable
                   columns={columns}
                   data={data}
-                  title="Inspecciones"
+                  title="Sucursales"
                   actions={[
                     {
                       icon: "edit",

@@ -25,7 +25,7 @@ const columns = [
     field: "com_TipoCombustible",
   },
   {
-    title: "Dado de baja?",
+    title: "¿Dado de baja?",
     field: "com_Marca",
   },
 ];
@@ -264,14 +264,14 @@ function Estados() {
     <div className={styles.modal}>
       <MDTypography variant="h3"> Agregar Nuevo Estado </MDTypography>
       <Divider sx={{ marginTop: 1 }} light={false} />
-      <MDBox pt={2} pb={3}>
+      <MDBox pt={2} pb={1}>
         <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={2}>
+          <Grid item xs={12} md={4} lg={5}>
+            <MDBox mb={2} pb={3}>
               <MDTypography variant="h6"> Descripcion: </MDTypography>
             </MDBox>
           </Grid>
-          <Grid item xs={12} md={6} lg={9}>
+          <Grid item xs={12} md={6} lg={7}>
             <MDBox mb={2}>
               <MDInput
                 type="text"
@@ -284,10 +284,8 @@ function Estados() {
         </Grid>
         <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} md={4} lg={5}>
-            <MDBox mb={2}>
-              <MDTypography variant="h6">
-                En este estado, el activo se considera como dado de baja?
-              </MDTypography>
+            <MDBox mb={2} pb={3}>
+              <MDTypography variant="h6"> ¿el activo se considera como dado de baja? </MDTypography>
             </MDBox>
           </Grid>
           <Grid item xs={12} md={6} lg={7}>

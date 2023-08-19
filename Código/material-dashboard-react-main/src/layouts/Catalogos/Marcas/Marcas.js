@@ -25,7 +25,7 @@ const columns = [
     field: "cli_Nombre",
   },
   {
-    title: "Descripcion",
+    title: "Descripción",
     field: "cli_Apellido",
   },
   // {
@@ -291,14 +291,14 @@ function Marcas() {
     <div className={styles.modal}>
       <MDTypography variant="h3"> Agregar Nueva Marca </MDTypography>
       <Divider sx={{ marginTop: 1 }} light={false} />
-      <MDBox pt={2} pb={3}>
+      <MDBox pt={2} pb={1}>
         <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
+          <Grid item xs={12} md={4} lg={4}>
             <MDBox mb={2}>
               <MDTypography variant="h6"> Nombre </MDTypography>
             </MDBox>
           </Grid>
-          <Grid item xs={12} md={6} lg={9}>
+          <Grid item xs={12} md={6} lg={8}>
             <MDBox mb={2}>
               <MDInput
                 type="text"
@@ -311,16 +311,16 @@ function Marcas() {
           </Grid>
         </Grid>
         <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
+          <Grid item xs={12} md={4} lg={4}>
             <MDBox mb={2}>
-              <MDTypography variant="h6"> Descripcion: </MDTypography>
+              <MDTypography variant="h6"> Descripción: </MDTypography>
             </MDBox>
           </Grid>
-          <Grid item xs={12} md={6} lg={9}>
+          <Grid item xs={12} md={6} lg={8}>
             <MDBox mb={2}>
               <MDInput
                 type="text"
-                label="Descripcion"
+                label="Descripción"
                 name="cli_Apellido"
                 onChange={handleChange}
               />
@@ -392,6 +392,13 @@ function Marcas() {
             </MDBox>
           </Grid>
         </Grid> */}
+        <Grid container spacing={3} justifyContent="center">
+          <Grid item xs={12} md={4} lg={3}>
+            <MDBox mb={2}>
+              <MDTypography variant="h6"> </MDTypography>
+            </MDBox>
+          </Grid>
+        </Grid>
         <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} md={4} lg={3}>
             <MDButton variant="gradient" color="info" fullWidth onClick={() => peticionpost()}>
