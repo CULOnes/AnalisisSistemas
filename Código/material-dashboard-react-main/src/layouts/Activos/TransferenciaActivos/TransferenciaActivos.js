@@ -304,14 +304,11 @@ function TransferenciaActivos() {
         <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} md={4} lg={5}>
             <MDBox mb={4}>
-              <MDTypography variant="h6">
-                {" "}
-                Seleccione el Custodio que Entrega Activos:{" "}
-              </MDTypography>
+              <MDTypography variant="h6"> Custodio que Entrega: </MDTypography>
             </MDBox>
           </Grid>
           <Grid item xs={12} md={6} lg={7}>
-            <MDBox mb={4}>
+            <MDBox mb={1}>
               <select name="transfAct_codigo" className="form-control" onChange={handleChange}>
                 <option key="0" value="0">
                   Seleccione Custodio:
@@ -347,10 +344,10 @@ function TransferenciaActivos() {
             </MDBox>
           </Grid>
           <Grid item xs={12} md={6} lg={7}>
-            <MDBox mb={4}>
+            <MDBox mb={1}>
               <select name="transfAct_codigo" className="form-control" onChange={handleChange}>
                 <option key="0" value="0">
-                  Seleccione el Custodio que Recibe los Activo(s)
+                  Seleccione Custodio que Recibe
                 </option>
                 <option key="0" value="0">
                   Nuevo Custodio 1
@@ -379,11 +376,11 @@ function TransferenciaActivos() {
         <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} md={4} lg={5}>
             <MDBox mb={4}>
-              <MDTypography variant="h6"> Seleccione Activos a Transferir: </MDTypography>
+              <MDTypography variant="h6">Activos a Transferir: </MDTypography>
             </MDBox>
           </Grid>
           <Grid item xs={12} md={6} lg={7}>
-            <MDBox mb={4}>
+            <MDBox mb={1}>
               <select name="pue_Codigo" className="form-control" onChange={handleChange} multiple>
                 <option key="0" value="0">
                   Seleccione Activos
@@ -419,7 +416,7 @@ function TransferenciaActivos() {
             </MDBox>
           </Grid>
           <Grid item xs={12} md={6} lg={7}>
-            <MDBox mb={4}>
+            <MDBox mb={1}>
               <select name="pue_Codigo" className="form-control" onChange={handleChange}>
                 <option key="0" value="0">
                   Seleccione Ubicación Destino
@@ -452,7 +449,7 @@ function TransferenciaActivos() {
             </MDBox>
           </Grid>
           <Grid item xs={12} md={6} lg={7}>
-            <MDBox mb={4}>
+            <MDBox mb={1}>
               <select name="pue_Codigo" className="form-control" onChange={handleChange}>
                 <option key="0" value="0">
                   Seleccione Centro de Costo Destino
@@ -631,7 +628,7 @@ function TransferenciaActivos() {
                   color="success"
                   onClick={() => abrircerrarModalInsertar()}
                 >
-                  Transferencia de Activos
+                  Transferir Activos
                 </MDButton>
                 <br />
                 <br />

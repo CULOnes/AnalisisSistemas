@@ -33,10 +33,6 @@ const columns = [
     field: "prov_nit",
   },
   {
-    title: "Dirección",
-    field: "prov_dirección",
-  },
-  {
     title: "Teléfono",
     field: "prov_telefono",
   },
@@ -308,7 +304,7 @@ function Proveedores() {
     <div className={styles.modal}>
       <MDTypography variant="h3"> Agregar Nuevo Proveedor </MDTypography>
       <Divider sx={{ marginTop: 1 }} light={false} />
-      <MDBox pb={1}>
+      <MDBox pb={2}>
         {/* <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} md={4} lg={3}>
             <MDBox mb={1}>
@@ -331,12 +327,12 @@ function Proveedores() {
           </Grid>
         </Grid> */}
         <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
+          <Grid item xs={12} md={4} lg={4}>
             <MDBox mb={1}>
               <MDTypography variant="h6"> Razón Social: </MDTypography>
             </MDBox>
           </Grid>
-          <Grid item xs={12} md={6} lg={9}>
+          <Grid item xs={12} md={6} lg={8}>
             <MDBox mb={1}>
               <MDInput
                 type="text"
@@ -349,12 +345,12 @@ function Proveedores() {
           </Grid>
         </Grid>
         <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
+          <Grid item xs={12} md={4} lg={4}>
             <MDBox mb={1}>
               <MDTypography variant="h6"> Nombre Comercial: </MDTypography>
             </MDBox>
           </Grid>
-          <Grid item xs={12} md={6} lg={9}>
+          <Grid item xs={12} md={6} lg={8}>
             <MDBox mb={1}>
               <MDInput
                 type="text"
@@ -367,12 +363,12 @@ function Proveedores() {
           </Grid>
         </Grid>
         <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
+          <Grid item xs={12} md={4} lg={4}>
             <MDBox mb={1}>
               <MDTypography variant="h6"> NIT: </MDTypography>
             </MDBox>
           </Grid>
-          <Grid item xs={12} md={6} lg={9}>
+          <Grid item xs={12} md={6} lg={8}>
             <MDBox mb={1}>
               <MDInput
                 label="NIT"
@@ -385,32 +381,12 @@ function Proveedores() {
           </Grid>
         </Grid>
         <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={1}>
-              <MDTypography variant="h6"> Dirección: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={1}>
-              <MDInput
-                label="Dirección"
-                name="prov_dirección"
-                type="text"
-                size="small"
-                multiline
-                rows={2}
-                onChange={handleChange}
-              />
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
+          <Grid item xs={12} md={4} lg={4}>
             <MDBox mb={1}>
               <MDTypography variant="h6"> Teléfono: </MDTypography>
             </MDBox>
           </Grid>
-          <Grid item xs={12} md={6} lg={9}>
+          <Grid item xs={12} md={6} lg={8}>
             <MDBox mb={1}>
               <MDInput
                 label="Teléfono"
@@ -423,18 +399,38 @@ function Proveedores() {
           </Grid>
         </Grid>
         <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
+          <Grid item xs={12} md={4} lg={4}>
             <MDBox mb={1}>
               <MDTypography variant="h6"> Contacto: </MDTypography>
             </MDBox>
           </Grid>
-          <Grid item xs={12} md={6} lg={9}>
+          <Grid item xs={12} md={6} lg={8}>
             <MDBox mb={1}>
               <MDInput
                 label="Contacto"
                 name="prov_contacto"
                 type="text"
                 size="small"
+                onChange={handleChange}
+              />
+            </MDBox>
+          </Grid>
+        </Grid>
+        <Grid container spacing={3} justifyContent="center">
+          <Grid item xs={12} md={4} lg={4}>
+            <MDBox mb={3}>
+              <MDTypography variant="h6"> Dirección: </MDTypography>
+            </MDBox>
+          </Grid>
+          <Grid item xs={12} md={6} lg={8}>
+            <MDBox mb={3}>
+              <MDInput
+                label="Dirección"
+                name="prov_dirección"
+                type="text"
+                size="small"
+                multiline
+                rows={2}
                 onChange={handleChange}
               />
             </MDBox>
@@ -552,25 +548,6 @@ function Proveedores() {
         <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} md={4} lg={3}>
             <MDBox mb={1}>
-              <MDTypography variant="h6"> Dirección: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={1}>
-              <MDInput
-                label="Dirección"
-                name="prov_dirección"
-                type="text"
-                size="small"
-                onChange={handleChange}
-                value={proveedorSeleccionado && proveedorSeleccionado.pro_Direccion}
-              />
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={1}>
               <MDTypography variant="h6"> Teléfono: </MDTypography>
             </MDBox>
           </Grid>
@@ -621,6 +598,25 @@ function Proveedores() {
                 size="small"
                 onChange={handleChange}
                 value={proveedorSeleccionado && proveedorSeleccionado.pro_contacto}
+              />
+            </MDBox>
+          </Grid>
+        </Grid>
+        <Grid container spacing={3} justifyContent="center">
+          <Grid item xs={12} md={4} lg={3}>
+            <MDBox mb={1}>
+              <MDTypography variant="h6"> Dirección: </MDTypography>
+            </MDBox>
+          </Grid>
+          <Grid item xs={12} md={6} lg={9}>
+            <MDBox mb={1}>
+              <MDInput
+                label="Dirección"
+                name="prov_dirección"
+                type="text"
+                size="small"
+                onChange={handleChange}
+                value={proveedorSeleccionado && proveedorSeleccionado.pro_Direccion}
               />
             </MDBox>
           </Grid>

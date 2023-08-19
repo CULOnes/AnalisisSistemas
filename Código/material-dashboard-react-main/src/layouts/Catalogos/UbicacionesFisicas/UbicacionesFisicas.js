@@ -272,14 +272,14 @@ function UbicacionesFisicas() {
     <div className={styles.modal}>
       <MDTypography variant="h3"> Agregar Nueva Ubicación </MDTypography>
       <Divider sx={{ marginTop: 1 }} light={false} />
-      <MDBox pt={2} pb={3}>
+      <MDBox pt={2} pb={0}>
         <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
+          <Grid item xs={12} md={4} lg={4}>
             <MDBox mb={2}>
               <MDTypography variant="h6"> Ubicación: </MDTypography>
             </MDBox>
           </Grid>
-          <Grid item xs={12} md={6} lg={9}>
+          <Grid item xs={12} md={6} lg={8}>
             <MDBox mb={2}>
               <MDInput
                 type="text"
@@ -291,12 +291,12 @@ function UbicacionesFisicas() {
           </Grid>
         </Grid>
         <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
+          <Grid item xs={12} md={4} lg={4}>
             <MDBox mb={2}>
               <MDTypography variant="h6"> Descripcion: </MDTypography>
             </MDBox>
           </Grid>
-          <Grid item xs={12} md={6} lg={9}>
+          <Grid item xs={12} md={6} lg={8}>
             <MDBox mb={2}>
               <MDInput
                 type="text"

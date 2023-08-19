@@ -293,7 +293,7 @@ function CentrosCosto() {
     <div className={styles.modal}>
       <MDTypography variant="h3"> Agregar Nuevo Centro de Costo </MDTypography>
       <Divider sx={{ marginTop: 1 }} light={false} />
-      <MDBox pb={1}>
+      <MDBox pb={3}>
         {/* <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} md={4} lg={3}>
             <MDBox mb={1}>
@@ -316,12 +316,12 @@ function CentrosCosto() {
           </Grid>
         </Grid> */}
         <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
+          <Grid item xs={12} md={4} lg={5}>
             <MDBox mb={1}>
               <MDTypography variant="h6"> Nombre Centro Costo: </MDTypography>
             </MDBox>
           </Grid>
-          <Grid item xs={12} md={6} lg={9}>
+          <Grid item xs={12} md={6} lg={7}>
             <MDBox mb={1}>
               <MDInput
                 type="text"
@@ -334,12 +334,12 @@ function CentrosCosto() {
           </Grid>
         </Grid>
         <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
+          <Grid item xs={12} md={4} lg={5}>
             <MDBox mb={1}>
               <MDTypography variant="h6"> Descripción Centro Costo: </MDTypography>
             </MDBox>
           </Grid>
-          <Grid item xs={12} md={6} lg={9}>
+          <Grid item xs={12} md={6} lg={7}>
             <MDBox mb={1}>
               <MDInput
                 label="Descripción Centro de Costo"
@@ -352,13 +352,13 @@ function CentrosCosto() {
           </Grid>
         </Grid>
         <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
+          <Grid item xs={12} md={4} lg={5}>
             <MDBox mb={1}>
               <MDTypography variant="h6"> Cuenta Centro Costo: </MDTypography>
             </MDBox>
           </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={1}>
+          <Grid item xs={12} md={6} lg={7}>
+            <MDBox mb={2}>
               <MDInput
                 label="Cuenta Centro de Costo"
                 name="cc_cuenta"
