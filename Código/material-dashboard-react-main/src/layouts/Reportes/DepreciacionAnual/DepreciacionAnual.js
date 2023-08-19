@@ -33,10 +33,6 @@ const columns = [
     field: "emp_Sub_clase",
   },
   {
-    title: "Deprecia Compra",
-    field: "emp_Sub_clase",
-  },
-  {
     title: "Deprecia Desde",
     field: "emp_Sub_clase",
   },
@@ -45,7 +41,7 @@ const columns = [
     field: "emp_Sub_clase",
   },
   {
-    title: "Valor Res",
+    title: "Valor Residual",
     field: "emp_Sub_clase",
   },
 ];
@@ -355,13 +351,25 @@ function DepreciacionAnual() {
           </Grid>
           <Grid item xs={12} md={6} lg={9}>
             <MDBox mb={1}>
-              <MDInput
-                type="text"
-                label="Clase"
-                name="emp_Nombre"
-                onChange={handleChange}
-                size="small"
-              />
+              <select name="pue_Codigo" className="form-control" onChange={handleChange}>
+                <option key="0" value="0">
+                  Seleccione clase
+                </option>
+                <option key="0" value="0">
+                  Clase 1
+                </option>
+                <option key="0" value="0">
+                  Clase 2
+                </option>
+                <option key="0" value="0">
+                  Clase 3
+                </option>
+                {/* {datatp.map((element) => (
+                  <option key={element.pue_Codigo} value={element.pue_Codigo}>
+                    {element.pue_Nombre}
+                  </option>
+                ))} */}
+              </select>
             </MDBox>
           </Grid>
         </Grid>
@@ -373,12 +381,42 @@ function DepreciacionAnual() {
           </Grid>
           <Grid item xs={12} md={6} lg={9}>
             <MDBox mb={1}>
+              <select name="pue_Codigo" className="form-control" onChange={handleChange}>
+                <option key="0" value="0">
+                  Seleccione Subclase
+                </option>
+                <option key="0" value="0">
+                  Subclase 1
+                </option>
+                <option key="0" value="0">
+                  Subclase 2
+                </option>
+                <option key="0" value="0">
+                  Subclase 3
+                </option>
+                {/* {datatp.map((element) => (
+                  <option key={element.pue_Codigo} value={element.pue_Codigo}>
+                    {element.pue_Nombre}
+                  </option>
+                ))} */}
+              </select>
+            </MDBox>
+          </Grid>
+        </Grid>
+        <Grid container spacing={3} justifyContent="center" mb={2}>
+          <Grid item xs={12} md={4} lg={3}>
+            <MDBox mb={1}>
+              <MDTypography variant="h6"> Hasta año: </MDTypography>
+            </MDBox>
+          </Grid>
+          <Grid item xs={12} md={6} lg={9}>
+            <MDBox mb={1}>
               <MDInput
-                label="Subclase"
-                name="emp_Apellido"
-                type="text"
-                onChange={handleChange}
+                name="emp_Nacimiento"
+                type="date"
                 size="small"
+                onChange={handleChange}
+                // value={empleadoseleccionado && empleadoseleccionado.emp_Nacimiento}
               />
             </MDBox>
           </Grid>
@@ -658,7 +696,7 @@ function DepreciacionAnual() {
                   color="success"
                   onClick={() => abrircerrarModalInsertar()}
                 >
-                  Consultar
+                  Consultar Depreciacion Anual
                 </MDButton>
                 <br />
                 <br />

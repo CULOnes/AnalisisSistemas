@@ -45,7 +45,7 @@ const columns = [
     field: "emp_Apellido",
   },
   {
-    title: "Descripción",
+    title: "Fin Garantía",
     field: "emp_Apellido",
   },
 ];
@@ -317,17 +317,74 @@ function GarantíasVencer() {
       <MDTypography variant="h3"> Garantías por Vencer </MDTypography>
       <Divider sx={{ marginTop: 1 }} light={false} />
       <MDBox pb={1}>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
+        <Grid container spacing={3} justifyContent="center" mb={1}>
+          <Grid item xs={12} md={4} lg={7}>
             <MDBox mb={1}>
-              <MDTypography variant="h6"> Garantias Por Vencer: </MDTypography>
+              <MDTypography variant="h6"> Mostrar Garantias vencidas hasta hoy: </MDTypography>
             </MDBox>
           </Grid>
-          <Grid item xs={12} md={6} lg={9}>
+          <Grid item xs={12} md={6} lg={5}>
             <MDBox mb={1}>
               <select name="pue_Codigo" className="form-control" onChange={handleChange}>
                 <option key="0" value="0">
-                  Seleccione Tipo de Bien
+                  Seleccione una Opcion
+                </option>
+                <option key="0" value="0">
+                  Si
+                </option>
+                <option key="0" value="0">
+                  No
+                </option>
+                {/* {datatp.map((element) => (
+                  <option key={element.pue_Codigo} value={element.pue_Codigo}>
+                    {element.pue_Nombre}
+                  </option>
+                ))} */}
+              </select>
+            </MDBox>
+          </Grid>
+        </Grid>
+        <Grid container spacing={3} justifyContent="center" mb={1}>
+          <Grid item xs={12} md={4} lg={7}>
+            <MDBox mb={1}>
+              <MDTypography variant="h6"> Mostrar por tiempo definido: </MDTypography>
+            </MDBox>
+          </Grid>
+          <Grid item xs={12} md={6} lg={5}>
+            <MDBox mb={1}>
+              <select name="pue_Codigo" className="form-control" onChange={handleChange}>
+                <option key="0" value="0">
+                  Seleccione una Opcion
+                </option>
+                <option key="0" value="0">
+                  Semana actual
+                </option>
+                <option key="0" value="0">
+                  Mes actual
+                </option>
+                <option key="0" value="0">
+                  Año actual
+                </option>
+                {/* {datatp.map((element) => (
+                  <option key={element.pue_Codigo} value={element.pue_Codigo}>
+                    {element.pue_Nombre}
+                  </option>
+                ))} */}
+              </select>
+            </MDBox>
+          </Grid>
+        </Grid>
+        <Grid container spacing={3} justifyContent="center" mb={2}>
+          <Grid item xs={12} md={4} lg={5}>
+            <MDBox mb={1}>
+              <MDTypography variant="h6"> Ordenar por: </MDTypography>
+            </MDBox>
+          </Grid>
+          <Grid item xs={12} md={6} lg={7}>
+            <MDBox mb={1}>
+              <select name="pue_Codigo" className="form-control" onChange={handleChange}>
+                <option key="0" value="0">
+                  Seleccione Orden
                 </option>
                 <option key="0" value="0">
                   Fecha
@@ -350,10 +407,10 @@ function GarantíasVencer() {
             </MDBox>
           </Grid>
         </Grid>
-        <Grid container spacing={3} justifyContent="center">
+        <Grid container spacing={3} justifyContent="center" mb={1}>
           <Grid item xs={12} md={4} lg={3}>
             <MDButton variant="gradient" color="info" fullWidth onClick={() => peticionpost()}>
-              Insertar
+              Consultar
             </MDButton>
           </Grid>
           <Grid item xs={12} md={4} lg={3}>
@@ -625,7 +682,7 @@ function GarantíasVencer() {
                   color="success"
                   onClick={() => abrircerrarModalInsertar()}
                 >
-                  Consultar
+                  Consultar Garantias Por Vencer
                 </MDButton>
                 <br />
                 <br />

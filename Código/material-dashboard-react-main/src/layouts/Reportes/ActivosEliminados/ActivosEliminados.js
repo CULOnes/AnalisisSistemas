@@ -318,7 +318,7 @@ function ActivosEliminados() {
       <MDTypography variant="h3"> Activos Eliminados</MDTypography>
       <Divider sx={{ marginTop: 1 }} light={false} />
       <MDBox pb={1}>
-        <Grid container spacing={3} justifyContent="center">
+        <Grid container spacing={3} justifyContent="center" mb={1}>
           <Grid item xs={12} md={4} lg={3}>
             <MDBox mb={1}>
               <MDTypography variant="h6"> Fecha Inicio: </MDTypography>
@@ -330,7 +330,7 @@ function ActivosEliminados() {
             </MDBox>
           </Grid>
         </Grid>
-        <Grid container spacing={3} justifyContent="center">
+        <Grid container spacing={3} justifyContent="center" mb={2}>
           <Grid item xs={12} md={4} lg={3}>
             <MDBox mb={1}>
               <MDTypography variant="h6"> Fecha Fin: </MDTypography>
@@ -342,7 +342,7 @@ function ActivosEliminados() {
             </MDBox>
           </Grid>
         </Grid>
-        <Grid container spacing={3} justifyContent="center" mt={1}>
+        <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} md={4} lg={3}>
             <MDButton variant="gradient" color="info" fullWidth onClick={() => peticionpost()}>
               Consultar
@@ -617,7 +617,7 @@ function ActivosEliminados() {
                   color="success"
                   onClick={() => abrircerrarModalInsertar()}
                 >
-                  Consulta
+                  Consultar Activos Eliminados
                 </MDButton>
                 <br />
                 <br />
