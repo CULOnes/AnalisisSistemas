@@ -121,14 +121,14 @@ function ActivosEliminados() {
     setModalEliminar(!modaleliminar);
   };
 
-  const seleccionarEmpleado = (empleado, caso) => {
-    setEmpleadoSeleccionado(empleado);
-    if (caso === "Editar") {
-      abrircerrarModalEditar();
-    } else {
-      abrircerrarModalEliminar();
-    }
-  };
+  // const seleccionarEmpleado = (empleado, caso) => {
+  //   setEmpleadoSeleccionado(empleado);
+  //   if (caso === "Editar") {
+  //     abrircerrarModalEditar();
+  //   } else {
+  //     abrircerrarModalEliminar();
+  //   }
+  // };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -315,192 +315,37 @@ function ActivosEliminados() {
 
   const bodyInsertar = (
     <div className={styles.modal}>
-      <MDTypography variant="h3"> Agregar Nuevo Empleado </MDTypography>
+      <MDTypography variant="h3"> Activos Eliminados</MDTypography>
       <Divider sx={{ marginTop: 1 }} light={false} />
       <MDBox pb={1}>
         <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} md={4} lg={3}>
             <MDBox mb={1}>
-              <MDTypography variant="h6"> Puesto: </MDTypography>
+              <MDTypography variant="h6"> Fecha Inicio: </MDTypography>
             </MDBox>
           </Grid>
           <Grid item xs={12} md={6} lg={9}>
             <MDBox mb={1}>
-              <select name="pue_Codigo" className="form-control" onChange={handleChange}>
-                <option key="0" value="0">
-                  Seleccione el Puesto
-                </option>
-                {datatp.map((element) => (
-                  <option key={element.pue_Codigo} value={element.pue_Codigo}>
-                    {element.pue_Nombre}
-                  </option>
-                ))}
-              </select>
+              <MDInput type="date" name="emp_fecha fin" onChange={handleChange} size="small" />
             </MDBox>
           </Grid>
         </Grid>
         <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} md={4} lg={3}>
             <MDBox mb={1}>
-              <MDTypography variant="h6"> Nombre: </MDTypography>
+              <MDTypography variant="h6"> Fecha Fin: </MDTypography>
             </MDBox>
           </Grid>
           <Grid item xs={12} md={6} lg={9}>
             <MDBox mb={1}>
-              <MDInput
-                type="text"
-                label="Nombre"
-                name="emp_Nombre"
-                onChange={handleChange}
-                size="small"
-              />
+              <MDInput name="emp_Apellido" type="date" onChange={handleChange} size="small" />
             </MDBox>
           </Grid>
         </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={1}>
-              <MDTypography variant="h6"> Apellido: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={1}>
-              <MDInput
-                label="Apellido"
-                name="emp_Apellido"
-                type="text"
-                onChange={handleChange}
-                size="small"
-              />
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={1}>
-              <MDTypography variant="h6"> Telefono: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={1}>
-              <MDInput
-                label="Telefono"
-                name="emp_Telefono"
-                type="number"
-                size="small"
-                onChange={handleChange}
-              />
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={1}>
-              <MDTypography variant="h6"> DPI: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={1}>
-              <MDInput
-                label="DPI"
-                name="emp_Dpi"
-                type="text"
-                size="small"
-                onChange={handleChange}
-              />
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={1}>
-              <MDTypography variant="h6"> Edad: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={1}>
-              <MDInput
-                label="Edad"
-                name="emp_Edad"
-                type="number"
-                size="small"
-                onChange={handleChange}
-              />
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={1}>
-              <MDTypography variant="h6"> Fecha Nacimiento: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={1}>
-              <MDInput name="emp_Nacimiento" type="date" size="small" onChange={handleChange} />
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={1}>
-              <MDTypography variant="h6"> Numero Licencia: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={1}>
-              <MDInput
-                label="Numero Licencia"
-                name="emp_Nolicencia"
-                type="text"
-                size="small"
-                onChange={handleChange}
-              />
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={1}>
-              <MDTypography variant="h6"> Tipo Licencia: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={1}>
-              <MDInput
-                label="Tipo Licencia"
-                name="emp_Tipolicencia"
-                type="text"
-                size="small"
-                onChange={handleChange}
-              />
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={1}>
-              <MDTypography variant="h6"> Direccion: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={1}>
-              <MDInput
-                label="Direccion"
-                name="emp_Direccion"
-                type="text"
-                size="small"
-                multiline
-                rows={2}
-                onChange={handleChange}
-              />
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
+        <Grid container spacing={3} justifyContent="center" mt={1}>
           <Grid item xs={12} md={4} lg={3}>
             <MDButton variant="gradient" color="info" fullWidth onClick={() => peticionpost()}>
-              Insertar
+              Consultar
             </MDButton>
           </Grid>
           <Grid item xs={12} md={4} lg={3}>
@@ -772,26 +617,26 @@ function ActivosEliminados() {
                   color="success"
                   onClick={() => abrircerrarModalInsertar()}
                 >
-                  Insertar Empleado
+                  Consulta
                 </MDButton>
                 <br />
                 <br />
                 <MaterialTable
                   columns={columns}
                   data={data}
-                  title="Empleados"
-                  actions={[
-                    {
-                      icon: "edit",
-                      tooltip: "Editar Empleado",
-                      onClick: (event, rowData) => seleccionarEmpleado(rowData, "Editar"),
-                    },
-                    {
-                      icon: "delete",
-                      tooltip: "Eliminar Empleado",
-                      onClick: (event, rowData) => seleccionarEmpleado(rowData, "Eliminar"),
-                    },
-                  ]}
+                  title="Activos Eliminados"
+                  // actions={[
+                  //   {
+                  //     icon: "edit",
+                  //     tooltip: "Editar Empleado",
+                  //     onClick: (event, rowData) => seleccionarEmpleado(rowData, "Editar"),
+                  //   },
+                  //   {
+                  //     icon: "delete",
+                  //     tooltip: "Eliminar Empleado",
+                  //     onClick: (event, rowData) => seleccionarEmpleado(rowData, "Eliminar"),
+                  //   },
+                  // ]}
                   options={{
                     actionsColumnIndex: -1,
                   }}
