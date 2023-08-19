@@ -3,13 +3,13 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
-import axios from "axios";
+// import axios from "axios";
 import MDBox from "components/MDBox";
 import "styles/styles.css";
 import MaterialTable from "material-table";
 import { Modal } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import Swal from "sweetalert2";
+// import Swal from "sweetalert2";
 import MDInput from "components/MDInput";
 import MDTypography from "components/MDTypography";
 import Divider from "@mui/material/Divider";
@@ -25,27 +25,27 @@ const columns = [
     field: "cli_Nombre",
   },
   {
-    title: "Apellido",
+    title: "Descripcion",
     field: "cli_Apellido",
   },
-  {
-    title: "Correo",
-    field: "cli_Correo",
-  },
-  {
-    title: "Celular",
-    field: "cli_TelefonoCelular",
-    type: "number",
-  },
+  // {
+  //   title: "Correo",
+  //   field: "cli_Correo",
+  // },
+  // {
+  //   title: "Celular",
+  //   field: "cli_TelefonoCelular",
+  //   type: "number",
+  // },
   // {
   //   title: "Telefono Secundario",
   //   field: "cli_TelefonoSecundario",
   //   type: "number",
   // },
-  {
-    title: "Direccion",
-    field: "cli_Direccion",
-  },
+  // {
+  //   title: "Direccion",
+  //   field: "cli_Direccion",
+  // },
 ];
 
 const useStyles = makeStyles((theme) => ({
@@ -70,7 +70,7 @@ const useStyles = makeStyles((theme) => ({
 
 function Marcas() {
   const styles = useStyles();
-  const [data, setData] = useState([]);
+  const [data /* , setData */] = useState([]);
   const [modalinsertar, setModalInsertar] = useState(false);
   const [modaleditar, setModalEditar] = useState(false);
   const [showComponent, setShowComponent] = useState(false);
@@ -131,149 +131,149 @@ function Marcas() {
   };
 
   const peticionpost = async () => {
-    Swal.showLoading();
-    if (
-      clienteseleccionado.cli_Nombre === "" ||
-      clienteseleccionado.cli_Apellido === "" ||
-      clienteseleccionado.cli_Correo === "" ||
-      clienteseleccionado.cli_TelefonoCelular === 0 ||
-      clienteseleccionado.cli_TelefonoSecundario === 0 ||
-      clienteseleccionado.cli_Direccion === ""
-    ) {
-      abrircerrarModalInsertar();
-      Swal.close();
-      Swal.fire({
-        icon: "info",
-        title: "",
-        html: "Debe de llenar <b>todos</b> los campos",
-      });
-    } else {
-      abrircerrarModalInsertar();
-      await axios
-        .post("https://localhost:7235/api/Clientes/registroclientes", clienteseleccionado)
-        .then((response) => {
-          setData(data.concat(response.data));
-          Swal.close();
-          Swal.fire({
-            icon: "success",
-            title: "",
-            text: "Cliente creado exitosamente",
-            timer: 2500,
-          });
-        })
-        .catch((error) => {
-          Swal.close();
-          Swal.fire({
-            icon: "error",
-            title: "",
-            text: error.response.data,
-            timer: 2500,
-          });
-        });
-    }
+    // Swal.showLoading();
+    // if (
+    //   clienteseleccionado.cli_Nombre === "" ||
+    //   clienteseleccionado.cli_Apellido === "" ||
+    //   clienteseleccionado.cli_Correo === "" ||
+    //   clienteseleccionado.cli_TelefonoCelular === 0 ||
+    //   clienteseleccionado.cli_TelefonoSecundario === 0 ||
+    //   clienteseleccionado.cli_Direccion === ""
+    // ) {
+    //   abrircerrarModalInsertar();
+    //   Swal.close();
+    //   Swal.fire({
+    //     icon: "info",
+    //     title: "",
+    //     html: "Debe de llenar <b>todos</b> los campos",
+    //   });
+    // } else {
+    //   abrircerrarModalInsertar();
+    //   await axios
+    //     .post("https://localhost:7235/api/Clientes/registroclientes", clienteseleccionado)
+    //     .then((response) => {
+    //       setData(data.concat(response.data));
+    //       Swal.close();
+    //       Swal.fire({
+    //         icon: "success",
+    //         title: "",
+    //         text: "Cliente creado exitosamente",
+    //         timer: 2500,
+    //       });
+    //     })
+    //     .catch((error) => {
+    //       Swal.close();
+    //       Swal.fire({
+    //         icon: "error",
+    //         title: "",
+    //         text: error.response.data,
+    //         timer: 2500,
+    //       });
+    //     });
+    // }
   };
 
   const peticionput = async () => {
-    if (
-      clienteseleccionado.cli_Nombre === "" ||
-      clienteseleccionado.cli_Apellido === "" ||
-      clienteseleccionado.cli_Correo === "" ||
-      clienteseleccionado.cli_TelefonoCelular === 0 ||
-      clienteseleccionado.cli_TelefonoSecundario === 0 ||
-      clienteseleccionado.cli_Direccion === ""
-    ) {
-      abrircerrarModalEditar();
-      Swal.close();
-      Swal.fire({
-        icon: "info",
-        title: "",
-        html: "Debe de llenar <b>todos</b> los campos",
-      });
-    } else {
-      abrircerrarModalEditar();
-      Swal.showLoading();
-      await axios
-        .put("https://localhost:7235/api/Clientes/actualizar", clienteseleccionado)
-        .then(() => {
-          const copiaArray = [...data];
-          const indice = copiaArray.findIndex(
-            (elemento) => elemento.cli_Codigo === clienteseleccionado.cli_Codigo
-          );
-          if (indice !== -1) {
-            copiaArray[indice] = {
-              ...copiaArray[indice],
-              cli_Nombre: clienteseleccionado.cli_Nombre,
-              cli_Apellido: clienteseleccionado.cli_Apellido,
-              cli_Correo: clienteseleccionado.cli_Correo,
-              cli_TelefonoCelular: clienteseleccionado.cli_TelefonoCelular,
-              cli_TelefonoSecundario: clienteseleccionado.cli_TelefonoSecundario,
-              cli_Direccion: clienteseleccionado.cli_Direccion,
-            };
-          }
-          setData(copiaArray);
-          Swal.close();
-          Swal.fire({
-            icon: "success",
-            title: "",
-            text: "Cliente actualizado exitosamente",
-            timer: 2500,
-          });
-        })
-        .catch((error) => {
-          Swal.close();
-          Swal.fire({
-            icon: "error",
-            title: "",
-            text: error.response.data,
-            timer: 2500,
-          });
-        });
-    }
+    // if (
+    //   clienteseleccionado.cli_Nombre === "" ||
+    //   clienteseleccionado.cli_Apellido === "" ||
+    //   clienteseleccionado.cli_Correo === "" ||
+    //   clienteseleccionado.cli_TelefonoCelular === 0 ||
+    //   clienteseleccionado.cli_TelefonoSecundario === 0 ||
+    //   clienteseleccionado.cli_Direccion === ""
+    // ) {
+    //   abrircerrarModalEditar();
+    //   Swal.close();
+    //   Swal.fire({
+    //     icon: "info",
+    //     title: "",
+    //     html: "Debe de llenar <b>todos</b> los campos",
+    //   });
+    // } else {
+    //   abrircerrarModalEditar();
+    //   Swal.showLoading();
+    //   await axios
+    //     .put("https://localhost:7235/api/Clientes/actualizar", clienteseleccionado)
+    //     .then(() => {
+    //       const copiaArray = [...data];
+    //       const indice = copiaArray.findIndex(
+    //         (elemento) => elemento.cli_Codigo === clienteseleccionado.cli_Codigo
+    //       );
+    //       if (indice !== -1) {
+    //         copiaArray[indice] = {
+    //           ...copiaArray[indice],
+    //           cli_Nombre: clienteseleccionado.cli_Nombre,
+    //           cli_Apellido: clienteseleccionado.cli_Apellido,
+    //           cli_Correo: clienteseleccionado.cli_Correo,
+    //           cli_TelefonoCelular: clienteseleccionado.cli_TelefonoCelular,
+    //           cli_TelefonoSecundario: clienteseleccionado.cli_TelefonoSecundario,
+    //           cli_Direccion: clienteseleccionado.cli_Direccion,
+    //         };
+    //       }
+    //       setData(copiaArray);
+    //       Swal.close();
+    //       Swal.fire({
+    //         icon: "success",
+    //         title: "",
+    //         text: "Cliente actualizado exitosamente",
+    //         timer: 2500,
+    //       });
+    //     })
+    //     .catch((error) => {
+    //       Swal.close();
+    //       Swal.fire({
+    //         icon: "error",
+    //         title: "",
+    //         text: error.response.data,
+    //         timer: 2500,
+    //       });
+    //     });
+    // }
   };
 
   const peticiondelete = async () => {
-    abrircerrarModalEliminar();
-    Swal.showLoading();
-    await axios
-      .put("https://localhost:7235/api/Clientes/eliminar", clienteseleccionado)
-      .then(() => {
-        setData(data.filter((cliente) => cliente.cli_Codigo !== clienteseleccionado.cli_Codigo));
-        Swal.close();
-        Swal.fire({
-          icon: "success",
-          title: "",
-          text: "Cliente eliminado exitosamente",
-          timer: 2500,
-        });
-      })
-      .catch((error) => {
-        Swal.close();
-        Swal.fire({
-          icon: "error",
-          title: "",
-          text: error.response.data,
-          timer: 2500,
-        });
-      });
+    // abrircerrarModalEliminar();
+    // Swal.showLoading();
+    // await axios
+    //   .put("https://localhost:7235/api/Clientes/eliminar", clienteseleccionado)
+    //   .then(() => {
+    //     setData(data.filter((cliente) => cliente.cli_Codigo !== clienteseleccionado.cli_Codigo));
+    //     Swal.close();
+    //     Swal.fire({
+    //       icon: "success",
+    //       title: "",
+    //       text: "Cliente eliminado exitosamente",
+    //       timer: 2500,
+    //     });
+    //   })
+    //   .catch((error) => {
+    //     Swal.close();
+    //     Swal.fire({
+    //       icon: "error",
+    //       title: "",
+    //       text: error.response.data,
+    //       timer: 2500,
+    //     });
+    //   });
   };
 
   const peticionget = async () => {
-    Swal.showLoading();
-    await axios
-      .get("https://localhost:7235/api/Clientes/clientes")
-      .then((response) => {
-        setData(response.data);
-        Swal.close();
-      })
-      .catch((error) => {
-        Swal.close();
-        Swal.fire({
-          icon: "error",
-          title: "",
-          text: error.response.data,
-          timer: 2500,
-        });
-      });
+    // Swal.showLoading();
+    // await axios
+    //   .get("https://localhost:7235/api/Clientes/clientes")
+    //   .then((response) => {
+    //     setData(response.data);
+    //     Swal.close();
+    //   })
+    //   .catch((error) => {
+    //     Swal.close();
+    //     Swal.fire({
+    //       icon: "error",
+    //       title: "",
+    //       text: error.response.data,
+    //       timer: 2500,
+    //     });
+    //   });
   };
 
   useEffect(() => {
@@ -289,13 +289,13 @@ function Marcas() {
 
   const bodyInsertar = (
     <div className={styles.modal}>
-      <MDTypography variant="h3"> Agregar Nuevo Cliente </MDTypography>
+      <MDTypography variant="h3"> Agregar Nueva Marca </MDTypography>
       <Divider sx={{ marginTop: 1 }} light={false} />
       <MDBox pt={2} pb={3}>
         <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} md={4} lg={3}>
             <MDBox mb={2}>
-              <MDTypography variant="h6"> Nombre: </MDTypography>
+              <MDTypography variant="h6"> Nombre </MDTypography>
             </MDBox>
           </Grid>
           <Grid item xs={12} md={6} lg={9}>
@@ -313,16 +313,21 @@ function Marcas() {
         <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} md={4} lg={3}>
             <MDBox mb={2}>
-              <MDTypography variant="h6"> Apellido: </MDTypography>
+              <MDTypography variant="h6"> Descripcion: </MDTypography>
             </MDBox>
           </Grid>
           <Grid item xs={12} md={6} lg={9}>
             <MDBox mb={2}>
-              <MDInput type="text" label="Apellido" name="cli_Apellido" onChange={handleChange} />
+              <MDInput
+                type="text"
+                label="Descripcion"
+                name="cli_Apellido"
+                onChange={handleChange}
+              />
             </MDBox>
           </Grid>
         </Grid>
-        <Grid container spacing={3} justifyContent="center">
+        {/* <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} md={4} lg={3}>
             <MDBox mb={2}>
               <MDTypography variant="h6"> Correo: </MDTypography>
@@ -337,21 +342,21 @@ function Marcas() {
         <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} md={4} lg={3}>
             <MDBox mb={2}>
-              <MDTypography variant="h6"> Celular: </MDTypography>
+              <MDTypography variant="h6"> Codigo: </MDTypography>
             </MDBox>
           </Grid>
           <Grid item xs={12} md={6} lg={9}>
             <MDBox mb={2}>
               <MDInput
-                label="Celular"
+                label="Codigo"
                 name="cli_TelefonoCelular"
                 type="number"
                 onChange={handleChange}
               />
             </MDBox>
           </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
+        </Grid> */}
+        {/* <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} md={4} lg={3}>
             <MDBox mb={2}>
               <MDTypography variant="h6"> Telefono Secundario: </MDTypography>
@@ -386,7 +391,7 @@ function Marcas() {
               />
             </MDBox>
           </Grid>
-        </Grid>
+        </Grid> */}
         <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} md={4} lg={3}>
             <MDButton variant="gradient" color="info" fullWidth onClick={() => peticionpost()}>
@@ -410,13 +415,13 @@ function Marcas() {
 
   const bodyEditar = (
     <div className={styles.modal}>
-      <MDTypography variant="h3"> Editar Cliente </MDTypography>
+      <MDTypography variant="h3"> Editar Marca </MDTypography>
       <Divider sx={{ marginTop: 1 }} light={false} />
       <MDBox pt={2} pb={3}>
         <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} md={4} lg={3}>
             <MDBox mb={2}>
-              <MDTypography variant="h6"> Nombre: </MDTypography>
+              <MDTypography variant="h6"> Descripcion: </MDTypography>
             </MDBox>
           </Grid>
           <Grid item xs={12} md={6} lg={9}>
@@ -431,7 +436,7 @@ function Marcas() {
             </MDBox>
           </Grid>
         </Grid>
-        <Grid container spacing={3} justifyContent="center">
+        {/* <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} md={4} lg={3}>
             <MDBox mb={2}>
               <MDTypography variant="h6"> Apellido: </MDTypography>
@@ -466,17 +471,17 @@ function Marcas() {
               />
             </MDBox>
           </Grid>
-        </Grid>
+        </Grid> */}
         <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} md={4} lg={3}>
             <MDBox mb={2}>
-              <MDTypography variant="h6"> Celular: </MDTypography>
+              <MDTypography variant="h6"> Codigo: </MDTypography>
             </MDBox>
           </Grid>
           <Grid item xs={12} md={6} lg={9}>
             <MDBox mb={2}>
               <MDInput
-                label="Celular"
+                label="Codigo"
                 name="cli_TelefonoCelular"
                 type="number"
                 onChange={handleChange}
@@ -485,7 +490,7 @@ function Marcas() {
             </MDBox>
           </Grid>
         </Grid>
-        <Grid container spacing={3} justifyContent="center">
+        {/* <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} md={4} lg={3}>
             <MDBox mb={2}>
               <MDTypography variant="h6"> Telefono Secundario: </MDTypography>
@@ -522,7 +527,7 @@ function Marcas() {
               />
             </MDBox>
           </Grid>
-        </Grid>
+        </Grid> */}
         <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} md={4} lg={3}>
             <MDButton variant="gradient" color="info" fullWidth onClick={() => peticionput()}>
@@ -547,7 +552,7 @@ function Marcas() {
   const bodyEliminar = (
     <div className={styles.modal}>
       <p>
-        Deseas Eliminar el Vehiculo
+        Deseas Eliminar la Marca
         <b> {clienteseleccionado && clienteseleccionado.cli_Nombre}</b>?
       </p>
       <div align="right">
@@ -573,14 +578,14 @@ function Marcas() {
                   color="success"
                   onClick={() => abrircerrarModalInsertar()}
                 >
-                  Insertar Cliente
+                  Insertar Marcas
                 </MDButton>
                 <br />
                 <br />
                 <MaterialTable
                   columns={columns}
                   data={data}
-                  title="Clientes"
+                  title="Marcas"
                   actions={[
                     {
                       icon: "edit",
