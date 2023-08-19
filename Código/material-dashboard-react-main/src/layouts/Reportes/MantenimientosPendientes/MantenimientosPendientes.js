@@ -16,26 +16,19 @@ import Divider from "@mui/material/Divider";
 import MDButton from "components/MDButton";
 
 const columns = [
-  {
+  { 
     title: "ID",
     field: "emp_Codigo",
   },
   {
-    title: "Nombre",
-    field: "emp_Nombre",
+    title: "Mostrar Mantenimiento de Pendintes",
+    field: "emp_Pendientes",
   },
   {
-    title: "Apellido",
-    field: "emp_Apellido",
+    title: "Fecha",
+    field: "emp_Fecha",
   },
-  {
-    title: "Telefono",
-    field: "emp_Telefono",
-  },
-  {
-    title: "Edad",
-    field: "emp_Edad",
-  },
+
 ];
 
 const useStyles = makeStyles((theme) => ({

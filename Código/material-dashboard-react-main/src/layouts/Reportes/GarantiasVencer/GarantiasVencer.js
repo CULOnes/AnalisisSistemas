@@ -21,22 +21,14 @@ const columns = [
     field: "emp_Codigo",
   },
   {
-    title: "Nombre",
-    field: "emp_Nombre",
+    title: "Mostrar Garantias Vencidas Hasta Hoy",
+    field: "emp_Garantia",
   },
   {
-    title: "Apellido",
+    title: "Mostrar Garantias a Vencer Para",
     field: "emp_Apellido",
   },
-  {
-    title: "Telefono",
-    field: "emp_Telefono",
-  },
-  {
-    title: "Edad",
-    field: "emp_Edad",
-  },
-];
+  ];
 
 const useStyles = makeStyles((theme) => ({
   modal: {

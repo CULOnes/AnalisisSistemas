@@ -21,20 +21,16 @@ const columns = [
     field: "emp_Codigo",
   },
   {
-    title: "Nombre",
-    field: "emp_Nombre",
+    title: "Tipo de Bien",
+    field: "emp_tipo_bien",
   },
   {
-    title: "Apellido",
-    field: "emp_Apellido",
+    title: "Clase",
+    field: "emp_Clase",
   },
   {
-    title: "Telefono",
-    field: "emp_Telefono",
-  },
-  {
-    title: "Edad",
-    field: "emp_Edad",
+    title: "SubClase",
+    field: "emp_Sub_clase",
   },
 ];
 
