@@ -3,20 +3,20 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
-import axios from "axios";
+// import axios from "axios";
 import MDBox from "components/MDBox";
 import "styles/styles.css";
 import MaterialTable from "material-table";
 import { Modal } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import Swal from "sweetalert2";
+// import Swal from "sweetalert2";
 import MDInput from "components/MDInput";
 import MDTypography from "components/MDTypography";
 import Divider from "@mui/material/Divider";
 import MDButton from "components/MDButton";
 
 const columns = [
-  { 
+  {
     title: "ID",
     field: "emp_Codigo",
   },
@@ -28,7 +28,6 @@ const columns = [
     title: "Fecha",
     field: "emp_Fecha",
   },
-
 ];
 
 const useStyles = makeStyles((theme) => ({
@@ -53,8 +52,8 @@ const useStyles = makeStyles((theme) => ({
 
 function MantenimientosPendientes() {
   const styles = useStyles();
-  const [data, setData] = useState([]);
-  const [datatp, setDatatp] = useState([]);
+  const [data /* , setData */] = useState([]);
+  const [datatp /* , setDatatp */] = useState([]);
   const [modalinsertar, setModalInsertar] = useState(false);
   const [modaleditar, setModalEditar] = useState(false);
   const [showComponent, setShowComponent] = useState(false);
@@ -273,12 +272,12 @@ function MantenimientosPendientes() {
   };
 
   const peticiongettp = async () => {
-    await axios
-      .get("https://localhost:7235/api/Puestos/puestos")
-      .then((response) => {
-        setDatatp(response.data);
-      })
-      .catch();
+    // await axios
+    //   .get("https://localhost:7235/api/Puestos/puestos")
+    //   .then((response) => {
+    //     setDatatp(response.data);
+    //   })
+    //   .catch();
   };
 
   useEffect(() => {
