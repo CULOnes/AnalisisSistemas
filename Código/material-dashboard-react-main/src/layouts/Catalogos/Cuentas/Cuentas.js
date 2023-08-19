@@ -322,7 +322,7 @@ function Cuentas() {
         <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} md={4} lg={4}>
             <MDBox mb={1} pb={4}>
-              <MDTypography variant="h6"> Descripcion: </MDTypography>
+              <MDTypography variant="h6"> Descripción: </MDTypography>
             </MDBox>
           </Grid>
           <Grid item xs={12} md={6} lg={8}>

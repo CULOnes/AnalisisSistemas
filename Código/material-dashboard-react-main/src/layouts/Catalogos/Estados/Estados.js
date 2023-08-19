@@ -268,7 +268,7 @@ function Estados() {
         <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} md={4} lg={5}>
             <MDBox mb={2} pb={3}>
-              <MDTypography variant="h6"> Descripcion: </MDTypography>
+              <MDTypography variant="h6"> Descripción: </MDTypography>
             </MDBox>
           </Grid>
           <Grid item xs={12} md={6} lg={7}>
