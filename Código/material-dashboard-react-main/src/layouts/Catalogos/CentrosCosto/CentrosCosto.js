@@ -7,13 +7,21 @@ import Card from "@mui/material/Card";
 import MDBox from "components/MDBox";
 import "styles/styles.css";
 import MaterialTable from "material-table";
-import { Modal } from "@material-ui/core";
+import { Modal, OutlinedInput } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 // import Swal from "sweetalert2";
 import MDInput from "components/MDInput";
 import MDTypography from "components/MDTypography";
 import Divider from "@mui/material/Divider";
 import MDButton from "components/MDButton";
+import { Formik, ErrorMessage, Field } from "formik";
+import * as Yup from "yup";
+import "./CentrosCosto.css";
+import Button from "@mui/material/Button";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
+import SaveIcon from "@mui/icons-material/Save";
+import ClearIcon from "@mui/icons-material/Clear";
+import TextField from "@mui/material/TextField";
 
 const columns = [
   {
@@ -33,6 +41,21 @@ const columns = [
     field: "cc_cuenta",
   },
 ];
+
+const valSchema = Yup.object().shape({
+  cc_nombre: Yup.string()
+    .matches(/^[a-zA-Z0-9]+$/, "Solo se permiten números y letras")
+    .required("El nombre del Centro de Costo es requerido")
+    .max(50, "El nombre no puede tener más de 50 caracteres"),
+  cc_descripcion: Yup.string()
+    .required("La descripción es requerida")
+    .max(250, "La descripción no puede tener más de 250 caracteres"),
+  cc_cuenta: Yup.number()
+    .typeError("La cuenta debe ser un número")
+    .required("La cuenta es requerida")
+    .positive("La cuenta debe ser un número positivo")
+    .integer("La cuenta debe ser un número entero"),
+});
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -64,7 +87,7 @@ function CentrosCosto() {
   const [modaleliminar, setModalEliminar] = useState(false);
   const [CentroCostoSeleccionado, setCentroCostoSeleccionado] = useState({
     cc_codigo: 0,
-    cc_nombre: 0,
+    cc_nombre: "",
     cc_descripcion: "",
     cc_cuenta: "",
   });
@@ -114,49 +137,55 @@ function CentrosCosto() {
     }));
   };
 
+  const onSubmit = (values, { resetForm }) => {
+    // eslint-disable-next-line no-console
+    console.log("Envío de Formulario:", values);
+    resetForm();
+  };
+
   const peticionpost = async () => {
-    // Swal.showLoading();
-    // if (
-    //   empleadoseleccionado.pue_Codigo === 0 ||
-    //   empleadoseleccionado.emp_Nombre === "" ||
-    //   empleadoseleccionado.emp_Apellido === "" ||
-    //   empleadoseleccionado.emp_Direccion === "" ||
-    //   empleadoseleccionado.emp_Telefono === 0 ||
-    //   empleadoseleccionado.emp_Dpi === "" ||
-    //   empleadoseleccionado.emp_Edad === 0 ||
-    //   empleadoseleccionado.emp_Nacimiento === 0
-    // ) {
-    //   abrircerrarModalInsertar();
-    //   Swal.close();
-    //   Swal.fire({
-    //     icon: "info",
-    //     title: "",
-    //     html: "Debe de llenar <b>todos</b> los campos",
-    //   });
-    // } else {
-    //   abrircerrarModalInsertar();
-    //   await axios
-    //     .post("https://localhost:7235/api/Empleados/registroempleados", empleadoseleccionado)
-    //     .then((response) => {
-    //       setData(data.concat(response.data));
-    //       Swal.close();
-    //       Swal.fire({
-    //         icon: "success",
-    //         title: "",
-    //         text: "Empleado creado exitosamente",
-    //         timer: 2500,
-    //       });
-    //     })
-    //     .catch((error) => {
-    //       Swal.close();
-    //       Swal.fire({
-    //         icon: "error",
-    //         title: "",
-    //         text: error.response.data,
-    //         timer: 2500,
-    //       });
-    //     });
-    // }
+    //   // Swal.showLoading();
+    //   // if (
+    //   //   empleadoseleccionado.pue_Codigo === 0 ||
+    //   //   empleadoseleccionado.emp_Nombre === "" ||
+    //   //   empleadoseleccionado.emp_Apellido === "" ||
+    //   //   empleadoseleccionado.emp_Direccion === "" ||
+    //   //   empleadoseleccionado.emp_Telefono === 0 ||
+    //   //   empleadoseleccionado.emp_Dpi === "" ||
+    //   //   empleadoseleccionado.emp_Edad === 0 ||
+    //   //   empleadoseleccionado.emp_Nacimiento === 0
+    //   // ) {
+    //   //   abrircerrarModalInsertar();
+    //   //   Swal.close();
+    //   //   Swal.fire({
+    //   //     icon: "info",
+    //   //     title: "",
+    //   //     html: "Debe de llenar <b>todos</b> los campos",
+    //   //   });
+    //   // } else {
+    //   //   abrircerrarModalInsertar();
+    //   //   await axios
+    //   //     .post("https://localhost:7235/api/Empleados/registroempleados", empleadoseleccionado)
+    //   //     .then((response) => {
+    //   //       setData(data.concat(response.data));
+    //   //       Swal.close();
+    //   //       Swal.fire({
+    //   //         icon: "success",
+    //   //         title: "",
+    //   //         text: "Empleado creado exitosamente",
+    //   //         timer: 2500,
+    //   //       });
+    //   //     })
+    //   //     .catch((error) => {
+    //   //       Swal.close();
+    //   //       Swal.fire({
+    //   //         icon: "error",
+    //   //         title: "",
+    //   //         text: error.response.data,
+    //   //         timer: 2500,
+    //   //       });
+    //   //     });
+    //   // }
   };
 
   const peticionput = async () => {
@@ -220,7 +249,6 @@ function CentrosCosto() {
     //         timer: 2500,
     //       });
     //     });
-    // }
   };
 
   const peticiondelete = async () => {
@@ -291,7 +319,7 @@ function CentrosCosto() {
 
   const bodyInsertar = (
     <div className={styles.modal}>
-      <MDTypography variant="h3"> Agregar Nuevo Centro de Costo </MDTypography>
+      <h2> Agregar Nuevo Centro de Costo </h2>
       <Divider sx={{ marginTop: 1 }} light={false} />
       <MDBox pb={3}>
         {/* <Grid container spacing={3} justifyContent="center">
@@ -315,77 +343,115 @@ function CentrosCosto() {
             </MDBox>
           </Grid>
         </Grid> */}
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={5}>
-            <MDBox mb={1}>
-              <MDTypography variant="h6"> Nombre Centro Costo: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={7}>
-            <MDBox mb={1}>
-              <MDInput
-                type="text"
-                label="Nombre Centro de Costo"
-                name="cc_nombre"
-                onChange={handleChange}
-                size="small"
-              />
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={5}>
-            <MDBox mb={1}>
-              <MDTypography variant="h6"> Descripción Centro Costo: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={7}>
-            <MDBox mb={1}>
-              <MDInput
-                label="Descripción Centro de Costo"
-                name="cc_descripcion"
-                type="text"
-                onChange={handleChange}
-                size="small"
-              />
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={5}>
-            <MDBox mb={1}>
-              <MDTypography variant="h6"> Cuenta Centro Costo: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={7}>
-            <MDBox mb={2}>
-              <MDInput
-                label="Cuenta Centro de Costo"
-                name="cc_cuenta"
-                type="number"
-                size="small"
-                onChange={handleChange}
-              />
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDButton variant="gradient" color="info" fullWidth onClick={() => peticionpost()}>
-              Insertar
-            </MDButton>
-          </Grid>
-          <Grid item xs={12} md={4} lg={3}>
-            <MDButton
-              variant="gradient"
-              color="light"
-              fullWidth
-              onClick={() => abrircerrarModalInsertar()}
-            >
-              Cancelar
-            </MDButton>
-          </Grid>
-        </Grid>
+        <Formik
+          initialValues={{
+            cc_nombre: "",
+            cc_descripcion: "",
+            cc_cuenta: "",
+          }}
+          validationSchema={valSchema}
+          onSubmit={onSubmit}
+        >
+          {({ handleSubmit }) => (
+            <form onSubmit={handleSubmit}>
+              <Grid container spacing={3} justifyContent="center">
+                <Grid item xs={12} md={4} lg={4}>
+                  <MDBox>
+                    <MDTypography variant="h6"> Nombre Centro Costo: </MDTypography>
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} md={6} lg={8}>
+                  <MDBox>
+                    <Field
+                      as={OutlinedInput}
+                      name="cc_nombre"
+                      id="cc_nombre"
+                      type="text"
+                      placeholder="Centro Costo"
+                    />
+                  </MDBox>
+                  <ErrorMessage name="cc_nombre" component="small" className="error" />
+                </Grid>
+              </Grid>
+              <Grid container spacing={3} justifyContent="center">
+                <Grid item xs={12} md={4} lg={4}>
+                  <MDBox mt={4} mb={2}>
+                    <MDTypography variant="h6"> Descripción: </MDTypography>
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} md={6} lg={8}>
+                  <MDBox mt={2} mb={2}>
+                    <Field
+                      as={TextField}
+                      name="cc_descripcion"
+                      id="cc_descripcion outlined-multiline-static"
+                      type="text"
+                      multiline
+                      fullWidth
+                      rows={2}
+                      placeholder="Descripcion"
+                    />
+                  </MDBox>
+                  <ErrorMessage name="cc_descripcion" component="small" className="error" />
+                </Grid>
+              </Grid>
+              <Grid container spacing={3} justifyContent="center">
+                <Grid item xs={12} md={4} lg={4}>
+                  <MDBox mb={2}>
+                    <MDTypography variant="h6"> Cuenta Centro Costo: </MDTypography>
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} md={6} lg={8}>
+                  <MDBox>
+                    <Field
+                      as={OutlinedInput}
+                      name="cc_cuenta"
+                      id="cc_cuenta"
+                      type="number"
+                      placeholder="Cuenta"
+                    />
+                  </MDBox>
+                  <ErrorMessage name="cc_cuenta" component="small" className="error" />
+                </Grid>
+              </Grid>
+              <Grid container spacing={3} justifyContent="center" mt={2}>
+                <Grid item xs={12} md={4} lg={3}>
+                  <Button
+                    className="aceptar"
+                    endIcon={<SaveIcon />}
+                    type="submit"
+                    fullWidth
+                    onClick={() => peticionpost()}
+                  >
+                    Insertar
+                  </Button>
+                  {/* <MDButton variant="gradient" color="info" fullWidth type="submit">
+                    Insertar
+                  </MDButton> */}
+                </Grid>
+                <Grid item xs={12} md={4} lg={3}>
+                  <Button
+                    className="cancelar"
+                    endIcon={<ClearIcon />}
+                    type="submit"
+                    fullWidth
+                    onClick={() => abrircerrarModalInsertar()}
+                  >
+                    Cancelar
+                  </Button>
+                  {/* <MDButton
+                    variant="gradient"
+                    color="light"
+                    fullWidth
+                    onClick={() => abrircerrarModalInsertar()}
+                  >
+                    Cancelar
+                  </MDButton> */}
+                </Grid>
+              </Grid>
+            </form>
+          )}
+        </Formik>
       </MDBox>
     </div>
   );
@@ -523,13 +589,20 @@ function CentrosCosto() {
             <Card>
               <div className="App">
                 <br />
-                <MDButton
+                <Button
+                  className="insertar"
+                  endIcon={<AddCircleIcon />}
+                  onClick={() => abrircerrarModalInsertar()}
+                >
+                  Insertar Centro de Costo
+                </Button>
+                {/* <MDButton
                   variant="gradient"
                   color="success"
                   onClick={() => abrircerrarModalInsertar()}
                 >
                   Insertar Centro de Costo
-                </MDButton>
+                </MDButton> */}
                 <br />
                 <br />
                 <MaterialTable

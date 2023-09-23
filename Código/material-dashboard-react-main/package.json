@@ -36,6 +36,7 @@
     "chroma-js": "2.4.2",
     "dayjs": "^1.11.7",
     "file-saver": "^2.0.5",
+    "formik": "^2.4.5",
     "material-table": "^1.63.0",
     "prop-types": "15.8.1",
     "react": "17.0.2",
@@ -50,7 +51,7 @@
     "stylis-plugin-rtl": "2.1.1",
     "sweetalert2": "^11.6.13",
     "web-vitals": "2.1.4",
-    "yup": "0.32.11"
+    "yup": "^0.32.11"
   },
   "scripts": {
     "start": "react-scripts start",

@@ -7,13 +7,21 @@ import Card from "@mui/material/Card";
 import MDBox from "components/MDBox";
 import "styles/styles.css";
 import MaterialTable from "material-table";
-import { Modal } from "@material-ui/core";
+import { Modal, OutlinedInput } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 // import Swal from "sweetalert2";
 import MDInput from "components/MDInput";
 import MDTypography from "components/MDTypography";
 import Divider from "@mui/material/Divider";
 import MDButton from "components/MDButton";
+import { Formik, ErrorMessage, Field } from "formik";
+import * as Yup from "yup";
+import "./UbicacionesFisicas.css";
+import Button from "@mui/material/Button";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
+import SaveIcon from "@mui/icons-material/Save";
+import ClearIcon from "@mui/icons-material/Clear";
+import TextField from "@mui/material/TextField";
 
 const columns = [
   {
@@ -30,6 +38,16 @@ const columns = [
   },
 ];
 
+const valSchema = Yup.object().shape({
+  ubi_nombreUbicacion: Yup.string()
+    .matches(/^[a-zA-Z0-9]+$/, "Solo se permiten números y letras")
+    .required("El nombre de la Ubicación es requerido")
+    .max(50, "El nombre no puede tener más de 50 caracteres"),
+  ubi_descripcion: Yup.string()
+    .required("La descripción es requerida")
+    .max(100, "La descripción no puede tener más de 100 caracteres"),
+});
+
 const useStyles = makeStyles((theme) => ({
   modal: {
     borderRadius: "5%",
@@ -37,7 +55,7 @@ const useStyles = makeStyles((theme) => ({
     width: 600,
     backgroundColor: theme.palette.background.paper,
     boxShadow: theme.shadows[5],
-    padding: theme.spacing(2, 4, 3),
+    padding: theme.spacing(2, 4, 0),
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
@@ -59,7 +77,7 @@ function UbicacionesFisicas() {
   const [showComponent, setShowComponent] = useState(false);
   const [ubicacionSeleccionada, setUbicacionSeleccionada] = useState({
     ubi_Codigo: 0,
-    ubi_Nombre: "",
+    ubi_nombreUbicacion: "",
     ubi_descripcion: "",
   });
 
@@ -106,6 +124,12 @@ function UbicacionesFisicas() {
       ...prevState,
       [name]: value,
     }));
+  };
+
+  const onSubmit = (values, { resetForm }) => {
+    // eslint-disable-next-line no-console
+    console.log("Envío de Formulario:", values);
+    resetForm();
   };
 
   const peticionpost = async () => {
@@ -270,60 +294,104 @@ function UbicacionesFisicas() {
 
   const bodyInsertar = (
     <div className={styles.modal}>
-      <MDTypography variant="h3"> Agregar Nueva Ubicación </MDTypography>
+      <h2> Agregar Nueva Ubicación </h2>
       <Divider sx={{ marginTop: 1 }} light={false} />
-      <MDBox pt={2} pb={0}>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={4}>
-            <MDBox mb={2}>
-              <MDTypography variant="h6"> Ubicación: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={8}>
-            <MDBox mb={2}>
-              <MDInput
-                type="text"
-                label="Ubicacion"
-                name="ubi_nombreUbicacion"
-                onChange={handleChange}
-              />
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={4}>
-            <MDBox mb={2}>
-              <MDTypography variant="h6"> Descripcion: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={8}>
-            <MDBox mb={2}>
-              <MDInput
-                type="text"
-                label="Descripción Ubicación"
-                name="ubi_descripcion"
-                onChange={handleChange}
-              />
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDButton variant="gradient" color="info" fullWidth onClick={() => peticionpost()}>
-              Insertar
-            </MDButton>
-          </Grid>
-          <Grid item xs={12} md={4} lg={3}>
-            <MDButton
-              variant="gradient"
-              color="light"
-              fullWidth
-              onClick={() => abrircerrarModalInsertar()}
-            >
-              Cancelar
-            </MDButton>
-          </Grid>
-        </Grid>
+      <MDBox pb={3}>
+        <Formik
+          initialValues={{
+            ubi_nombreUbicacion: "",
+            ubi_descripcion: "",
+          }}
+          validationSchema={valSchema}
+          onSubmit={onSubmit}
+        >
+          {({ handleSubmit }) => (
+            <form onSubmit={handleSubmit}>
+              <Grid container spacing={3} justifyContent="center">
+                <Grid item xs={12} md={4} lg={4}>
+                  <MDBox mb={2}>
+                    <MDTypography variant="h6"> Ubicación: </MDTypography>
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} md={6} lg={8}>
+                  <MDBox>
+                    <Field
+                      as={OutlinedInput}
+                      name="ubi_nombreUbicacion"
+                      id="ubi_nombreUbicacion"
+                      type="text"
+                      placeholder="Ubicacion"
+                    />
+                  </MDBox>
+                  <ErrorMessage name="ubi_nombreUbicacion" component="small" className="error" />
+                </Grid>
+              </Grid>
+              <Grid container spacing={3} justifyContent="center">
+                <Grid item xs={12} md={4} lg={4}>
+                  <MDBox mt={2}>
+                    <MDTypography variant="h6"> Descripcion: </MDTypography>
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} md={6} lg={8}>
+                  <MDBox mt={2}>
+                    <Field
+                      as={TextField}
+                      name="ubi_descripcion"
+                      id="ubi_descripcion outlined-multiline-static"
+                      type="text"
+                      multiline
+                      fullWidth
+                      rows={2}
+                      placeholder="Descripcion"
+                    />
+                  </MDBox>
+                  <ErrorMessage name="ubi_descripcion" component="small" className="error" />
+                </Grid>
+              </Grid>
+              <Grid container spacing={3} justifyContent="center" mt={2}>
+                <Grid item xs={12} md={4} lg={3}>
+                  <Button
+                    className="aceptar"
+                    endIcon={<SaveIcon />}
+                    type="submit"
+                    fullWidth
+                    onClick={() => peticionpost()}
+                  >
+                    Insertar
+                  </Button>
+                  {/* <MDButton
+                    variant="gradient"
+                    color="info"
+                    fullWidth
+                    type="submit"
+                    onClick={() => peticionpost()}
+                  >
+                    Insertar
+                  </MDButton> */}
+                </Grid>
+                <Grid item xs={12} md={4} lg={3}>
+                  <Button
+                    className="cancelar"
+                    endIcon={<ClearIcon />}
+                    type="submit"
+                    fullWidth
+                    onClick={() => abrircerrarModalInsertar()}
+                  >
+                    Cancelar
+                  </Button>
+                  {/* <MDButton
+                    variant="gradient"
+                    color="light"
+                    fullWidth
+                    onClick={() => abrircerrarModalInsertar()}
+                  >
+                    Cancelar
+                  </MDButton> */}
+                </Grid>
+              </Grid>
+            </form>
+          )}
+        </Formik>
       </MDBox>
     </div>
   );
@@ -414,13 +482,16 @@ function UbicacionesFisicas() {
             <Card>
               <div className="App">
                 <br />
-                <MDButton
-                  variant="gradient"
-                  color="success"
+                <Button
+                  className="insertar"
+                  endIcon={<AddCircleIcon />}
                   onClick={() => abrircerrarModalInsertar()}
                 >
                   Insertar Ubicación
-                </MDButton>
+                </Button>
+                {/* <MDButton color="success" onClick={() => abrircerrarModalInsertar()}> */}
+                {/* Insertar Ubicación */}
+                {/* </MDButton> */}
                 <br />
                 <br />
                 <MaterialTable

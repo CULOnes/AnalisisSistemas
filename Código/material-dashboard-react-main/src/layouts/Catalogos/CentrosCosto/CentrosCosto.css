@@ -1,0 +1,28 @@
+.error{
+    font-size: 15px !important;
+    position: relative !important;
+    /* top: "-20px" !important; */
+    color: red !important;
+}
+
+.insertar{
+    background-color: #5CB360 !important;
+    width: 30% !important;
+    height: 40px !important;
+    border-radius: 10px !important;
+    color: white !important;
+    font-size: 15px !important;
+}
+
+.aceptar{
+    background-color: #2F89EC !important;
+    border-radius: 10px !important;
+    color: white !important;
+    font-size: 12px !important;
+}
+
+.cancelar{
+    background-color: #E2E6EC !important;
+    border-radius: 10px !important;
+    font-size: 12px !important;
+}
