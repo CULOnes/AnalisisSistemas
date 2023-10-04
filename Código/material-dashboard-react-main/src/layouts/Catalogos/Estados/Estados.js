@@ -14,6 +14,14 @@ import MDInput from "components/MDInput";
 import MDTypography from "components/MDTypography";
 import Divider from "@mui/material/Divider";
 import MDButton from "components/MDButton";
+import { Formik, ErrorMessage, Field } from "formik";
+import * as Yup from "yup";
+import "./Estados.css";
+import Button from "@mui/material/Button";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
+import SaveIcon from "@mui/icons-material/Save";
+import ClearIcon from "@mui/icons-material/Clear";
+import TextField from "@mui/material/TextField";
 
 const columns = [
   {
@@ -29,6 +37,31 @@ const columns = [
     field: "com_Marca",
   },
 ];
+
+function CheckboxComponent() {
+  const [isChecked, setIsChecked] = useState(false);
+
+  const handleCheckboxChange = () => {
+    setIsChecked(!isChecked);
+  };
+
+  return (
+    <div>
+      <input
+        className="check"
+        type="checkbox"
+        checked={isChecked}
+        onChange={handleCheckboxChange}
+      />
+    </div>
+  );
+}
+
+const valSchema = Yup.object().shape({
+  cc_descripcion: Yup.string()
+    .required("La descripción es requerida")
+    .max(250, "La descripción no puede tener más de 250 caracteres"),
+});
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -57,10 +90,9 @@ function Estados() {
   const [modaleditar, setModalEditar] = useState(false);
   const [modaleliminar, setModalEliminar] = useState(false);
   const [showComponent, setShowComponent] = useState(false);
-  const [combustibleseleccionado, setCombustibleSeleccionado] = useState({
-    com_Codigo: 0,
-    com_TipoCombustible: "",
-    com_Marca: "",
+  const [EstadoSeleccionado, setEstadoSeleccionado] = useState({
+    Est_Descripcion: "",
+    Est_Baja: 0,
   });
 
   const abrircerrarModalInsertar = () => {
@@ -92,7 +124,7 @@ function Estados() {
   };
 
   const seleccionarCombustible = (combustible, caso) => {
-    setCombustibleSeleccionado(combustible);
+    setEstadoSeleccionado(combustible);
     if (caso === "Editar") {
       abrircerrarModalEditar();
     } else {
@@ -102,13 +134,20 @@ function Estados() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setCombustibleSeleccionado((prevState) => ({
+    setEstadoSeleccionado((prevState) => ({
       ...prevState,
       [name]: value,
     }));
   };
 
+  const onSubmit = (values, { resetForm }) => {
+    // eslint-disable-next-line no-console
+    console.log("Envío de Formulario:", values);
+    resetForm();
+  };
+
   const peticionpost = async () => {
+    // abrircerrarModalEditar();
     // Swal.showLoading();
     // if (
     //   combustibleseleccionado.com_TipoCombustible === "" ||
@@ -265,69 +304,100 @@ function Estados() {
       <MDTypography variant="h3"> Agregar Nuevo Estado </MDTypography>
       <Divider sx={{ marginTop: 1 }} light={false} />
       <MDBox pt={2} pb={1}>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={5}>
-            <MDBox mb={2} pb={3}>
-              <MDTypography variant="h6"> Descripción: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={7}>
-            <MDBox mb={2}>
-              <MDInput
-                type="text"
-                label="Descripción"
-                name="com_TipoCombustible"
-                onChange={handleChange}
-              />
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={5}>
-            <MDBox mb={2} pb={3}>
-              <MDTypography variant="h6">
-                En este estado, ¿El activo se considera como dado de baja?
-              </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={7}>
-            <MDBox mb={2}>
-              <select name="pue_Codigo" className="form-control" onChange={handleChange}>
-                <option key="0" value="0">
-                  Seleccione una opcion
-                </option>
-                <option key="0" value="0">
-                  Si
-                </option>
-                <option key="0" value="0">
-                  No
-                </option>
-                {/* {datatp.map((element) => (
+        <Formik
+          initialValues={{
+            cc_descripcion: "",
+          }}
+          validationSchema={valSchema}
+          onSubmit={onSubmit}
+        >
+          {({ handleSubmit }) => (
+            <form onSubmit={handleSubmit}>
+              <Grid container spacing={3} justifyContent="center">
+                <Grid item xs={12} md={4} lg={5}>
+                  <MDBox mb={2} pb={3}>
+                    <MDTypography variant="h6"> Descripción: </MDTypography>
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} md={6} lg={7}>
+                  <MDBox mb={2}>
+                    <Field
+                      as={TextField}
+                      name="cc_descripcion"
+                      id="cc_descripcion outlined-multiline-static"
+                      type="text"
+                      multiline
+                      fullWidth
+                      rows={2}
+                      placeholder="Descripcion"
+                    />
+                  </MDBox>
+                  <ErrorMessage name="cc_descripcion" component="small" className="error" />
+                </Grid>
+              </Grid>
+              <Grid container spacing={3} justifyContent="center">
+                <Grid item xs={12} md={4} lg={5}>
+                  <MDBox mb={2} pb={3}>
+                    <MDTypography variant="h6">
+                      En este estado, ¿El activo se considera como dado de baja?
+                    </MDTypography>
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} md={6} lg={7}>
+                  <MDBox mt={3} mb={2}>
+                    <CheckboxComponent /> {}
+                    {/* <select
+                      id="Est_Baja"
+                      name="Est_Baja"
+                      className="form-control"
+                      onBlur={Formik.handleBlur}
+                      onChange={handleChange}
+                    >
+                      <option key="0" value="0">
+                        Seleccione una opcion
+                      </option>
+                      <option key="0" value="0">
+                        Si
+                      </option>
+                      <option key="0" value="0">
+                        No
+                      </option> */}
+                    {/* {datatp.map((element) => (
                   <option key={element.pue_Codigo} value={element.pue_Codigo}>
                     {element.pue_Nombre}
                   </option>
                 ))} */}
-              </select>
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDButton variant="gradient" color="info" fullWidth onClick={() => peticionpost()}>
-              Insertar
-            </MDButton>
-          </Grid>
-          <Grid item xs={12} md={4} lg={3}>
-            <MDButton
-              variant="gradient"
-              color="light"
-              fullWidth
-              onClick={() => abrircerrarModalInsertar()}
-            >
-              Cancelar
-            </MDButton>
-          </Grid>
-        </Grid>
+                    {/* </select> */}
+                  </MDBox>
+                </Grid>
+              </Grid>
+              <Grid container spacing={3} justifyContent="center">
+                <Grid item xs={12} md={4} lg={3}>
+                  <Button
+                    className="aceptar"
+                    endIcon={<SaveIcon />}
+                    type="submit"
+                    fullWidth
+                    onClick={() => peticionpost()}
+                  >
+                    Insertar
+                  </Button>
+                </Grid>
+                <Grid item xs={12} md={4} lg={3}>
+                  <Button
+                    className="cancelar"
+                    endIcon={<ClearIcon />}
+                    type="submit"
+                    fullWidth
+                    onClick={() => abrircerrarModalInsertar()}
+                  >
+                    Cancelar
+                  </Button>
+                </Grid>
+              </Grid>
+            </form>
+          )}
+        </Formik>
       </MDBox>
     </div>
   );
@@ -350,7 +420,7 @@ function Estados() {
                 label="Nombre"
                 name="com_TipoCombustible"
                 onChange={handleChange}
-                value={combustibleseleccionado && combustibleseleccionado.com_TipoCombustible}
+                value={EstadoSeleccionado && EstadoSeleccionado.com_TipoCombustible}
               />
             </MDBox>
           </Grid>
@@ -368,7 +438,7 @@ function Estados() {
                 label="Desccripcion"
                 name="com_Marca"
                 onChange={handleChange}
-                value={combustibleseleccionado && combustibleseleccionado.com_Marca}
+                value={EstadoSeleccionado && EstadoSeleccionado.com_Marca}
               />
             </MDBox>
           </Grid>
@@ -398,7 +468,7 @@ function Estados() {
     <div className={styles.modal}>
       <p>
         Deseas Eliminar el Estado
-        <b> {combustibleseleccionado && combustibleseleccionado.com_TipoCombustible}</b>?
+        <b> {EstadoSeleccionado && EstadoSeleccionado.com_TipoCombustible}</b>?
       </p>
       <div align="right">
         <MDButton color="secondary" onClick={() => peticiondelete()}>
@@ -418,13 +488,13 @@ function Estados() {
             <Card>
               <div className="App">
                 <br />
-                <MDButton
-                  variant="gradient"
-                  color="success"
+                <Button
+                  className="insertar"
+                  endIcon={<AddCircleIcon />}
                   onClick={() => abrircerrarModalInsertar()}
                 >
                   Insertar Estado
-                </MDButton>
+                </Button>
                 <br />
                 <br />
                 <MaterialTable
