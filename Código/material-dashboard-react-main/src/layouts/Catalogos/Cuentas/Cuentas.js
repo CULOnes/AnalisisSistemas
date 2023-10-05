@@ -788,6 +788,7 @@ function Cuentas() {
           </Grid>
         </Grid>
       </MDBox>
+      <footer>Vista creada por Wesley Morales(DBA)</footer>
     </DashboardLayout>
   );
 }

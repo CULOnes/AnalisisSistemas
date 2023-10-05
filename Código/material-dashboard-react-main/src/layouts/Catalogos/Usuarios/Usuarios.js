@@ -580,7 +580,6 @@ function Usuarios() {
                     },
                   }}
                 />
-
                 <Modal open={modalinsertar} onClose={abrircerrarModalInsertar}>
                   {bodyInsertar}
                 </Modal>
@@ -597,6 +596,7 @@ function Usuarios() {
           </Grid>
         </Grid>
       </MDBox>
+      <footer>Vista creada por Wesley Morales(DBA)</footer>
     </DashboardLayout>
   );
 }
