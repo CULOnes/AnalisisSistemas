@@ -344,12 +344,12 @@ function Departamentos() {
             <form onSubmit={handleSubmit}>
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={4} lg={3}>
-                  <MDBox mb={2}>
+                  <MDBox>
                     <MDTypography variant="h6"> Nombre: </MDTypography>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={9}>
-                  <MDBox mb={2}>
+                  <MDBox>
                     <Field
                       as={OutlinedInput}
                       name="cc_nombre"
@@ -363,12 +363,31 @@ function Departamentos() {
               </Grid>
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={4} lg={3}>
-                  <MDBox mb={2}>
+                  <MDBox mt={2}>
+                    <MDTypography variant="h6"> Nombre del jefe: </MDTypography>
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} md={6} lg={9}>
+                  <MDBox mt={2}>
+                    <Field
+                      as={OutlinedInput}
+                      name="cc_jefe"
+                      id="cc_jefe"
+                      type="text"
+                      placeholder="Nombre del jefe"
+                    />
+                  </MDBox>
+                  <ErrorMessage name="cc_jefe" component="small" className="error" />
+                </Grid>
+              </Grid>
+              <Grid container spacing={3} justifyContent="center">
+                <Grid item xs={12} md={4} lg={3}>
+                  <MDBox mt={2}>
                     <MDTypography variant="h6"> Descripcion </MDTypography>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={9}>
-                  <MDBox mb={2}>
+                  <MDBox mt={2}>
                     <Field
                       as={TextField}
                       name="cc_descripcion"
@@ -383,26 +402,7 @@ function Departamentos() {
                   <ErrorMessage name="cc_descripcion" component="small" className="error" />
                 </Grid>
               </Grid>
-              <Grid container spacing={3} justifyContent="center">
-                <Grid item xs={12} md={4} lg={3}>
-                  <MDBox mb={2}>
-                    <MDTypography variant="h6"> Nombre del jefe: </MDTypography>
-                  </MDBox>
-                </Grid>
-                <Grid item xs={12} md={6} lg={9}>
-                  <MDBox mb={2}>
-                    <Field
-                      as={OutlinedInput}
-                      name="cc_jefe"
-                      id="cc_jefe"
-                      type="text"
-                      placeholder="Nombre del jefe"
-                    />
-                  </MDBox>
-                  <ErrorMessage name="cc_jefe" component="small" className="error" />
-                </Grid>
-              </Grid>
-              <Grid container spacing={3} justifyContent="center">
+              <Grid container spacing={3} justifyContent="center" mt={2}>
                 <Grid item xs={12} md={4} lg={3}>
                   <Button
                     className="aceptar"

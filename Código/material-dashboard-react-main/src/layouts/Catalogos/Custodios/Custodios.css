@@ -43,3 +43,11 @@
 footer{
     font-size: 15px;
 }
+
+#cc_dpi{
+    width: 140px !important;
+}
+
+#cc_cargo{
+    width: 160px !important;
+}

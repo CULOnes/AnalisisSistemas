@@ -333,7 +333,7 @@ function Cuentas() {
 
   const bodyInsertar = (
     <div className={styles.modal}>
-      <MDTypography variant="h3"> Agregar Nueva Cuenta </MDTypography>
+      <h2> Agregar Nueva Cuenta </h2>
       <Divider sx={{ marginTop: 1 }} light={false} />
       <MDBox pb={1}>
         <Formik
@@ -349,12 +349,12 @@ function Cuentas() {
             <form onSubmit={handleSubmit}>
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={4} lg={4}>
-                  <MDBox mb={1} pb={4}>
+                  <MDBox mb={1} pb={4} mt={2}>
                     <MDTypography variant="h6"> Nombre: </MDTypography>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={8}>
-                  <MDBox mb={1}>
+                  <MDBox mt={2}>
                     <Field
                       as={OutlinedInput}
                       name="cc_nombre"
@@ -367,35 +367,13 @@ function Cuentas() {
                 </Grid>
               </Grid>
               <Grid container spacing={3} justifyContent="center">
-                <Grid item xs={12} md={4} lg={4}>
-                  <MDBox mb={1} pb={4}>
-                    <MDTypography variant="h6"> Descripción: </MDTypography>
-                  </MDBox>
-                </Grid>
-                <Grid item xs={12} md={6} lg={8}>
-                  <MDBox mb={1}>
-                    <Field
-                      as={TextField}
-                      name="cc_descripcion"
-                      id="cc_descripcion outlined-multiline-static"
-                      type="text"
-                      multiline
-                      fullWidth
-                      rows={2}
-                      placeholder="Descripcion"
-                    />
-                  </MDBox>
-                  <ErrorMessage name="cc_descripcion" component="small" className="error" />
-                </Grid>
-              </Grid>
-              <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={6} lg={4}>
-                  <MDBox mb={2} pb={4}>
+                  <MDBox pb={4} mt={2}>
                     <MDTypography variant="h6"> Tipo de cuenta: </MDTypography>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={8}>
-                  <MDBox mb={2}>
+                  <MDBox mt={2}>
                     <select
                       id="Cue_TipoC"
                       name="Cue_TipoC"
@@ -419,6 +397,28 @@ function Cuentas() {
                 ))} */}
                     </select>
                   </MDBox>
+                </Grid>
+              </Grid>
+              <Grid container spacing={3} justifyContent="center">
+                <Grid item xs={12} md={4} lg={4}>
+                  <MDBox mt={1} pb={4}>
+                    <MDTypography variant="h6"> Descripción: </MDTypography>
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} md={6} lg={8}>
+                  <MDBox mt={1}>
+                    <Field
+                      as={TextField}
+                      name="cc_descripcion"
+                      id="cc_descripcion outlined-multiline-static"
+                      type="text"
+                      multiline
+                      fullWidth
+                      rows={2}
+                      placeholder="Descripcion"
+                    />
+                  </MDBox>
+                  <ErrorMessage name="cc_descripcion" component="small" className="error" />
                 </Grid>
               </Grid>
               {/* <Grid container spacing={3} justifyContent="center">
@@ -457,7 +457,7 @@ function Cuentas() {
             </MDBox>
           </Grid>
         </Grid> */}
-              <Grid container spacing={3} justifyContent="center">
+              <Grid container spacing={3} justifyContent="center" mt={2} mb={3}>
                 <Grid item xs={12} md={4} lg={3}>
                   <Button
                     className="aceptar"

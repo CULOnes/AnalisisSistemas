@@ -452,7 +452,7 @@ function Marcas() {
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={8}>
-                  <MDBox mt={2} mb={2}>
+                  <MDBox mt={2}>
                     <Field
                       as={TextField}
                       name="cc_descripcion"
@@ -474,7 +474,7 @@ function Marcas() {
                   </MDBox>
                 </Grid>
               </Grid>
-              <Grid container spacing={3} justifyContent="center">
+              <Grid container spacing={3} justifyContent="center" mt={1}>
                 <Grid item xs={12} md={4} lg={3}>
                   <Button
                     className="aceptar"

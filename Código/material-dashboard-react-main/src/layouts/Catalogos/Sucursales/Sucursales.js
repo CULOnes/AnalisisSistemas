@@ -338,7 +338,7 @@ function Sucursales() {
     <div className={styles.modal}>
       <h2> Agregar Nueva sucursal </h2>
       <Divider sx={{ marginTop: 1 }} light={false} />
-      <MDBox pt={2} pb={1}>
+      <MDBox pt={2} pb={1} mt={2}>
         {/* <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} md={4} lg={3}>
             <MDBox mb={2}>
@@ -499,7 +499,7 @@ function Sucursales() {
                   </MDBox>
                 </Grid>
               </Grid>
-              <Grid container spacing={3} justifyContent="center">
+              <Grid container spacing={3} justifyContent="center" mt={2}>
                 <Grid item xs={12} md={4} lg={3}>
                   <Button
                     className="aceptar"

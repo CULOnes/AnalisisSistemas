@@ -1,8 +1,8 @@
 .error{
-    font-size: 15px !important;
-    position: relative !important;
-    /* top: "-20px" !important; */
-    color: red !important;
+    font-size: 12px;
+    position: relative;
+    top: "-20px";
+    color: red;
 }
 
 .insertar{
@@ -29,4 +29,24 @@
 
 footer{
     font-size: 15px;
+}
+
+#cc_usuario{
+    width: 150px !important;
+}
+
+#cc_nombre{
+    width: 180px !important;
+}
+
+#cc_apellido{
+    width: 200px !important;
+}
+
+#cc_clave{
+    width: 225px !important;
+}
+
+#confirmarClave{
+    width: 225px !important;
 }

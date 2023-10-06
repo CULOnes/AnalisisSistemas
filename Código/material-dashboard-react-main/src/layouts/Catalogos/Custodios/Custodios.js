@@ -370,9 +370,9 @@ function Custodios() {
 
   const bodyInsertar = (
     <div className={styles.modal}>
-      <MDTypography variant="h3"> Agregar Nuevo Custodio </MDTypography>
+      <h2> Agregar Nuevo Custodio </h2>
       <Divider sx={{ marginTop: 1 }} light={false} />
-      <MDBox pb={1}>
+      <MDBox pb={1} mb={2} mt={2}>
         <Formik
           initialValues={{
             cc_dpi: "",
@@ -394,7 +394,7 @@ function Custodios() {
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={8}>
-                  <MDBox mb={1}>
+                  <MDBox>
                     <Field
                       as={OutlinedInput}
                       name="cc_dpi"
@@ -408,12 +408,31 @@ function Custodios() {
               </Grid>
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={4} lg={4}>
-                  <MDBox mb={1} pb={4}>
+                  <MDBox mt={2} pb={4}>
+                    <MDTypography variant="h6"> Cargo </MDTypography>
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} md={6} lg={8}>
+                  <MDBox mt={2}>
+                    <Field
+                      as={OutlinedInput}
+                      name="cc_cargo"
+                      id="cc_cargo"
+                      type="text"
+                      placeholder="Cargo del custodio"
+                    />
+                  </MDBox>
+                  <ErrorMessage name="cc_cargo" component="small" className="error" />
+                </Grid>
+              </Grid>
+              <Grid container spacing={3} justifyContent="center">
+                <Grid item xs={12} md={4} lg={4}>
+                  <MDBox mt={2} pb={4}>
                     <MDTypography variant="h6"> Nombre: </MDTypography>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={8}>
-                  <MDBox mb={1}>
+                  <MDBox mt={2}>
                     <Field
                       as={OutlinedInput}
                       name="cc_nombre"
@@ -427,12 +446,12 @@ function Custodios() {
               </Grid>
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={4} lg={4}>
-                  <MDBox mb={1} pb={4}>
+                  <MDBox mt={2} pb={4}>
                     <MDTypography variant="h6"> Apellido </MDTypography>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={8}>
-                  <MDBox mb={1}>
+                  <MDBox mt={2}>
                     <Field
                       as={OutlinedInput}
                       name="cc_apellido"
@@ -445,32 +464,13 @@ function Custodios() {
                 </Grid>
               </Grid>
               <Grid container spacing={3} justifyContent="center">
-                <Grid item xs={12} md={4} lg={4}>
-                  <MDBox mb={1} pb={4}>
-                    <MDTypography variant="h6"> Cargo </MDTypography>
-                  </MDBox>
-                </Grid>
-                <Grid item xs={12} md={6} lg={8}>
-                  <MDBox mb={1}>
-                    <Field
-                      as={OutlinedInput}
-                      name="cc_cargo"
-                      id="cc_cargo"
-                      type="text"
-                      placeholder="Cargo del custodio"
-                    />
-                  </MDBox>
-                  <ErrorMessage name="cc_cargo" component="small" className="error" />
-                </Grid>
-              </Grid>
-              <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={6} lg={4}>
-                  <MDBox mb={2} pb={4}>
+                  <MDBox mt={2} pb={4}>
                     <MDTypography variant="h6"> Sucursal </MDTypography>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={8}>
-                  <MDBox mb={2}>
+                  <MDBox mt={2}>
                     <select
                       id="Cus_Sucursal"
                       name="Cus_Sucursal"
@@ -498,12 +498,12 @@ function Custodios() {
               </Grid>
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={6} lg={4}>
-                  <MDBox mb={2} pb={4}>
+                  <MDBox mt={2} pb={4}>
                     <MDTypography variant="h6"> Departamento </MDTypography>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={8}>
-                  <MDBox mb={2}>
+                  <MDBox mt={2}>
                     <select
                       id="Cus_Departamento"
                       name="Cus_Departamento"
@@ -529,7 +529,7 @@ function Custodios() {
                   </MDBox>
                 </Grid>
               </Grid>
-              <Grid container spacing={3} justifyContent="center">
+              <Grid container spacing={3} justifyContent="center" mb={1} mt={2}>
                 <Grid item xs={12} md={4} lg={3}>
                   <Button
                     className="aceptar"

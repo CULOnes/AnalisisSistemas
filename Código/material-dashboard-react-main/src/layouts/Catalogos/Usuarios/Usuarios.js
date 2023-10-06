@@ -35,10 +35,6 @@ const columns = [
     title: "Nombre",
     field: "usu_Nombre",
   },
-  {
-    title: "Clave",
-    field: "usu_Clave",
-  },
 ];
 
 const valSchema = Yup.object().shape({
@@ -52,11 +48,14 @@ const valSchema = Yup.object().shape({
     .max(50, "El nombre no puede tener más de 50 caracteres"),
   cc_apellido: Yup.string()
     .matches(/^[a-zA-Z0-9]+$/, "Solo se permiten números y letras")
-    .required("El nombre de usuario es requerido")
+    .required("El apellido del usuario es requerido")
     .max(50, "El nombre no puede tener más de 50 caracteres"),
   cc_clave: Yup.string()
-    .required("La clave es requerida")
-    .max(50, "La clave no puede tener más de 50 caracteres"),
+    .required("La contraseña es requerida")
+    .max(50, "La contraseña no puede tener más de 50 caracteres"),
+  confirmarClave: Yup.string()
+    .required("Por favor, confirma tu contraseña")
+    .oneOf([Yup.ref("cc_clave")], "Las contraseñas no coinciden"),
 });
 
 const useStyles = makeStyles((theme) => ({
@@ -285,13 +284,14 @@ function Usuarios() {
     <div className={styles.modal}>
       <h2> Agregar Nuevo Usuario </h2>
       <Divider sx={{ marginTop: 1 }} light={false} />
-      <MDBox pt={2} pb={3}>
+      <MDBox pt={2} pb={2}>
         <Formik
           initialValues={{
             cc_usuario: "",
             cc_nombre: "",
             cc_apellido: "",
             cc_clave: "",
+            confirmarClave: "",
           }}
           validationSchema={valSchema}
           onSubmit={onSubmit}
@@ -305,7 +305,7 @@ function Usuarios() {
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={9}>
-                  <MDBox mb={2}>
+                  <MDBox>
                     <Field
                       as={OutlinedInput}
                       name="cc_usuario"
@@ -319,12 +319,12 @@ function Usuarios() {
               </Grid>
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={4} lg={3}>
-                  <MDBox mb={2}>
+                  <MDBox mt={2}>
                     <MDTypography variant="h6"> Nombre: </MDTypography>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={9}>
-                  <MDBox mb={2}>
+                  <MDBox mt={2}>
                     <Field
                       as={OutlinedInput}
                       name="cc_nombre"
@@ -338,12 +338,12 @@ function Usuarios() {
               </Grid>
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={4} lg={3}>
-                  <MDBox mb={2}>
+                  <MDBox mt={2}>
                     <MDTypography variant="h6"> Apellido: </MDTypography>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={9}>
-                  <MDBox mb={2}>
+                  <MDBox mt={2}>
                     <Field
                       as={OutlinedInput}
                       name="cc_apellido"
@@ -357,18 +357,18 @@ function Usuarios() {
               </Grid>
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={4} lg={3}>
-                  <MDBox mb={2}>
-                    <MDTypography variant="h6"> Clave: </MDTypography>
+                  <MDBox mt={2}>
+                    <MDTypography variant="h6"> Contraseña: </MDTypography>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={9}>
-                  <MDBox mb={2}>
+                  <MDBox mt={2}>
                     <Field
                       as={OutlinedInput}
                       name="cc_clave"
                       id="cc_clave"
                       type="password"
-                      placeholder="clave"
+                      placeholder="Contraseña"
                     />
                   </MDBox>
                   <ErrorMessage name="cc_clave" component="small" className="error" />
@@ -376,24 +376,24 @@ function Usuarios() {
               </Grid>
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={4} lg={3}>
-                  <MDBox mb={2}>
-                    <MDTypography variant="h6"> Confirmar Clave: </MDTypography>
+                  <MDBox mt={2}>
+                    <MDTypography variant="h6"> Confirmar Contraseña: </MDTypography>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={9}>
-                  <MDBox mb={2}>
+                  <MDBox mt={2}>
                     <Field
                       as={OutlinedInput}
-                      name="cc_clave"
-                      id="cc_clave"
+                      name="confirmarClave"
+                      id="confirmarClave"
                       type="password"
-                      placeholder="clave"
+                      placeholder="Confirmar contraseña"
                     />
                   </MDBox>
-                  <ErrorMessage name="cc_clave" component="small" className="error" />
+                  <ErrorMessage name="confirmarClave" component="small" className="error" />
                 </Grid>
               </Grid>
-              <Grid container spacing={3} justifyContent="center">
+              <Grid container spacing={3} justifyContent="center" mt={2}>
                 <Grid item xs={12} md={4} lg={3}>
                   <Button
                     className="aceptar"

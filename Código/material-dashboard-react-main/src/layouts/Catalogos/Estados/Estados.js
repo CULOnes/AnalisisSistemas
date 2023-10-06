@@ -7,7 +7,7 @@ import Card from "@mui/material/Card";
 import MDBox from "components/MDBox";
 import "styles/styles.css";
 import MaterialTable from "material-table";
-import { Modal } from "@material-ui/core";
+import { Modal, OutlinedInput } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 // import Swal from "sweetalert2";
 import MDInput from "components/MDInput";
@@ -58,6 +58,10 @@ function CheckboxComponent() {
 }
 
 const valSchema = Yup.object().shape({
+  cc_nombre: Yup.string()
+    .matches(/^[a-zA-Z0-9]+$/, "Solo se permiten números y letras")
+    .required("El nombre del estado es requerido")
+    .max(50, "El nombre no puede tener más de 50 caracteres"),
   cc_descripcion: Yup.string()
     .required("La descripción es requerida")
     .max(250, "La descripción no puede tener más de 250 caracteres"),
@@ -301,11 +305,12 @@ function Estados() {
 
   const bodyInsertar = (
     <div className={styles.modal}>
-      <MDTypography variant="h3"> Agregar Nuevo Estado </MDTypography>
+      <h2> Agregar Nuevo Estado </h2>
       <Divider sx={{ marginTop: 1 }} light={false} />
       <MDBox pt={2} pb={1}>
         <Formik
           initialValues={{
+            cc_nombre: "",
             cc_descripcion: "",
           }}
           validationSchema={valSchema}
@@ -314,36 +319,14 @@ function Estados() {
           {({ handleSubmit }) => (
             <form onSubmit={handleSubmit}>
               <Grid container spacing={3} justifyContent="center">
-                <Grid item xs={12} md={4} lg={5}>
-                  <MDBox mb={2} pb={3}>
-                    <MDTypography variant="h6"> Descripción: </MDTypography>
-                  </MDBox>
-                </Grid>
-                <Grid item xs={12} md={6} lg={7}>
-                  <MDBox mb={2}>
-                    <Field
-                      as={TextField}
-                      name="cc_descripcion"
-                      id="cc_descripcion outlined-multiline-static"
-                      type="text"
-                      multiline
-                      fullWidth
-                      rows={2}
-                      placeholder="Descripcion"
-                    />
-                  </MDBox>
-                  <ErrorMessage name="cc_descripcion" component="small" className="error" />
-                </Grid>
-              </Grid>
-              <Grid container spacing={3} justifyContent="center">
-                <Grid item xs={12} md={4} lg={5}>
+                <Grid item xs={12} md={4} lg={8}>
                   <MDBox mb={2} pb={3}>
                     <MDTypography variant="h6">
                       En este estado, ¿El activo se considera como dado de baja?
                     </MDTypography>
                   </MDBox>
                 </Grid>
-                <Grid item xs={12} md={6} lg={7}>
+                <Grid item xs={12} md={6} lg={4}>
                   <MDBox mt={3} mb={2}>
                     <CheckboxComponent /> {}
                     {/* <select
@@ -372,6 +355,47 @@ function Estados() {
                 </Grid>
               </Grid>
               <Grid container spacing={3} justifyContent="center">
+                <Grid item xs={12} md={4} lg={3}>
+                  <MDBox mt={2}>
+                    <MDTypography variant="h6"> Nombre: </MDTypography>
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} md={6} lg={9}>
+                  <MDBox mt={2}>
+                    <Field
+                      as={OutlinedInput}
+                      name="cc_nombre"
+                      id="cc_nombre"
+                      type="text"
+                      placeholder="Nombre del estado"
+                    />
+                  </MDBox>
+                  <ErrorMessage name="cc_nombre" component="small" className="error" />
+                </Grid>
+              </Grid>
+              <Grid container spacing={3} justifyContent="center">
+                <Grid item xs={12} md={4} lg={3}>
+                  <MDBox mt={2} pb={3}>
+                    <MDTypography variant="h6"> Descripción: </MDTypography>
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} md={6} lg={9}>
+                  <MDBox mt={2}>
+                    <Field
+                      as={TextField}
+                      name="cc_descripcion"
+                      id="cc_descripcion outlined-multiline-static"
+                      type="text"
+                      multiline
+                      fullWidth
+                      rows={2}
+                      placeholder="Descripcion"
+                    />
+                  </MDBox>
+                  <ErrorMessage name="cc_descripcion" component="small" className="error" />
+                </Grid>
+              </Grid>
+              <Grid container spacing={3} justifyContent="center" mt={2}>
                 <Grid item xs={12} md={4} lg={3}>
                   <Button
                     className="aceptar"
