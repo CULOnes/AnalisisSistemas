@@ -9,7 +9,7 @@ import "styles/styles.css";
 import MaterialTable from "material-table";
 import { Modal, OutlinedInput } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-// import Swal from "sweetalert2";
+import Swal from "sweetalert2";
 import MDInput from "components/MDInput";
 import MDTypography from "components/MDTypography";
 import Divider from "@mui/material/Divider";
@@ -49,7 +49,8 @@ const valSchema = Yup.object().shape({
     .max(50, "El nombre no puede tener más de 50 caracteres"),
   cc_descripcion: Yup.string()
     .required("La descripción es requerida")
-    .max(250, "La descripción no puede tener más de 250 caracteres"),
+    .max(250, "La descripción no puede tener más de 250 caracteres")
+    .matches(/^[a-zA-ZñÑ0-9,. -]*$/, "Caracter no permitido"),
   cc_cuenta: Yup.number()
     .typeError("La cuenta debe ser un número")
     .required("La cuenta es requerida")
@@ -141,6 +142,14 @@ function CentrosCosto() {
     // eslint-disable-next-line no-console
     console.log("Envío de Formulario:", values);
     resetForm();
+
+    Swal.fire({
+      icon: "success",
+      title: "Formulario Enviado",
+      text: "El formulario se ha enviado con éxito",
+      timer: 2500, // Controla cuánto tiempo se muestra el mensaje (en milisegundos)
+      timerProgressBar: true, // Muestra una barra de progreso durante el tiempo de visualización
+    });
   };
 
   const peticionpost = async () => {
@@ -355,12 +364,12 @@ function CentrosCosto() {
           {({ handleSubmit }) => (
             <form onSubmit={handleSubmit}>
               <Grid container spacing={3} justifyContent="center">
-                <Grid item xs={12} md={4} lg={4}>
+                <Grid item xs={12} md={4} lg={5}>
                   <MDBox>
                     <MDTypography variant="h6"> Nombre Centro Costo: </MDTypography>
                   </MDBox>
                 </Grid>
-                <Grid item xs={12} md={6} lg={8}>
+                <Grid item xs={12} md={6} lg={7}>
                   <MDBox>
                     <Field
                       as={OutlinedInput}
@@ -374,13 +383,32 @@ function CentrosCosto() {
                 </Grid>
               </Grid>
               <Grid container spacing={3} justifyContent="center">
-                <Grid item xs={12} md={4} lg={4}>
+                <Grid item xs={12} md={4} lg={5}>
+                  <MDBox mt={4} mb={2}>
+                    <MDTypography variant="h6"> Cuenta Centro Costo: </MDTypography>
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} md={6} lg={7}>
+                  <MDBox mt={4}>
+                    <Field
+                      as={OutlinedInput}
+                      name="cc_cuenta"
+                      id="cc_cuenta"
+                      type="number"
+                      placeholder="Cuenta"
+                    />
+                  </MDBox>
+                  <ErrorMessage name="cc_cuenta" component="small" className="error" />
+                </Grid>
+              </Grid>
+              <Grid container spacing={3} justifyContent="center">
+                <Grid item xs={12} md={4} lg={3}>
                   <MDBox mt={4} mb={2}>
                     <MDTypography variant="h6"> Descripción: </MDTypography>
                   </MDBox>
                 </Grid>
-                <Grid item xs={12} md={6} lg={8}>
-                  <MDBox mt={2} mb={2}>
+                <Grid item xs={12} md={6} lg={9}>
+                  <MDBox mt={2}>
                     <Field
                       as={TextField}
                       name="cc_descripcion"
@@ -393,25 +421,6 @@ function CentrosCosto() {
                     />
                   </MDBox>
                   <ErrorMessage name="cc_descripcion" component="small" className="error" />
-                </Grid>
-              </Grid>
-              <Grid container spacing={3} justifyContent="center">
-                <Grid item xs={12} md={4} lg={4}>
-                  <MDBox mb={2}>
-                    <MDTypography variant="h6"> Cuenta Centro Costo: </MDTypography>
-                  </MDBox>
-                </Grid>
-                <Grid item xs={12} md={6} lg={8}>
-                  <MDBox>
-                    <Field
-                      as={OutlinedInput}
-                      name="cc_cuenta"
-                      id="cc_cuenta"
-                      type="number"
-                      placeholder="Cuenta"
-                    />
-                  </MDBox>
-                  <ErrorMessage name="cc_cuenta" component="small" className="error" />
                 </Grid>
               </Grid>
               <Grid container spacing={3} justifyContent="center" mt={2}>
@@ -647,6 +656,7 @@ function CentrosCosto() {
           </Grid>
         </Grid>
       </MDBox>
+      <footer>Vista creada por Axel Estrada(PO)</footer>
     </DashboardLayout>
   );
 }

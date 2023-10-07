@@ -901,6 +901,7 @@ function RealizarConstatacion() {
           </Grid>
         </Grid>
       </MDBox>
+      <footer>Vista creada por Gustavo Herrera(QA)</footer>
     </DashboardLayout>
   );
 }
