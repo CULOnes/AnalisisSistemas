@@ -1,0 +1,48 @@
+input{
+    border: solid #CACACA 1px;
+    width: auto;
+    height: 35px;
+    padding-left: 10px;
+    border-radius: 5px;
+}
+
+input:invalid:focus {
+    border: red solid 1px;
+}
+
+input:focus {
+    outline: solid #BABABA 1px;
+}
+
+input + .validity {
+    padding-right: 30px;
+}
+
+input:invalid + .validity::after {
+    position: absolute;
+    content: "✖";
+    padding-left: 5px;
+    color: red;
+}
+
+input:valid + .validity::after {
+    position: absolute;
+    content: "✓";
+    padding-left: 5px;
+    color: green;
+}
+
+input:invalid:focus ~ .error::after {
+    font-size: 11px;
+    top: -10px;
+    content: "El usuario debe contener al menos 8 caracteres";
+    color: red;
+}
+
+/* input:valid:focus + .error::after {
+    position: absolute;
+    content: "✓";
+    padding-left: 5px;
+    color: green;
+} */
+  

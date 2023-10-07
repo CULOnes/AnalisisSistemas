@@ -1,0 +1,25 @@
+.insertar{
+    background-color: #5CB360 !important;
+    width: 25% !important;
+    height: 40px !important;
+    border-radius: 10px !important;
+    color: white !important;
+    font-size: 15px !important;
+}
+
+.campos{
+    height: 40px;
+}
+
+.combo{
+    width: 75%;
+    height: 35px;
+    border-radius: 10px;
+    border: solid #CACACA 1px;
+    outline: none;
+}
+
+.cuadrito{
+    width: 20px;
+    height: 20px;
+}

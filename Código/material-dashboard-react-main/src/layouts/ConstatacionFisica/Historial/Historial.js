@@ -7,13 +7,19 @@ import Card from "@mui/material/Card";
 import MDBox from "components/MDBox";
 import "styles/styles.css";
 import MaterialTable from "material-table";
-import { Modal } from "@material-ui/core";
+import { Modal, OutlinedInput } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 // import Swal from "sweetalert2";
 import MDInput from "components/MDInput";
 import MDTypography from "components/MDTypography";
 import Divider from "@mui/material/Divider";
 import MDButton from "components/MDButton";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
+import { Formik, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
+import SearchIcon from "@mui/icons-material/Search";
+import ClearIcon from "@mui/icons-material/Clear";
+import "./Historial.css";
 
 const columns = [
   {
@@ -37,6 +43,15 @@ const columns = [
     field: "emp_Edad",
   },
 ];
+
+const valSchema = Yup.object().shape({
+  fecha_inicio: Yup.date()
+    .required("La fecha de inicio es requerida")
+    .max(new Date(), "La fecha no puede ser mayor que la fecha actual"),
+  fecha_fin: Yup.date()
+    .required("La fecha fin es requerida")
+    .max(new Date(), "La fecha no puede ser mayor que la fecha actual"),
+});
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -125,50 +140,50 @@ function Historial() {
     }));
   };
 
-  const peticionpost = async () => {
-    // Swal.showLoading();
-    // if (
-    //   empleadoseleccionado.pue_Codigo === 0 ||
-    //   empleadoseleccionado.emp_Nombre === "" ||
-    //   empleadoseleccionado.emp_Apellido === "" ||
-    //   empleadoseleccionado.emp_Direccion === "" ||
-    //   empleadoseleccionado.emp_Telefono === 0 ||
-    //   empleadoseleccionado.emp_Dpi === "" ||
-    //   empleadoseleccionado.emp_Edad === 0 ||
-    //   empleadoseleccionado.emp_Nacimiento === 0
-    // ) {
-    //   abrircerrarModalInsertar();
-    //   Swal.close();
-    //   Swal.fire({
-    //     icon: "info",
-    //     title: "",
-    //     html: "Debe de llenar <b>todos</b> los campos",
-    //   });
-    // } else {
-    //   abrircerrarModalInsertar();
-    //   await axios
-    //     .post("https://localhost:7235/api/Empleados/registroempleados", empleadoseleccionado)
-    //     .then((response) => {
-    //       setData(data.concat(response.data));
-    //       Swal.close();
-    //       Swal.fire({
-    //         icon: "success",
-    //         title: "",
-    //         text: "Empleado creado exitosamente",
-    //         timer: 2500,
-    //       });
-    //     })
-    //     .catch((error) => {
-    //       Swal.close();
-    //       Swal.fire({
-    //         icon: "error",
-    //         title: "",
-    //         text: error.response.data,
-    //         timer: 2500,
-    //       });
-    //     });
-    // }
-  };
+  // const peticionpost = async () => {
+  //   // Swal.showLoading();
+  //   // if (
+  //   //   empleadoseleccionado.pue_Codigo === 0 ||
+  //   //   empleadoseleccionado.emp_Nombre === "" ||
+  //   //   empleadoseleccionado.emp_Apellido === "" ||
+  //   //   empleadoseleccionado.emp_Direccion === "" ||
+  //   //   empleadoseleccionado.emp_Telefono === 0 ||
+  //   //   empleadoseleccionado.emp_Dpi === "" ||
+  //   //   empleadoseleccionado.emp_Edad === 0 ||
+  //   //   empleadoseleccionado.emp_Nacimiento === 0
+  //   // ) {
+  //   //   abrircerrarModalInsertar();
+  //   //   Swal.close();
+  //   //   Swal.fire({
+  //   //     icon: "info",
+  //   //     title: "",
+  //   //     html: "Debe de llenar <b>todos</b> los campos",
+  //   //   });
+  //   // } else {
+  //   //   abrircerrarModalInsertar();
+  //   //   await axios
+  //   //     .post("https://localhost:7235/api/Empleados/registroempleados", empleadoseleccionado)
+  //   //     .then((response) => {
+  //   //       setData(data.concat(response.data));
+  //   //       Swal.close();
+  //   //       Swal.fire({
+  //   //         icon: "success",
+  //   //         title: "",
+  //   //         text: "Empleado creado exitosamente",
+  //   //         timer: 2500,
+  //   //       });
+  //   //     })
+  //   //     .catch((error) => {
+  //   //       Swal.close();
+  //   //       Swal.fire({
+  //   //         icon: "error",
+  //   //         title: "",
+  //   //         text: error.response.data,
+  //   //         timer: 2500,
+  //   //       });
+  //   //     });
+  //   // }
+  // };
 
   const peticionput = async () => {
     // if (
@@ -288,6 +303,11 @@ function Historial() {
     //   .catch();
   };
 
+  const validaractivo = (values, { resetForm }) => {
+    console.log("Envío de Formulario:", values);
+    resetForm();
+  };
+
   useEffect(() => {
     peticionget();
     peticiongettp();
@@ -302,50 +322,79 @@ function Historial() {
 
   const bodyInsertar = (
     <div className={styles.modal}>
-      <MDTypography variant="h3"> Consultar Constatacion </MDTypography>
+      <h2> Consultar Constatacion </h2>
       <Divider sx={{ marginTop: 1 }} light={false} />
       <MDBox pb={1}>
-        <Grid container spacing={3} justifyContent="center" mt={2}>
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={2}>
-              <MDTypography variant="h6"> Fecha Inicio: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={2}>
-              <MDInput name="emp_Nacimiento" type="date" size="small" onChange={handleChange} />
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={2}>
-              <MDTypography variant="h6"> Fecha Fin: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={2}>
-              <MDInput name="emp_Nacimiento" type="date" size="small" onChange={handleChange} />
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center" mb={1}>
-          <Grid item xs={12} md={4} lg={3}>
-            <MDButton variant="gradient" color="info" fullWidth onClick={() => peticionpost()}>
-              Insertar
-            </MDButton>
-          </Grid>
-          <Grid item xs={12} md={4} lg={3}>
-            <MDButton
-              variant="gradient"
-              color="light"
-              fullWidth
-              onClick={() => abrircerrarModalInsertar()}
-            >
-              Cancelar
-            </MDButton>
-          </Grid>
-        </Grid>
+        <Formik
+          initialValues={{
+            fecha_inicio: "",
+            fecha_fin: "",
+          }}
+          validationSchema={valSchema}
+          onSubmit={validaractivo}
+        >
+          {({ handleSubmit }) => (
+            <form onSubmit={handleSubmit}>
+              <Grid container spacing={3} justifyContent="center">
+                <Grid item xs={12} md={4} lg={3}>
+                  <MDBox mb={2}>
+                    <MDTypography variant="h6"> Fecha Inicio: </MDTypography>
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} md={6} lg={9}>
+                  <MDBox mb={2}>
+                    <Field
+                      as={OutlinedInput}
+                      name="fecha_inicio"
+                      id="fecha_inicio"
+                      type="date"
+                      className="campos"
+                    />
+                    <br />
+                    <ErrorMessage name="fecha_inicio" component="small" className="error" />
+                  </MDBox>
+                </Grid>
+              </Grid>
+              <Grid container spacing={3} justifyContent="center">
+                <Grid item xs={12} md={4} lg={3}>
+                  <MDBox mb={2}>
+                    <MDTypography variant="h6"> Fecha Fin: </MDTypography>
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} md={6} lg={9}>
+                  <MDBox mb={2}>
+                    <Field
+                      as={OutlinedInput}
+                      name="fecha_fin"
+                      id="fecha_fin"
+                      type="date"
+                      className="campos"
+                    />
+                    <br />
+                    <ErrorMessage name="fecha_fin" component="small" className="error" />
+                  </MDBox>
+                </Grid>
+              </Grid>
+              <Grid container spacing={3} justifyContent="center" mb={1}>
+                <Grid item xs={12} md={4} lg={3}>
+                  <MDButton type="submit" className="aceptar" endIcon={<SearchIcon />} fullWidth>
+                    Consultar
+                  </MDButton>
+                </Grid>
+                <Grid item xs={12} md={4} lg={3}>
+                  <MDButton
+                    className="cancelar"
+                    endIcon={<ClearIcon />}
+                    fullWidth
+                    onClick={() => abrircerrarModalInsertar()}
+                  >
+                    Cancelar
+                  </MDButton>
+                </Grid>
+              </Grid>
+            </form>
+          )}
+        </Formik>
       </MDBox>
     </div>
   );
@@ -600,8 +649,8 @@ function Historial() {
               <div className="App">
                 <br />
                 <MDButton
-                  variant="gradient"
-                  color="success"
+                  className="insertar"
+                  endIcon={<AddCircleIcon />}
                   onClick={() => abrircerrarModalInsertar()}
                 >
                   Consultar Constatacion

@@ -7,13 +7,19 @@ import Card from "@mui/material/Card";
 import MDBox from "components/MDBox";
 import "styles/styles.css";
 import MaterialTable from "material-table";
-import { Modal } from "@material-ui/core";
+import { Modal, OutlinedInput } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-// import Swal from "sweetalert2";
-import MDInput from "components/MDInput";
-import MDTypography from "components/MDTypography";
+import Swal from "sweetalert2";
 import Divider from "@mui/material/Divider";
 import MDButton from "components/MDButton";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
+import "./CambioEstados.css";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import ClearIcon from "@mui/icons-material/Clear";
+import { Formik, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
+import TextField from "@mui/material/TextField";
+import SaveIcon from "@mui/icons-material/Save";
 
 const columns = [
   {
@@ -33,6 +39,16 @@ const columns = [
     field: "emp_Telefono",
   },
 ];
+
+const valSchema = Yup.object().shape({
+  fecha: Yup.date()
+    .required("Debe seleccionar una fecha")
+    .max(new Date(), "La fecha no puede ser mayor al dia de hoy"),
+  descripcion: Yup.string()
+    .matches(/^[a-zA-Z0-9]*$/, "Solo se permiten números y letras")
+    .required("La descripcion es requerida")
+    .max(250, "La descripcion no puede tener más de 250 caracteres"),
+});
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -63,17 +79,8 @@ function CambioEstados() {
   const [showComponent, setShowComponent] = useState(false);
   const [modaleliminar, setModalEliminar] = useState(false);
   const [empleadoseleccionado, setEmpleadoSeleccionado] = useState({
-    emp_Codigo: 0,
-    pue_Codigo: 0,
-    emp_Nombre: "",
-    emp_Apellido: "",
-    emp_Direccion: "",
-    emp_Telefono: 0,
-    emp_Dpi: "",
-    emp_Edad: 0,
-    emp_Nacimiento: 0,
-    emp_Nolicencia: "",
-    emp_Tipolicencia: "",
+    activos: 0,
+    estados: 0,
   });
 
   const abrircerrarModalInsertar = () => {
@@ -122,53 +129,72 @@ function CambioEstados() {
     }));
   };
 
-  // const peticionpost = async () => {
-  // Swal.showLoading();
-  // if (
-  //   empleadoseleccionado.pue_Codigo === 0 ||
-  //   empleadoseleccionado.emp_Nombre === "" ||
-  //   empleadoseleccionado.emp_Apellido === "" ||
-  //   empleadoseleccionado.emp_Direccion === "" ||
-  //   empleadoseleccionado.emp_Telefono === 0 ||
-  //   empleadoseleccionado.emp_Dpi === "" ||
-  //   empleadoseleccionado.emp_Edad === 0 ||
-  //   empleadoseleccionado.emp_Nacimiento === 0
-  // ) {
-  //   abrircerrarModalInsertar();
-  //   Swal.close();
-  //   Swal.fire({
-  //     icon: "info",
-  //     title: "",
-  //     html: "Debe de llenar <b>todos</b> los campos",
-  //   });
-  // } else {
-  //   abrircerrarModalInsertar();
-  //   await axios
-  //     .post("https://localhost:7235/api/Empleados/registroempleados", empleadoseleccionado)
-  //     .then((response) => {
-  //       setData(data.concat(response.data));
-  //       Swal.close();
-  //       Swal.fire({
-  //         icon: "success",
-  //         title: "",
-  //         text: "Empleado creado exitosamente",
-  //         timer: 2500,
-  //       });
-  //     })
-  //     .catch((error) => {
-  //       Swal.close();
-  //       Swal.fire({
-  //         icon: "error",
-  //         title: "",
-  //         text: error.response.data,
-  //         timer: 2500,
-  //       });
-  //     });
-  // }
-  // };
+  const validaractivo = (values, { resetForm }) => {
+    console.log("Envío de Formulario:", values);
+    resetForm();
+  };
+
+  const peticionpost = async () => {
+    // Swal.showLoading();
+    if (empleadoseleccionado.activos === 0) {
+      Swal.fire({
+        icon: "info",
+        title: "",
+        text: "Debe seleccionar al menos un activo",
+      });
+    } else if (empleadoseleccionado.estados === 0) {
+      Swal.fire({
+        icon: "info",
+        title: "",
+        text: "Debe seleccionar un estado",
+      });
+    } else {
+      abrircerrarModalEditar();
+      // if (
+      //   empleadoseleccionado.pue_Codigo === 0 ||
+      //   empleadoseleccionado.emp_Nombre === "" ||
+      //   empleadoseleccionado.emp_Apellido === "" ||
+      //   empleadoseleccionado.emp_Direccion === "" ||
+      //   empleadoseleccionado.emp_Telefono === 0 ||
+      //   empleadoseleccionado.emp_Dpi === "" ||
+      //   empleadoseleccionado.emp_Edad === 0 ||
+      //   empleadoseleccionado.emp_Nacimiento === 0
+      // ) {
+      //   abrircerrarModalInsertar();
+      //   Swal.close();
+      //   Swal.fire({
+      //     icon: "info",
+      //     title: "",
+      //     html: "Debe de llenar <b>todos</b> los campos",
+      //   });
+      // } else {
+      //   abrircerrarModalInsertar();
+      //   await axios
+      //     .post("https://localhost:7235/api/Empleados/registroempleados", empleadoseleccionado)
+      //     .then((response) => {
+      //       setData(data.concat(response.data));
+      //       Swal.close();
+      //       Swal.fire({
+      //         icon: "success",
+      //         title: "",
+      //         text: "Empleado creado exitosamente",
+      //         timer: 2500,
+      //       });
+      //     })
+      //     .catch((error) => {
+      //       Swal.close();
+      //       Swal.fire({
+      //         icon: "error",
+      //         title: "",
+      //         text: error.response.data,
+      //         timer: 2500,
+      //       });
+      //     });
+    }
+  };
 
   const peticionput = async () => {
-    setModalEditar(!modaleditar);
+    // setModalEditar(!modaleditar);
     // if (
     //   empleadoseleccionado.pue_Codigo === 0 ||
     //   empleadoseleccionado.emp_Nombre === "" ||
@@ -300,34 +326,34 @@ function CambioEstados() {
 
   const bodyInsertar = (
     <div className={styles.modal}>
-      <MDTypography variant="h3"> Cambio de Estado de Activos </MDTypography>
+      <h2> Cambio de Estado de Activos </h2>
       <Divider sx={{ marginTop: 1 }} light={false} />
       <MDBox pb={1}>
         <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} md={4} lg={5}>
             <MDBox mb={4}>
-              <MDTypography variant="h6"> Seleccione Activos: </MDTypography>
+              <h4> Seleccione Activos: </h4>
             </MDBox>
           </Grid>
           <Grid item xs={12} md={6} lg={7}>
             <MDBox mb={4}>
-              <select name="pue_Codigo" className="form-control" onChange={handleChange} multiple>
+              <select name="activos" className="combo" onChange={handleChange} multiple>
                 <option key="0" value="0">
                   Seleccione Activos
                 </option>
-                <option key="0" value="0">
+                <option key="1" value="1">
                   Activo 1
                 </option>
-                <option key="0" value="0">
+                <option key="2" value="2">
                   Activo 2
                 </option>
-                <option key="0" value="0">
+                <option key="3" value="3">
                   Activo 3
                 </option>
-                <option key="0" value="0">
+                <option key="4" value="4">
                   Activo 4
                 </option>
-                <option key="0" value="0">
+                <option key="5" value="5">
                   Activo 5
                 </option>
                 {/* {datatp.map((element) => (
@@ -342,25 +368,25 @@ function CambioEstados() {
         <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} md={4} lg={5}>
             <MDBox mb={4}>
-              <MDTypography variant="h6"> Nuevo Estado: </MDTypography>
+              <h4> Nuevo Estado: </h4>
             </MDBox>
           </Grid>
           <Grid item xs={12} md={6} lg={7}>
             <MDBox mb={4}>
-              <select name="pue_Codigo" className="form-control" onChange={handleChange}>
+              <select name="estados" className="combo" onChange={handleChange}>
                 <option key="0" value="0">
                   Seleccione Nuevo Estado
                 </option>
-                <option key="0" value="0">
+                <option key="1" value="1">
                   Bueno
                 </option>
-                <option key="0" value="0">
+                <option key="2" value="2">
                   Robado
                 </option>
-                <option key="0" value="0">
+                <option key="3" value="3">
                   Desaparecido
                 </option>
-                <option key="0" value="0">
+                <option key="4" value="4">
                   Perdido
                 </option>
                 {/* {datatp.map((element) => (
@@ -375,18 +401,19 @@ function CambioEstados() {
         <Grid container spacing={3} justifyContent="center" mb={1}>
           <Grid item xs={12} md={4} lg={4}>
             <MDButton
-              variant="gradient"
-              color="info"
+              className="aceptar"
+              endIcon={<ArrowForwardIosIcon />}
+              type="submit"
               fullWidth
-              onClick={() => abrircerrarModalEditar()}
+              onClick={() => peticionpost()}
             >
-              Cambiar Estado
+              Siguiente
             </MDButton>
           </Grid>
           <Grid item xs={12} md={4} lg={4}>
             <MDButton
-              variant="gradient"
-              color="light"
+              className="cancelar"
+              endIcon={<ClearIcon />}
               fullWidth
               onClick={() => abrircerrarModalInsertar()}
             >
@@ -400,61 +427,84 @@ function CambioEstados() {
 
   const bodyEditar = (
     <div className={styles.modal}>
-      <MDTypography variant="h3"> Agregar Acta </MDTypography>
+      <h2> Agregar Acta </h2>
       <Divider sx={{ marginTop: 1 }} light={false} />
       <MDBox pb={1}>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={4}>
-              <MDTypography variant="h6"> Fecha: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDInput
-              name="emp_Nacimiento"
-              type="date"
-              size="small"
-              onChange={handleChange}
-              // value={empleadoseleccionado && empleadoseleccionado.emp_Nacimiento}
-            />
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={4}>
-              <MDTypography variant="h6"> Descripcion: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={4}>
-              <MDInput
-                type="area"
-                label="Descripcion"
-                name="emp_Nombre"
-                onChange={handleChange}
-                size="small"
-                value={empleadoseleccionado && empleadoseleccionado.emp_Nombre}
-              />
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center" mb={1}>
-          <Grid item xs={12} md={4} lg={3}>
-            <MDButton variant="gradient" color="info" fullWidth onClick={() => peticionput()}>
-              Confirmar
-            </MDButton>
-          </Grid>
-          <Grid item xs={12} md={4} lg={3}>
-            <MDButton
-              variant="gradient"
-              color="light"
-              fullWidth
-              onClick={() => abrircerrarModalEditar()}
-            >
-              Cancelar
-            </MDButton>
-          </Grid>
-        </Grid>
+        <Formik
+          initialValues={{
+            fecha: "",
+            descripcion: "",
+          }}
+          validationSchema={valSchema}
+          onSubmit={validaractivo}
+        >
+          {({ handleSubmit }) => (
+            <form onSubmit={handleSubmit}>
+              <Grid container spacing={3} justifyContent="center">
+                <Grid item xs={12} md={4} lg={3}>
+                  <MDBox mb={4}>
+                    <h4> Fecha: </h4>
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} md={6} lg={9}>
+                  <Field
+                    as={OutlinedInput}
+                    name="fecha"
+                    id="fecha"
+                    type="date"
+                    className="campos"
+                  />
+                  <br />
+                  <ErrorMessage name="fecha" component="small" className="error" />
+                </Grid>
+              </Grid>
+              <Grid container spacing={3} justifyContent="center">
+                <Grid item xs={12} md={4} lg={3}>
+                  <MDBox mb={4}>
+                    <h4> Descripcion: </h4>
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} md={6} lg={9}>
+                  <MDBox mb={4}>
+                    <Field
+                      as={TextField}
+                      name="descripcion"
+                      id="descripcion outlined-multiline-static"
+                      type="text"
+                      multiline
+                      fullWidth
+                      placeholder="Descripcion"
+                    />
+                    <ErrorMessage name="descripcion" component="small" className="error" />
+                  </MDBox>
+                </Grid>
+              </Grid>
+              <Grid container spacing={3} justifyContent="center" mb={1}>
+                <Grid item xs={12} md={4} lg={3}>
+                  <MDButton
+                    className="aceptar"
+                    endIcon={<SaveIcon />}
+                    type="submit"
+                    fullWidth
+                    onClick={() => peticionput()}
+                  >
+                    Confirmar
+                  </MDButton>
+                </Grid>
+                <Grid item xs={12} md={4} lg={3}>
+                  <MDButton
+                    className="cancelar"
+                    endIcon={<ClearIcon />}
+                    fullWidth
+                    onClick={() => abrircerrarModalEditar()}
+                  >
+                    Cancelar
+                  </MDButton>
+                </Grid>
+              </Grid>
+            </form>
+          )}
+        </Formik>
       </MDBox>
     </div>
   );
@@ -484,8 +534,8 @@ function CambioEstados() {
               <div className="App">
                 <br />
                 <MDButton
-                  variant="gradient"
-                  color="success"
+                  className="insertar"
+                  endIcon={<AddCircleIcon />}
                   onClick={() => abrircerrarModalInsertar()}
                 >
                   Cambiar Estados

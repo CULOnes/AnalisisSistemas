@@ -7,13 +7,18 @@ import Card from "@mui/material/Card";
 import MDBox from "components/MDBox";
 import "styles/styles.css";
 import MaterialTable from "material-table";
-import { Modal } from "@material-ui/core";
+import { Modal, OutlinedInput } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-// import Swal from "sweetalert2";
+import Swal from "sweetalert2";
 import MDInput from "components/MDInput";
 import MDTypography from "components/MDTypography";
 import Divider from "@mui/material/Divider";
 import MDButton from "components/MDButton";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
+import "./ReporteActivos.css";
+import { Formik, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
+import SaveIcon from "@mui/icons-material/Save";
 
 const columns = [
   {
@@ -58,6 +63,14 @@ const columns = [
   },
 ];
 
+const valSchema = Yup.object().shape({
+  criterio: Yup.string()
+    .matches(/^[a-zA-Z0-9]*$/, "Solo se permiten números y letras")
+    .required("El criterio de busqueda es obligatorio"),
+  fecha_inicio: Yup.date().max(new Date(), "La fecha no puede ser mayor que la fecha actual"),
+  fecha_fin: Yup.date().max(new Date(), "La fecha no puede ser mayor que la fecha actual"),
+});
+
 const useStyles = makeStyles((theme) => ({
   modal: {
     borderRadius: "5%",
@@ -86,18 +99,11 @@ function ReporteActivos() {
   const [modaleditar, setModalEditar] = useState(false);
   const [showComponent, setShowComponent] = useState(false);
   const [modaleliminar, setModalEliminar] = useState(false);
+  const [isChecked, setIsChecked] = useState(false);
+  const [isChecked2, setIsChecked2] = useState(false);
   const [empleadoseleccionado, setEmpleadoSeleccionado] = useState({
-    emp_Codigo: 0,
-    pue_Codigo: 0,
-    emp_Nombre: "",
-    emp_Apellido: "",
-    emp_Direccion: "",
-    emp_Telefono: 0,
-    emp_Dpi: "",
-    emp_Edad: 0,
-    emp_Nacimiento: 0,
-    emp_Nolicencia: "",
-    emp_Tipolicencia: "",
+    tipo_busqueda: 0,
+    tipo_reporte: 0,
   });
 
   const abrircerrarModalInsertar = () => {
@@ -146,48 +152,62 @@ function ReporteActivos() {
   };
 
   const peticionpost = async () => {
-    // Swal.showLoading();
-    // if (
-    //   empleadoseleccionado.pue_Codigo === 0 ||
-    //   empleadoseleccionado.emp_Nombre === "" ||
-    //   empleadoseleccionado.emp_Apellido === "" ||
-    //   empleadoseleccionado.emp_Direccion === "" ||
-    //   empleadoseleccionado.emp_Telefono === 0 ||
-    //   empleadoseleccionado.emp_Dpi === "" ||
-    //   empleadoseleccionado.emp_Edad === 0 ||
-    //   empleadoseleccionado.emp_Nacimiento === 0
-    // ) {
-    //   abrircerrarModalInsertar();
-    //   Swal.close();
-    //   Swal.fire({
-    //     icon: "info",
-    //     title: "",
-    //     html: "Debe de llenar <b>todos</b> los campos",
-    //   });
-    // } else {
-    //   abrircerrarModalInsertar();
-    //   await axios
-    //     .post("https://localhost:7235/api/Empleados/registroempleados", empleadoseleccionado)
-    //     .then((response) => {
-    //       setData(data.concat(response.data));
-    //       Swal.close();
-    //       Swal.fire({
-    //         icon: "success",
-    //         title: "",
-    //         text: "Empleado creado exitosamente",
-    //         timer: 2500,
-    //       });
-    //     })
-    //     .catch((error) => {
-    //       Swal.close();
-    //       Swal.fire({
-    //         icon: "error",
-    //         title: "",
-    //         text: error.response.data,
-    //         timer: 2500,
-    //       });
-    //     });
-    // }
+    if (empleadoseleccionado.tipo_busqueda === 0) {
+      Swal.fire({
+        icon: "info",
+        title: "",
+        text: "Debe seleccionar un tipo de busqueda",
+      });
+    } else if (empleadoseleccionado.tipo_reporte === 0) {
+      Swal.fire({
+        icon: "info",
+        title: "",
+        text: "Debe seleccionar un tipo de reporte",
+      });
+    } else {
+      abrircerrarModalInsertar();
+      // Swal.showLoading();
+      // if (
+      //   empleadoseleccionado.pue_Codigo === 0 ||
+      //   empleadoseleccionado.emp_Nombre === "" ||
+      //   empleadoseleccionado.emp_Apellido === "" ||
+      //   empleadoseleccionado.emp_Direccion === "" ||
+      //   empleadoseleccionado.emp_Telefono === 0 ||
+      //   empleadoseleccionado.emp_Dpi === "" ||
+      //   empleadoseleccionado.emp_Edad === 0 ||
+      //   empleadoseleccionado.emp_Nacimiento === 0
+      // ) {
+      //   abrircerrarModalInsertar();
+      //   Swal.close();
+      //   Swal.fire({
+      //     icon: "info",
+      //     title: "",
+      //     html: "Debe de llenar <b>todos</b> los campos",
+      //   });
+      // } else {
+      //   abrircerrarModalInsertar();
+      //   await axios
+      //     .post("https://localhost:7235/api/Empleados/registroempleados", empleadoseleccionado)
+      //     .then((response) => {
+      //       setData(data.concat(response.data));
+      //       Swal.close();
+      //       Swal.fire({
+      //         icon: "success",
+      //         title: "",
+      //         text: "Empleado creado exitosamente",
+      //         timer: 2500,
+      //       });
+      //     })
+      //     .catch((error) => {
+      //       Swal.close();
+      //       Swal.fire({
+      //         icon: "error",
+      //         title: "",
+      //         text: error.response.data,
+      //         timer: 2500,
+      //       });
+      //     });
+    }
   };
 
   const peticionput = async () => {
@@ -308,6 +328,19 @@ function ReporteActivos() {
     //   .catch();
   };
 
+  const validarinfo = (values, { resetForm }) => {
+    console.log("Envío de Formulario:", values);
+    resetForm();
+  };
+
+  const handleCheckboxChange = (event) => {
+    setIsChecked(event.target.checked);
+  };
+
+  const handleCheckboxChange2 = (event) => {
+    setIsChecked2(event.target.checked);
+  };
+
   useEffect(() => {
     peticionget();
     peticiongettp();
@@ -322,209 +355,222 @@ function ReporteActivos() {
 
   const bodyInsertar = (
     <div className={styles.modal}>
-      <MDTypography variant="h3"> Consultar Activos </MDTypography>
+      <h2> Consultar Activos </h2>
       <Divider sx={{ marginTop: 1 }} light={false} />
       <MDBox pb={1}>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={5}>
-            <MDBox mb={2}>
-              <MDTypography variant="h6"> Tipo de Busqueda: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={7}>
-            <MDBox mb={2}>
-              <select name="pue_Codigo" className="form-control" onChange={handleChange}>
-                <option key="0" value="0">
-                  Seleccione el Tipo de Busqueda
-                </option>
-                <option key="0" value="0">
-                  Ubicacion Fisica
-                </option>
-                <option key="0" value="0">
-                  Proveedor
-                </option>
-                <option key="0" value="0">
-                  Custodio
-                </option>
-                <option key="0" value="0">
-                  Tipo y Clase
-                </option>
-                <option key="0" value="0">
-                  Estado
-                </option>
-                <option key="0" value="0">
-                  Marca
-                </option>
-                {/* {datatp.map((element) => (
+        <Formik
+          initialValues={{
+            criterio: "",
+            fecha_inicio: "",
+            fecha_fin: "",
+          }}
+          validationSchema={valSchema}
+          onSubmit={validarinfo}
+        >
+          {({ handleSubmit }) => (
+            <form onSubmit={handleSubmit}>
+              <Grid container spacing={3} justifyContent="center">
+                <Grid item xs={12} md={4} lg={5}>
+                  <MDBox mb={2}>
+                    <MDTypography variant="h6"> Tipo de Busqueda: </MDTypography>
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} md={6} lg={7}>
+                  <MDBox mb={2}>
+                    <select name="tipo_busqueda" className="combo" onChange={handleChange}>
+                      <option key="0" value="0">
+                        Seleccione el Tipo de Busqueda
+                      </option>
+                      <option key="1" value="1">
+                        Ubicacion Fisica
+                      </option>
+                      <option key="2" value="2">
+                        Proveedor
+                      </option>
+                      <option key="3" value="3">
+                        Custodio
+                      </option>
+                      <option key="4" value="4">
+                        Tipo y Clase
+                      </option>
+                      <option key="5" value="5">
+                        Estado
+                      </option>
+                      <option key="6" value="6">
+                        Marca
+                      </option>
+                      {/* {datatp.map((element) => (
                   <option key={element.pue_Codigo} value={element.pue_Codigo}>
                     {element.pue_Nombre}
                   </option>
                 ))} */}
-              </select>
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={5}>
-            <MDBox mb={2}>
-              <MDTypography variant="h6"> Criterio de Busqueda: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={7}>
-            <MDBox mb={2}>
-              <MDInput
-                type="text"
-                label="Criterio"
-                name="emp_Nombre"
-                onChange={handleChange}
-                size="small"
-              />
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={5}>
-            <MDBox mb={2}>
-              <MDTypography variant="h6"> Buscar por fecha de compra: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={7}>
-            <MDBox mb={2}>
-              <select name="pue_Codigo" className="form-control" onChange={handleChange}>
-                <option key="0" value="0">
-                  Seleccione una opcion
-                </option>
-                <option key="0" value="0">
-                  Si
-                </option>
-                <option key="0" value="0">
-                  No
-                </option>
-                {/* {datatp.map((element) => (
-                  <option key={element.pue_Codigo} value={element.pue_Codigo}>
-                    {element.pue_Nombre}
-                  </option>
-                ))} */}
-              </select>
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={5}>
-            <MDBox mb={2}>
-              <MDTypography variant="h6"> Fecha Inicio: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={7}>
-            <MDBox mb={2}>
-              <MDInput
-                name="emp_Nacimiento"
-                type="date"
-                size="small"
-                onChange={handleChange}
-                // value={empleadoseleccionado && empleadoseleccionado.emp_Nacimiento}
-              />
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={5}>
-            <MDBox mb={2}>
-              <MDTypography variant="h6"> Fecha Fin: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={7}>
-            <MDBox mb={2}>
-              <MDInput
-                name="emp_Nacimiento"
-                type="date"
-                size="small"
-                onChange={handleChange}
-                // value={empleadoseleccionado && empleadoseleccionado.emp_Nacimiento}
-              />
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={6} lg={5}>
-            <MDBox mb={2}>
-              <MDTypography variant="h6"> Tipo de Reporte: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={7}>
-            <MDBox mb={2}>
-              <select name="pue_Codigo" className="form-control" onChange={handleChange}>
-                <option key="0" value="0">
-                  Seleccione el Tipo de Reporte
-                </option>
-                <option key="0" value="0">
-                  Contable
-                </option>
-                <option key="0" value="0">
-                  Custodio
-                </option>
-                <option key="0" value="0">
-                  De Mantenimiento
-                </option>
-                <option key="0" value="0">
-                  Financiero
-                </option>
-                <option key="0" value="0">
-                  General
-                </option>
-                {/* {datatp.map((element) => (
-                  <option key={element.pue_Codigo} value={element.pue_Codigo}>
-                    {element.pue_Nombre}
-                  </option>
-                ))} */}
-              </select>
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={5}>
-            <MDBox mb={4}>
-              <MDTypography variant="h6"> Bajas mes actual: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={7}>
-            <MDBox mb={1}>
-              <select name="pue_Codigo" className="form-control" onChange={handleChange}>
-                <option key="0" value="0">
-                  Seleccione una opcion
-                </option>
-                <option key="0" value="0">
-                  Si
-                </option>
-                <option key="0" value="0">
-                  No
-                </option>
-                {/* {datatp.map((element) => (
-                  <option key={element.pue_Codigo} value={element.pue_Codigo}>
-                    {element.pue_Nombre}
-                  </option>
-                ))} */}
-              </select>
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center" mb={1}>
-          <Grid item xs={12} md={4} lg={3}>
-            <MDButton variant="gradient" color="info" fullWidth onClick={() => peticionpost()}>
-              Consultar
-            </MDButton>
-          </Grid>
-          <Grid item xs={12} md={4} lg={3}>
-            <MDButton
-              variant="gradient"
-              color="light"
-              fullWidth
-              onClick={() => abrircerrarModalInsertar()}
-            >
-              Cancelar
-            </MDButton>
-          </Grid>
-        </Grid>
+                    </select>
+                  </MDBox>
+                </Grid>
+              </Grid>
+              <Grid container spacing={3} justifyContent="center">
+                <Grid item xs={12} md={4} lg={5}>
+                  <MDBox mb={2}>
+                    <MDTypography variant="h6"> Criterio de Busqueda: </MDTypography>
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} md={6} lg={7}>
+                  <MDBox mb={2}>
+                    <Field
+                      as={OutlinedInput}
+                      name="criterio"
+                      id="criterio"
+                      type="text"
+                      className="campos"
+                      placeholder="Criterio de Busqueda"
+                    />
+                    <br />
+                    <ErrorMessage name="criterio" component="small" className="error" />
+                  </MDBox>
+                </Grid>
+              </Grid>
+              <Grid container spacing={3} justifyContent="center">
+                <Grid item xs={12} md={4} lg={7}>
+                  <MDBox mb={2}>
+                    <MDTypography variant="h6"> ¿Buscar por fecha de compra? </MDTypography>
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} md={6} lg={5}>
+                  <MDBox mb={2}>
+                    <Field
+                      type="checkbox"
+                      name="fecha_compra"
+                      id="fecha_compra"
+                      className="cuadrito"
+                      checked={isChecked}
+                      onChange={handleCheckboxChange}
+                    />
+                  </MDBox>
+                </Grid>
+              </Grid>
+              <Grid container spacing={3} justifyContent="center">
+                <Grid item xs={12} md={4} lg={5}>
+                  <MDBox mb={2}>
+                    <MDTypography variant="h6"> Fecha Inicio: </MDTypography>
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} md={6} lg={7}>
+                  <MDBox mb={2}>
+                    <Field
+                      as={OutlinedInput}
+                      name="fecha_inicio"
+                      id="fecha_inicio"
+                      type="date"
+                      className="campos"
+                      disabled={!isChecked}
+                    />
+                    <br />
+                    <ErrorMessage name="fecha_inicio" component="small" className="error" />
+                  </MDBox>
+                </Grid>
+              </Grid>
+              <Grid container spacing={3} justifyContent="center">
+                <Grid item xs={12} md={4} lg={5}>
+                  <MDBox mb={2}>
+                    <MDTypography variant="h6"> Fecha Fin: </MDTypography>
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} md={6} lg={7}>
+                  <MDBox mb={2}>
+                    <Field
+                      as={OutlinedInput}
+                      name="fecha_fin"
+                      id="fecha_fin"
+                      type="date"
+                      className="campos"
+                      disabled={!isChecked}
+                    />
+                    <br />
+                    <ErrorMessage name="fecha_fin" component="small" className="error" />
+                  </MDBox>
+                </Grid>
+              </Grid>
+              <Grid container spacing={3} justifyContent="center">
+                <Grid item xs={12} md={6} lg={5}>
+                  <MDBox mb={2}>
+                    <MDTypography variant="h6"> Tipo de Reporte: </MDTypography>
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} md={6} lg={7}>
+                  <MDBox mb={2}>
+                    <select name="tipo_reporte" className="combo" onChange={handleChange}>
+                      <option key="0" value="0">
+                        Seleccione el Tipo de Reporte
+                      </option>
+                      <option key="1" value="1">
+                        Contable
+                      </option>
+                      <option key="2" value="2">
+                        Custodio
+                      </option>
+                      <option key="3" value="3">
+                        De Mantenimiento
+                      </option>
+                      <option key="4" value="4">
+                        Financiero
+                      </option>
+                      <option key="5" value="5">
+                        General
+                      </option>
+                      {/* {datatp.map((element) => (
+                        <option key={element.pue_Codigo} value={element.pue_Codigo}>
+                          {element.pue_Nombre}
+                        </option>
+                      ))} */}
+                    </select>
+                  </MDBox>
+                </Grid>
+              </Grid>
+              <Grid container spacing={3} justifyContent="center">
+                <Grid item xs={12} md={4} lg={7}>
+                  <MDBox mb={4}>
+                    <MDTypography variant="h6"> ¿Incluir bajas del mes actual? </MDTypography>
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} md={6} lg={5}>
+                  <MDBox mb={1}>
+                    <Field
+                      type="checkbox"
+                      name="fecha_compra"
+                      id="fecha_compra"
+                      className="cuadrito"
+                      checked={isChecked2}
+                      onChange={handleCheckboxChange2}
+                    />
+                  </MDBox>
+                </Grid>
+              </Grid>
+              <Grid container spacing={3} justifyContent="center" mb={1}>
+                <Grid item xs={12} md={4} lg={3}>
+                  <MDButton
+                    className="aceptar"
+                    endIcon={<SaveIcon />}
+                    type="submit"
+                    fullWidth
+                    onClick={() => peticionpost()}
+                  >
+                    Consultar
+                  </MDButton>
+                </Grid>
+                <Grid item xs={12} md={4} lg={3}>
+                  <MDButton
+                    variant="gradient"
+                    color="light"
+                    fullWidth
+                    onClick={() => abrircerrarModalInsertar()}
+                  >
+                    Cancelar
+                  </MDButton>
+                </Grid>
+              </Grid>
+            </form>
+          )}
+        </Formik>
       </MDBox>
     </div>
   );
@@ -669,7 +715,6 @@ function ReporteActivos() {
                 size="small"
                 onChange={handleChange}
                 disabled
-                // value={empleadoseleccionado && empleadoseleccionado.emp_Nacimiento}
               />
             </MDBox>
           </Grid>
@@ -779,8 +824,8 @@ function ReporteActivos() {
               <div className="App">
                 <br />
                 <MDButton
-                  variant="gradient"
-                  color="success"
+                  className="insertar"
+                  endIcon={<AddCircleIcon />}
                   onClick={() => abrircerrarModalInsertar()}
                 >
                   Consultar Activos
