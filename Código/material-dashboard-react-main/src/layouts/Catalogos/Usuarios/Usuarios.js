@@ -40,7 +40,7 @@ const columns = [
 const valSchema = Yup.object().shape({
   cc_usuario: Yup.string()
     .matches(/^[a-zA-Z0-9]+$/, "Solo se permiten números y letras")
-    .required("El nombre de usuario es requerido")
+    .required("El usuario es requerido")
     .max(50, "El nombre no puede tener más de 50 caracteres"),
   cc_nombre: Yup.string()
     .matches(/^[a-zA-Z0-9]+$/, "Solo se permiten números y letras")
@@ -311,7 +311,7 @@ function Usuarios() {
                       name="cc_usuario"
                       id="cc_usuario"
                       type="text"
-                      placeholder="Nombre de usuario"
+                      placeholder="Nombre usuario"
                     />
                   </MDBox>
                   <ErrorMessage name="cc_usuario" component="small" className="error" />
