@@ -17,6 +17,7 @@ import MDButton from "components/MDButton";
 import "./GarantiasVencer.css";
 import Button from "@mui/material/Button";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
+import { Formik, Field } from "formik";
 import SaveIcon from "@mui/icons-material/Save";
 import ClearIcon from "@mui/icons-material/Clear";
 
@@ -136,13 +137,7 @@ function GarantíasVencer() {
 
   const peticionpost = async () => {
     // Swal.showLoading();
-    if (empleadoseleccionado.Garantias_vencidas === 0) {
-      Swal.fire({
-        icon: "info",
-        title: "",
-        text: "seleccione Garantias vencidas",
-      });
-    } else if (empleadoseleccionado.tiempo_definido === 0) {
+    if (empleadoseleccionado.tiempo_definido === 0) {
       Swal.fire({
         icon: "info",
         title: "",
@@ -317,6 +312,11 @@ function GarantíasVencer() {
     //   .catch();
   };
 
+  const validarinfo = (values, { resetForm }) => {
+    console.log("Envío de Formulario:", values);
+    resetForm();
+  };
+
   useEffect(() => {
     peticionget();
     peticiongettp();
@@ -331,123 +331,119 @@ function GarantíasVencer() {
 
   const bodyInsertar = (
     <div className={styles.modal}>
-      <MDTypography variant="h3"> Garantías por Vencer </MDTypography>
+      <h2> Garantías por Vencer </h2>
       <Divider sx={{ marginTop: 1 }} light={false} />
       <MDBox pb={1}>
-        <Grid container spacing={3} justifyContent="center" mb={1}>
-          <Grid item xs={12} md={4} lg={7}>
-            <MDBox mb={1}>
-              <MDTypography variant="h6"> Mostrar Garantias vencidas hasta hoy: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={5}>
-            <MDBox mb={1}>
-              <select name="Garantias_vencidas" className="form-control" onChange={handleChange}>
-                <option key="0" value="0">
-                  Seleccione una Opcion
-                </option>
-                <option key="0" value="0">
-                  Si
-                </option>
-                <option key="0" value="0">
-                  No
-                </option>
-                {/* {datatp.map((element) => (
+        <Formik initialValues={{}} onSubmit={validarinfo}>
+          {({ handleSubmit }) => (
+            <form onSubmit={handleSubmit}>
+              <Grid container spacing={3} justifyContent="center" mb={1}>
+                <Grid item xs={12} md={4} lg={9}>
+                  <MDBox mb={2}>
+                    <h4> Mostrar Garantias vencidas hasta hoy: </h4>
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} md={6} lg={3}>
+                  <MDBox mb={2}>
+                    <Field
+                      type="checkbox"
+                      name="garantias_hoy"
+                      id="garantias_hoy"
+                      className="cuadrito"
+                    />
+                  </MDBox>
+                </Grid>
+              </Grid>
+              <Grid container spacing={3} justifyContent="center" mb={1}>
+                <Grid item xs={12} md={4} lg={7}>
+                  <MDBox mb={2}>
+                    <MDTypography variant="h6"> Mostrar por tiempo definido: </MDTypography>
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} md={6} lg={5}>
+                  <MDBox mb={2}>
+                    <select name="tiempo_definido" className="form-control" onChange={handleChange}>
+                      <option key="0" value="0">
+                        Seleccione una Opcion
+                      </option>
+                      <option key="0" value="0">
+                        Semana actual
+                      </option>
+                      <option key="0" value="0">
+                        Mes actual
+                      </option>
+                      <option key="0" value="0">
+                        Año actual
+                      </option>
+                      {/* {datatp.map((element) => (
                   <option key={element.pue_Codigo} value={element.pue_Codigo}>
                     {element.pue_Nombre}
                   </option>
                 ))} */}
-              </select>
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center" mb={1}>
-          <Grid item xs={12} md={4} lg={7}>
-            <MDBox mb={1}>
-              <MDTypography variant="h6"> Mostrar por tiempo definido: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={5}>
-            <MDBox mb={1}>
-              <select name="tiempo_definido" className="form-control" onChange={handleChange}>
-                <option key="0" value="0">
-                  Seleccione una Opcion
-                </option>
-                <option key="0" value="0">
-                  Semana actual
-                </option>
-                <option key="0" value="0">
-                  Mes actual
-                </option>
-                <option key="0" value="0">
-                  Año actual
-                </option>
-                {/* {datatp.map((element) => (
+                    </select>
+                  </MDBox>
+                </Grid>
+              </Grid>
+              <Grid container spacing={3} justifyContent="center" mb={2}>
+                <Grid item xs={12} md={4} lg={3}>
+                  <MDBox mb={2}>
+                    <MDTypography variant="h6"> Ordenar por: </MDTypography>
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} md={6} lg={9}>
+                  <MDBox mb={2}>
+                    <select name="orden" className="form-control" onChange={handleChange}>
+                      <option key="0" value="0">
+                        Seleccione Orden
+                      </option>
+                      <option key="0" value="0">
+                        Fecha
+                      </option>
+                      <option key="0" value="0">
+                        Activo
+                      </option>
+                      <option key="0" value="0">
+                        Ubicacion Fisica
+                      </option>
+                      <option key="0" value="0">
+                        Proveedor
+                      </option>
+                      {/* {datatp.map((element) => (
                   <option key={element.pue_Codigo} value={element.pue_Codigo}>
                     {element.pue_Nombre}
                   </option>
                 ))} */}
-              </select>
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center" mb={2}>
-          <Grid item xs={12} md={4} lg={5}>
-            <MDBox mb={1}>
-              <MDTypography variant="h6"> Ordenar por: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={7}>
-            <MDBox mb={1}>
-              <select name="orden" className="form-control" onChange={handleChange}>
-                <option key="0" value="0">
-                  Seleccione Orden
-                </option>
-                <option key="0" value="0">
-                  Fecha
-                </option>
-                <option key="0" value="0">
-                  Activo
-                </option>
-                <option key="0" value="0">
-                  Ubicacion Fisica
-                </option>
-                <option key="0" value="0">
-                  Proveedor
-                </option>
-                {/* {datatp.map((element) => (
-                  <option key={element.pue_Codigo} value={element.pue_Codigo}>
-                    {element.pue_Nombre}
-                  </option>
-                ))} */}
-              </select>
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center" mb={1}>
-          <Grid item xs={12} md={4} lg={3}>
-            <Button
-              className="aceptar"
-              endIcon={<SaveIcon />}
-              type="submit"
-              fullWidth
-              onClick={() => peticionpost()}
-            >
-              Consultar
-            </Button>
-          </Grid>
-          <Grid item xs={12} md={4} lg={3}>
-            <Button
-              className="cancelar"
-              endIcon={<ClearIcon />}
-              type="submit"
-              fullWidth
-              onClick={() => abrircerrarModalInsertar()}
-            >
-              Cancelar
-            </Button>
-          </Grid>
-        </Grid>
+                    </select>
+                  </MDBox>
+                </Grid>
+              </Grid>
+              <Grid container spacing={3} justifyContent="center" mb={1}>
+                <Grid item xs={12} md={4} lg={3}>
+                  <Button
+                    className="aceptar"
+                    endIcon={<SaveIcon />}
+                    type="submit"
+                    fullWidth
+                    onClick={() => peticionpost()}
+                  >
+                    Consultar
+                  </Button>
+                </Grid>
+                <Grid item xs={12} md={4} lg={3}>
+                  <Button
+                    className="cancelar"
+                    endIcon={<ClearIcon />}
+                    type="submit"
+                    fullWidth
+                    onClick={() => abrircerrarModalInsertar()}
+                  >
+                    Cancelar
+                  </Button>
+                </Grid>
+              </Grid>
+            </form>
+          )}
+        </Formik>
       </MDBox>
     </div>
   );
@@ -592,7 +588,6 @@ function GarantíasVencer() {
                 size="small"
                 onChange={handleChange}
                 disabled
-                // value={empleadoseleccionado && empleadoseleccionado.emp_Nacimiento}
               />
             </MDBox>
           </Grid>
@@ -752,6 +747,7 @@ function GarantíasVencer() {
           </Grid>
         </Grid>
       </MDBox>
+      <footer>Vista creada por Werner Chajon(SM)</footer>
     </DashboardLayout>
   );
 }

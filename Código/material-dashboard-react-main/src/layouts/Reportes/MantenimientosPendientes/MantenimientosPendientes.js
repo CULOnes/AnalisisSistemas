@@ -338,7 +338,7 @@ function MantenimientosPendientes() {
 
   const bodyInsertar = (
     <div className={styles.modal}>
-      <MDTypography variant="h3"> Mantenimientos Pendientes</MDTypography>
+      <h2> Mantenimientos Pendientes</h2>
       <Divider sx={{ marginTop: 1 }} light={false} />
       <MDBox pb={1}>
         <Formik
@@ -351,12 +351,12 @@ function MantenimientosPendientes() {
           {({ handleSubmit }) => (
             <form onSubmit={handleSubmit}>
               <Grid container spacing={3} justifyContent="center" mb={1}>
-                <Grid item xs={12} md={4} lg={6}>
+                <Grid item xs={12} md={4} lg={7}>
                   <MDBox mb={1}>
-                    <MDTypography variant="h6"> Mostrar por tiempo definido: </MDTypography>
+                    <h4> Mostrar por tiempo definido: </h4>
                   </MDBox>
                 </Grid>
-                <Grid item xs={12} md={6} lg={6}>
+                <Grid item xs={12} md={6} lg={5}>
                   <MDBox mb={1}>
                     <select name="tiempo_definido" className="form-control" onChange={handleChange}>
                       <option key="0" value="0">
@@ -381,12 +381,12 @@ function MantenimientosPendientes() {
                 </Grid>
               </Grid>
               <Grid container spacing={3} justifyContent="center" mb={1}>
-                <Grid item xs={12} md={4} lg={3}>
+                <Grid item xs={12} md={4} lg={4}>
                   <MDBox mb={1}>
-                    <MDTypography variant="h6"> Ordenar Por: </MDTypography>
+                    <h4> Ordenar Por: </h4>
                   </MDBox>
                 </Grid>
-                <Grid item xs={12} md={6} lg={9}>
+                <Grid item xs={12} md={6} lg={8}>
                   <MDBox mb={1}>
                     <select name="Ordenar_por" className="form-control" onChange={handleChange}>
                       <option key="0" value="0">
@@ -421,7 +421,13 @@ function MantenimientosPendientes() {
                 </Grid>
                 <Grid item xs={12} md={6} lg={9}>
                   <MDBox mb={1}>
-                    <Field as={OutlinedInput} name="depa_fecha" id="depa_fecha" type="date" />
+                    <Field
+                      as={OutlinedInput}
+                      name="depa_fecha"
+                      id="depa_fecha"
+                      type="date"
+                      className="campos"
+                    />
                   </MDBox>
                   <ErrorMessage name="depa_fecha" component="small" className="error" />
                 </Grid>
@@ -711,14 +717,14 @@ function MantenimientosPendientes() {
                   endIcon={<AddCircleIcon />}
                   onClick={() => abrircerrarModalInsertar()}
                 >
-                  Consultar mantenimiento pendientes
+                  Consultar mantenimientos pendientes
                 </Button>
                 <br />
                 <br />
                 <MaterialTable
                   columns={columns}
                   data={data}
-                  title="Mantenimiento de Pendientes"
+                  title="Mantenimientos Pendientes"
                   // actions={[
                   //   {
                   //     icon: "edit",
@@ -757,6 +763,7 @@ function MantenimientosPendientes() {
           </Grid>
         </Grid>
       </MDBox>
+      <footer>Vista creada por Werner Chajon(SM)</footer>
     </DashboardLayout>
   );
 }

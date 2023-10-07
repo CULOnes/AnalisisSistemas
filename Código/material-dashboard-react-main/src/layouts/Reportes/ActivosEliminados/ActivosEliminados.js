@@ -327,7 +327,7 @@ function ActivosEliminados() {
 
   const bodyInsertar = (
     <div className={styles.modal}>
-      <MDTypography variant="h3"> Activos Eliminados</MDTypography>
+      <h2> Activos Eliminados</h2>
       <Divider sx={{ marginTop: 1 }} light={false} />
       <MDBox pb={1}>
         <Formik
@@ -341,33 +341,45 @@ function ActivosEliminados() {
           {({ handleSubmit }) => (
             <form onSubmit={handleSubmit}>
               <Grid container spacing={3} justifyContent="center" mb={1}>
-                <Grid item xs={12} md={4} lg={3}>
-                  <MDBox mb={1}>
-                    <MDTypography variant="h6"> Fecha Inicio: </MDTypography>
+                <Grid item xs={12} md={4} lg={4}>
+                  <MDBox mb={2}>
+                    <h4> Fecha Inicio: </h4>
                   </MDBox>
                 </Grid>
-                <Grid item xs={12} md={6} lg={9}>
-                  <MDBox mb={1}>
-                    <Field as={OutlinedInput} name="dep_fechai" id="dep_fechai" type="date" />
+                <Grid item xs={12} md={6} lg={8}>
+                  <MDBox mb={2}>
+                    <Field
+                      as={OutlinedInput}
+                      name="dep_fechai"
+                      id="dep_fechai"
+                      type="date"
+                      className="campos"
+                    />
                   </MDBox>
                   <ErrorMessage name="dep_fechai" component="small" className="error" />
                 </Grid>
               </Grid>
               <Grid container spacing={3} justifyContent="center" mb={2}>
                 <Grid item xs={12} md={4} lg={3}>
-                  <MDBox mb={1}>
-                    <MDTypography variant="h6"> Fecha Fin: </MDTypography>
+                  <MDBox mb={2}>
+                    <h4> Fecha Fin: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={9}>
-                  <MDBox mb={1}>
-                    <Field as={OutlinedInput} name="dep_fechaf" id="dep_fechaf" type="date" />
+                  <MDBox mb={2}>
+                    <Field
+                      as={OutlinedInput}
+                      name="dep_fechaf"
+                      id="dep_fechaf"
+                      type="date"
+                      className="campos"
+                    />
                   </MDBox>
                   <ErrorMessage name="dep_fechaf" component="small" className="error" />
                 </Grid>
               </Grid>
               <Grid container spacing={3} justifyContent="center">
-                <Grid item xs={12} md={4} lg={3}>
+                <Grid item xs={12} md={4} lg={3} mb={2}>
                   <Button
                     className="aceptar"
                     endIcon={<SaveIcon />}
@@ -697,6 +709,7 @@ function ActivosEliminados() {
           </Grid>
         </Grid>
       </MDBox>
+      <footer>Vista creada por Werner Chajon(SM)</footer>
     </DashboardLayout>
   );
 }

@@ -339,7 +339,7 @@ function DepreciacionAnual() {
 
   const bodyInsertar = (
     <div className={styles.modal}>
-      <MDTypography variant="h3"> Depreciación Anual </MDTypography>
+      <h2> Depreciación Anual </h2>
       <Divider sx={{ marginTop: 1 }} light={false} />
       <MDBox pb={1}>
         <Formik
@@ -352,13 +352,13 @@ function DepreciacionAnual() {
           {({ handleSubmit }) => (
             <form onSubmit={handleSubmit}>
               <Grid container spacing={3} justifyContent="center">
-                <Grid item xs={12} md={4} lg={3}>
-                  <MDBox mb={1}>
-                    <MDTypography variant="h6"> Tipo de Bien: </MDTypography>
+                <Grid item xs={12} md={4} lg={4}>
+                  <MDBox mb={2}>
+                    <h4> Tipo de Bien: </h4>
                   </MDBox>
                 </Grid>
-                <Grid item xs={12} md={6} lg={9}>
-                  <MDBox mb={1}>
+                <Grid item xs={12} md={6} lg={8}>
+                  <MDBox mb={2}>
                     <select name="tipobien" className="form-control" onChange={handleChange}>
                       <option key="0" value="0">
                         Seleccione Tipo de Bien
@@ -382,13 +382,13 @@ function DepreciacionAnual() {
                 </Grid>
               </Grid>
               <Grid container spacing={3} justifyContent="center">
-                <Grid item xs={12} md={4} lg={3}>
-                  <MDBox mb={1}>
-                    <MDTypography variant="h6"> Clase: </MDTypography>
+                <Grid item xs={12} md={4} lg={2}>
+                  <MDBox mb={2}>
+                    <h4> Clase: </h4>
                   </MDBox>
                 </Grid>
-                <Grid item xs={12} md={6} lg={9}>
-                  <MDBox mb={1}>
+                <Grid item xs={12} md={6} lg={10}>
+                  <MDBox mb={2}>
                     <select name="clase" className="form-control" onChange={handleChange}>
                       <option key="0" value="0">
                         Seleccione clase
@@ -413,12 +413,12 @@ function DepreciacionAnual() {
               </Grid>
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={4} lg={3}>
-                  <MDBox mb={1}>
-                    <MDTypography variant="h6"> Subclase: </MDTypography>
+                  <MDBox mb={2}>
+                    <h4> Subclase: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={9}>
-                  <MDBox mb={1}>
+                  <MDBox mb={2}>
                     <select name="subclase" className="form-control" onChange={handleChange}>
                       <option key="0" value="0">
                         Seleccione Subclase
@@ -444,12 +444,18 @@ function DepreciacionAnual() {
               <Grid container spacing={3} justifyContent="center" mb={2}>
                 <Grid item xs={12} md={4} lg={3}>
                   <MDBox mb={1}>
-                    <MDTypography variant="h6"> Hasta año: </MDTypography>
+                    <h4> Hasta año: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={9}>
                   <MDBox mb={1}>
-                    <Field as={OutlinedInput} name="depa_fecha" id="depa_fecha" type="date" />
+                    <Field
+                      as={OutlinedInput}
+                      name="depa_fecha"
+                      id="depa_fecha"
+                      type="date"
+                      className="campos"
+                    />
                   </MDBox>
                   <ErrorMessage name="depa_fecha" component="small" className="error" />
                 </Grid>
@@ -785,6 +791,7 @@ function DepreciacionAnual() {
           </Grid>
         </Grid>
       </MDBox>
+      <footer>Vista creada por Werner Chajon(SM)</footer>
     </DashboardLayout>
   );
 }

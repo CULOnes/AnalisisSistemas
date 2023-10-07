@@ -44,7 +44,7 @@ const columns = [
 const valSchema = Yup.object().shape({
   dep_nombre: Yup.string()
     .matches(/^[a-zA-Z0-9]+$/, "Solo se permiten números y letras")
-    .required("colocar el nombre del activo")
+    .required("El nombre del activo es requerido")
     .max(50, "El nombre no puede tener más de 50 caracteres"),
   dep_fecha: Yup.date()
     .required("La Fecha es requerida")
@@ -311,14 +311,20 @@ function Depreciacion() {
           {({ handleSubmit }) => (
             <form onSubmit={handleSubmit}>
               <Grid container spacing={3} justifyContent="center">
-                <Grid item xs={12} md={4} lg={5}>
+                <Grid item xs={12} md={4} lg={6}>
                   <MDBox>
-                    <MDTypography variant="h6"> Calcular depreciacion hasta Año-Mes: </MDTypography>
+                    <h4> Calcular depreciacion hasta Año-Mes: </h4>
                   </MDBox>
                 </Grid>
-                <Grid item xs={12} md={6} lg={7}>
+                <Grid item xs={12} md={6} lg={6}>
                   <MDBox>
-                    <Field as={OutlinedInput} name="dep_fecha" id="dep_fecha" type="date" />
+                    <Field
+                      as={OutlinedInput}
+                      name="dep_fecha"
+                      id="dep_fecha"
+                      type="date"
+                      className="campos"
+                    />
                   </MDBox>
                   <ErrorMessage name="dep_fecha" component="small" className="error" />
                 </Grid>
@@ -326,7 +332,7 @@ function Depreciacion() {
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={4} lg={5}>
                   <MDBox mt={2}>
-                    <MDTypography variant="h6"> Nombre del Activo: </MDTypography>
+                    <h4> Nombre del Activo: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={7}>
@@ -336,7 +342,8 @@ function Depreciacion() {
                       name="dep_nombre"
                       id="dep_nombre"
                       type="text"
-                      placeholder="nombre del activo"
+                      placeholder="Nombre del activo"
+                      className="campos"
                     />
                   </MDBox>
                   <ErrorMessage name="dep_nombre" component="small" className="error" />
@@ -584,6 +591,7 @@ function Depreciacion() {
           </Grid>
         </Grid>
       </MDBox>
+      <footer>Vista creada por Werner Chajon(SM)</footer>
     </DashboardLayout>
   );
 }

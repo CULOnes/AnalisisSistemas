@@ -7,7 +7,7 @@
 
 .insertar{
     background-color: #5CB360 !important;
-    width: 30% !important;
+    width: 35% !important;
     height: 40px !important;
     border-radius: 10px !important;
     color: white !important;
@@ -38,6 +38,10 @@
     border: solid #CACACA 1px;
     outline: none;
     font-size: 16px;
+}
+
+.campos{
+    height: 40px;
 }
 
 footer{
