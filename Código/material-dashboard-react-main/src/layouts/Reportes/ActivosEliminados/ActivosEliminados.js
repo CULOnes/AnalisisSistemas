@@ -7,13 +7,20 @@ import Card from "@mui/material/Card";
 import MDBox from "components/MDBox";
 import "styles/styles.css";
 import MaterialTable from "material-table";
-import { Modal } from "@material-ui/core";
+import { Modal, OutlinedInput } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 // import Swal from "sweetalert2";
 import MDInput from "components/MDInput";
 import MDTypography from "components/MDTypography";
 import Divider from "@mui/material/Divider";
 import MDButton from "components/MDButton";
+import { Formik, ErrorMessage, Field } from "formik";
+import * as Yup from "yup";
+import "./activoseliminados.css";
+import Button from "@mui/material/Button";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
+import SaveIcon from "@mui/icons-material/Save";
+import ClearIcon from "@mui/icons-material/Clear";
 
 const columns = [
   {
@@ -80,17 +87,8 @@ function ActivosEliminados() {
   const [showComponent, setShowComponent] = useState(false);
   const [modaleliminar, setModalEliminar] = useState(false);
   const [empleadoseleccionado, setEmpleadoSeleccionado] = useState({
-    emp_Codigo: 0,
-    pue_Codigo: 0,
-    emp_Nombre: "",
-    emp_Apellido: "",
-    emp_Direccion: "",
-    emp_Telefono: 0,
-    emp_Dpi: "",
-    emp_Edad: 0,
-    emp_Nacimiento: 0,
-    emp_Nolicencia: "",
-    emp_Tipolicencia: "",
+    fechainicio: 0,
+    fechafin: 0,
   });
 
   const abrircerrarModalInsertar = () => {
@@ -138,9 +136,17 @@ function ActivosEliminados() {
     }));
   };
 
+  const valSchema = Yup.object().shape({
+    dep_fechai: Yup.date()
+      .required("La Fecha es requerida")
+      .max(new Date(), "La fecha no puede ser mayor que la fecha actual"),
+    dep_fechaf: Yup.date()
+      .required("La Fecha es requerida")
+      .max(new Date(), "La fecha no puede ser mayor que la fecha actual"),
+  });
+
   const peticionpost = async () => {
     // Swal.showLoading();
-    // if (
     //   empleadoseleccionado.pue_Codigo === 0 ||
     //   empleadoseleccionado.emp_Nombre === "" ||
     //   empleadoseleccionado.emp_Apellido === "" ||
@@ -313,52 +319,80 @@ function ActivosEliminados() {
     return null;
   }
 
+  const onSubmit = (values, { resetForm }) => {
+    // eslint-disable-next-line no-console
+    console.log("Envío de Formulario:", values);
+    resetForm();
+  };
+
   const bodyInsertar = (
     <div className={styles.modal}>
       <MDTypography variant="h3"> Activos Eliminados</MDTypography>
       <Divider sx={{ marginTop: 1 }} light={false} />
       <MDBox pb={1}>
-        <Grid container spacing={3} justifyContent="center" mb={1}>
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={1}>
-              <MDTypography variant="h6"> Fecha Inicio: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={1}>
-              <MDInput type="date" name="emp_fecha fin" onChange={handleChange} size="small" />
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center" mb={2}>
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={1}>
-              <MDTypography variant="h6"> Fecha Fin: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={1}>
-              <MDInput name="emp_Apellido" type="date" onChange={handleChange} size="small" />
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDButton variant="gradient" color="info" fullWidth onClick={() => peticionpost()}>
-              Consultar
-            </MDButton>
-          </Grid>
-          <Grid item xs={12} md={4} lg={3}>
-            <MDButton
-              variant="gradient"
-              color="light"
-              fullWidth
-              onClick={() => abrircerrarModalInsertar()}
-            >
-              Cancelar
-            </MDButton>
-          </Grid>
-        </Grid>
+        <Formik
+          initialValues={{
+            dep_fechai: "",
+            dep_fechaf: "",
+          }}
+          validationSchema={valSchema}
+          onSubmit={onSubmit}
+        >
+          {({ handleSubmit }) => (
+            <form onSubmit={handleSubmit}>
+              <Grid container spacing={3} justifyContent="center" mb={1}>
+                <Grid item xs={12} md={4} lg={3}>
+                  <MDBox mb={1}>
+                    <MDTypography variant="h6"> Fecha Inicio: </MDTypography>
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} md={6} lg={9}>
+                  <MDBox mb={1}>
+                    <Field as={OutlinedInput} name="dep_fechai" id="dep_fechai" type="date" />
+                  </MDBox>
+                  <ErrorMessage name="dep_fechai" component="small" className="error" />
+                </Grid>
+              </Grid>
+              <Grid container spacing={3} justifyContent="center" mb={2}>
+                <Grid item xs={12} md={4} lg={3}>
+                  <MDBox mb={1}>
+                    <MDTypography variant="h6"> Fecha Fin: </MDTypography>
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} md={6} lg={9}>
+                  <MDBox mb={1}>
+                    <Field as={OutlinedInput} name="dep_fechaf" id="dep_fechaf" type="date" />
+                  </MDBox>
+                  <ErrorMessage name="dep_fechaf" component="small" className="error" />
+                </Grid>
+              </Grid>
+              <Grid container spacing={3} justifyContent="center">
+                <Grid item xs={12} md={4} lg={3}>
+                  <Button
+                    className="aceptar"
+                    endIcon={<SaveIcon />}
+                    type="submit"
+                    fullWidth
+                    onClick={() => peticionpost()}
+                  >
+                    Consultar
+                  </Button>
+                </Grid>
+                <Grid item xs={12} md={4} lg={3}>
+                  <Button
+                    className="cancelar"
+                    endIcon={<ClearIcon />}
+                    type="submit"
+                    fullWidth
+                    onClick={() => abrircerrarModalInsertar()}
+                  >
+                    Cancelar
+                  </Button>
+                </Grid>
+              </Grid>
+            </form>
+          )}
+        </Formik>
       </MDBox>
     </div>
   );
@@ -612,13 +646,13 @@ function ActivosEliminados() {
             <Card>
               <div className="App">
                 <br />
-                <MDButton
-                  variant="gradient"
-                  color="success"
+                <Button
+                  className="insertar"
+                  endIcon={<AddCircleIcon />}
                   onClick={() => abrircerrarModalInsertar()}
                 >
-                  Consultar Activos Eliminados
-                </MDButton>
+                  Consultar activos eliminados
+                </Button>
                 <br />
                 <br />
                 <MaterialTable

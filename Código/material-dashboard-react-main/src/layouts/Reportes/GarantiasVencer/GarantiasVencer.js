@@ -9,11 +9,16 @@ import "styles/styles.css";
 import MaterialTable from "material-table";
 import { Modal } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-// import Swal from "sweetalert2";
+import Swal from "sweetalert2";
 import MDInput from "components/MDInput";
 import MDTypography from "components/MDTypography";
 import Divider from "@mui/material/Divider";
 import MDButton from "components/MDButton";
+import "./GarantiasVencer.css";
+import Button from "@mui/material/Button";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
+import SaveIcon from "@mui/icons-material/Save";
+import ClearIcon from "@mui/icons-material/Clear";
 
 const columns = [
   {
@@ -79,17 +84,9 @@ function GarantíasVencer() {
   const [showComponent, setShowComponent] = useState(false);
   const [modaleliminar, setModalEliminar] = useState(false);
   const [empleadoseleccionado, setEmpleadoSeleccionado] = useState({
-    emp_Codigo: 0,
-    pue_Codigo: 0,
-    emp_Nombre: "",
-    emp_Apellido: "",
-    emp_Direccion: "",
-    emp_Telefono: 0,
-    emp_Dpi: "",
-    emp_Edad: 0,
-    emp_Nacimiento: 0,
-    emp_Nolicencia: "",
-    emp_Tipolicencia: "",
+    Garantias_vencidas: 0,
+    tiempo_definido: 0,
+    orden: 0,
   });
 
   const abrircerrarModalInsertar = () => {
@@ -138,6 +135,26 @@ function GarantíasVencer() {
   };
 
   const peticionpost = async () => {
+    // Swal.showLoading();
+    if (empleadoseleccionado.Garantias_vencidas === 0) {
+      Swal.fire({
+        icon: "info",
+        title: "",
+        text: "seleccione Garantias vencidas",
+      });
+    } else if (empleadoseleccionado.tiempo_definido === 0) {
+      Swal.fire({
+        icon: "info",
+        title: "",
+        text: "Debe seleccionar un tiempo definido",
+      });
+    } else if (empleadoseleccionado.orden === 0) {
+      Swal.fire({
+        icon: "info",
+        title: "",
+        text: "Debe seleccionar un Tipo de orden",
+      });
+    }
     // Swal.showLoading();
     // if (
     //   empleadoseleccionado.pue_Codigo === 0 ||
@@ -325,7 +342,7 @@ function GarantíasVencer() {
           </Grid>
           <Grid item xs={12} md={6} lg={5}>
             <MDBox mb={1}>
-              <select name="pue_Codigo" className="form-control" onChange={handleChange}>
+              <select name="Garantias_vencidas" className="form-control" onChange={handleChange}>
                 <option key="0" value="0">
                   Seleccione una Opcion
                 </option>
@@ -352,7 +369,7 @@ function GarantíasVencer() {
           </Grid>
           <Grid item xs={12} md={6} lg={5}>
             <MDBox mb={1}>
-              <select name="pue_Codigo" className="form-control" onChange={handleChange}>
+              <select name="tiempo_definido" className="form-control" onChange={handleChange}>
                 <option key="0" value="0">
                   Seleccione una Opcion
                 </option>
@@ -382,7 +399,7 @@ function GarantíasVencer() {
           </Grid>
           <Grid item xs={12} md={6} lg={7}>
             <MDBox mb={1}>
-              <select name="pue_Codigo" className="form-control" onChange={handleChange}>
+              <select name="orden" className="form-control" onChange={handleChange}>
                 <option key="0" value="0">
                   Seleccione Orden
                 </option>
@@ -409,19 +426,26 @@ function GarantíasVencer() {
         </Grid>
         <Grid container spacing={3} justifyContent="center" mb={1}>
           <Grid item xs={12} md={4} lg={3}>
-            <MDButton variant="gradient" color="info" fullWidth onClick={() => peticionpost()}>
+            <Button
+              className="aceptar"
+              endIcon={<SaveIcon />}
+              type="submit"
+              fullWidth
+              onClick={() => peticionpost()}
+            >
               Consultar
-            </MDButton>
+            </Button>
           </Grid>
           <Grid item xs={12} md={4} lg={3}>
-            <MDButton
-              variant="gradient"
-              color="light"
+            <Button
+              className="cancelar"
+              endIcon={<ClearIcon />}
+              type="submit"
               fullWidth
               onClick={() => abrircerrarModalInsertar()}
             >
               Cancelar
-            </MDButton>
+            </Button>
           </Grid>
         </Grid>
       </MDBox>
@@ -677,13 +701,13 @@ function GarantíasVencer() {
             <Card>
               <div className="App">
                 <br />
-                <MDButton
-                  variant="gradient"
-                  color="success"
+                <Button
+                  className="insertar"
+                  endIcon={<AddCircleIcon />}
                   onClick={() => abrircerrarModalInsertar()}
                 >
-                  Consultar Garantias Por Vencer
-                </MDButton>
+                  Consultar garantias por vencer
+                </Button>
                 <br />
                 <br />
                 <MaterialTable
