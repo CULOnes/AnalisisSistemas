@@ -54,6 +54,7 @@ import Custodios from "layouts/Catalogos/Custodios/Custodios";
 import Proveedores from "layouts/Catalogos/Proveedores/Proveedores";
 import CentrosCosto from "layouts/Catalogos/CentrosCosto/CentrosCosto";
 import ConsultaActivos from "layouts/Activos/ConsultaActivos/ConsultaActivos";
+import CompraActivos from "layouts/Activos/CompraActivos/CompraActivos";
 import UbicacionesFisicas from "layouts/Catalogos/UbicacionesFisicas/UbicacionesFisicas";
 import TransferenciaActivos from "layouts/Activos/TransferenciaActivos/TransferenciaActivos";
 import CambioEstados from "layouts/Activos/CambioEstados/CambioEstados";
@@ -219,7 +220,7 @@ const routes = [
     key: "compraactivos",
     icon: <Icon fontSize="small">format_textdirection_r_to_l</Icon>,
     route: "/activos/compraactivos",
-    component: <ConsultaActivos />,
+    component: <CompraActivos />,
   },
   {
     type: "title",

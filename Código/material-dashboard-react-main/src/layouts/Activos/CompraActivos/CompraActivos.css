@@ -40,17 +40,14 @@
     font-size: 16px;
 }
 
-.form-control-lista{
-    width: auto;
-    height: 35px;
-    border-radius: 10px;
-    border: solid #CACACA 1px;
-    outline: none;
-    font-size: 16px;
-    padding-left: 5px;
-}
-
-
 footer{
     font-size: 15px;
+}
+
+#compra_vidaUtilAct{
+    width: 45px !important;
+}
+
+#compra_montoAsegurado{
+    width: 100px !important;
 }
