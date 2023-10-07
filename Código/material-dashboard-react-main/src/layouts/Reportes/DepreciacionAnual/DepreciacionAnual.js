@@ -7,13 +7,20 @@ import Card from "@mui/material/Card";
 import MDBox from "components/MDBox";
 import "styles/styles.css";
 import MaterialTable from "material-table";
-import { Modal } from "@material-ui/core";
+import { Modal, OutlinedInput } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-// import Swal from "sweetalert2";
+import Swal from "sweetalert2";
 import MDInput from "components/MDInput";
 import MDTypography from "components/MDTypography";
 import Divider from "@mui/material/Divider";
 import MDButton from "components/MDButton";
+import { Formik, ErrorMessage, Field } from "formik";
+import * as Yup from "yup";
+import "./DepreciacionAnual.css";
+import Button from "@mui/material/Button";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
+import SaveIcon from "@mui/icons-material/Save";
+import ClearIcon from "@mui/icons-material/Clear";
 
 const columns = [
   {
@@ -46,6 +53,12 @@ const columns = [
   },
 ];
 
+const valSchema = Yup.object().shape({
+  depa_fecha: Yup.date()
+    .required("La Fecha es requerida")
+    .max(new Date(), "La fecha no puede ser mayor que la fecha actual"),
+});
+
 const useStyles = makeStyles((theme) => ({
   modal: {
     borderRadius: "5%",
@@ -75,17 +88,9 @@ function DepreciacionAnual() {
   const [showComponent, setShowComponent] = useState(false);
   const [modaleliminar, setModalEliminar] = useState(false);
   const [empleadoseleccionado, setEmpleadoSeleccionado] = useState({
-    emp_Codigo: 0,
-    pue_Codigo: 0,
-    emp_Nombre: "",
-    emp_Apellido: "",
-    emp_Direccion: "",
-    emp_Telefono: 0,
-    emp_Dpi: "",
-    emp_Edad: 0,
-    emp_Nacimiento: 0,
-    emp_Nolicencia: "",
-    emp_Tipolicencia: "",
+    tipobien: 0,
+    clase: 0,
+    subclase: 0,
   });
 
   const abrircerrarModalInsertar = () => {
@@ -133,9 +138,33 @@ function DepreciacionAnual() {
     }));
   };
 
+  const onSubmit = (values, { resetForm }) => {
+    // eslint-disable-next-line no-console
+    console.log("Envío de Formulario:", values);
+    resetForm();
+  };
+
   const peticionpost = async () => {
     // Swal.showLoading();
-    // if (
+    if (empleadoseleccionado.tipobien === 0) {
+      Swal.fire({
+        icon: "info",
+        title: "",
+        text: "Debe seleccionar un Tipo de bien",
+      });
+    } else if (empleadoseleccionado.clase === 0) {
+      Swal.fire({
+        icon: "info",
+        title: "",
+        text: "Debe seleccionar un tipo de Clase",
+      });
+    } else if (empleadoseleccionado.subclase === 0) {
+      Swal.fire({
+        icon: "info",
+        title: "",
+        text: "Debe seleccionar un Tipo de Subclase",
+      });
+    }
     //   empleadoseleccionado.pue_Codigo === 0 ||
     //   empleadoseleccionado.emp_Nombre === "" ||
     //   empleadoseleccionado.emp_Apellido === "" ||
@@ -313,131 +342,145 @@ function DepreciacionAnual() {
       <MDTypography variant="h3"> Depreciación Anual </MDTypography>
       <Divider sx={{ marginTop: 1 }} light={false} />
       <MDBox pb={1}>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={1}>
-              <MDTypography variant="h6"> Tipo de Bien: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={1}>
-              <select name="pue_Codigo" className="form-control" onChange={handleChange}>
-                <option key="0" value="0">
-                  Seleccione Tipo de Bien
-                </option>
-                <option key="0" value="0">
-                  Bien 1
-                </option>
-                <option key="0" value="0">
-                  Bien 2
-                </option>
-                <option key="0" value="0">
-                  Bien 3
-                </option>
-                {/* {datatp.map((element) => (
+        <Formik
+          initialValues={{
+            depa_fecha: "",
+          }}
+          validationSchema={valSchema}
+          onSubmit={onSubmit}
+        >
+          {({ handleSubmit }) => (
+            <form onSubmit={handleSubmit}>
+              <Grid container spacing={3} justifyContent="center">
+                <Grid item xs={12} md={4} lg={3}>
+                  <MDBox mb={1}>
+                    <MDTypography variant="h6"> Tipo de Bien: </MDTypography>
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} md={6} lg={9}>
+                  <MDBox mb={1}>
+                    <select name="tipobien" className="form-control" onChange={handleChange}>
+                      <option key="0" value="0">
+                        Seleccione Tipo de Bien
+                      </option>
+                      <option key="1" value="1">
+                        Bien 1
+                      </option>
+                      <option key="2" value="2">
+                        Bien 2
+                      </option>
+                      <option key="3" value="3">
+                        Bien 3
+                      </option>
+                      {/* {datatp.map((element) => (
                   <option key={element.pue_Codigo} value={element.pue_Codigo}>
                     {element.pue_Nombre}
                   </option>
                 ))} */}
-              </select>
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={1}>
-              <MDTypography variant="h6"> Clase: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={1}>
-              <select name="pue_Codigo" className="form-control" onChange={handleChange}>
-                <option key="0" value="0">
-                  Seleccione clase
-                </option>
-                <option key="0" value="0">
-                  Clase 1
-                </option>
-                <option key="0" value="0">
-                  Clase 2
-                </option>
-                <option key="0" value="0">
-                  Clase 3
-                </option>
-                {/* {datatp.map((element) => (
+                    </select>
+                  </MDBox>
+                </Grid>
+              </Grid>
+              <Grid container spacing={3} justifyContent="center">
+                <Grid item xs={12} md={4} lg={3}>
+                  <MDBox mb={1}>
+                    <MDTypography variant="h6"> Clase: </MDTypography>
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} md={6} lg={9}>
+                  <MDBox mb={1}>
+                    <select name="clase" className="form-control" onChange={handleChange}>
+                      <option key="0" value="0">
+                        Seleccione clase
+                      </option>
+                      <option key="1" value="1">
+                        Clase 1
+                      </option>
+                      <option key="2" value="2">
+                        Clase 2
+                      </option>
+                      <option key="3" value="3">
+                        Clase 3
+                      </option>
+                      {/* {datatp.map((element) => (
                   <option key={element.pue_Codigo} value={element.pue_Codigo}>
                     {element.pue_Nombre}
                   </option>
                 ))} */}
-              </select>
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={1}>
-              <MDTypography variant="h6"> Subclase: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={1}>
-              <select name="pue_Codigo" className="form-control" onChange={handleChange}>
-                <option key="0" value="0">
-                  Seleccione Subclase
-                </option>
-                <option key="0" value="0">
-                  Subclase 1
-                </option>
-                <option key="0" value="0">
-                  Subclase 2
-                </option>
-                <option key="0" value="0">
-                  Subclase 3
-                </option>
-                {/* {datatp.map((element) => (
+                    </select>
+                  </MDBox>
+                </Grid>
+              </Grid>
+              <Grid container spacing={3} justifyContent="center">
+                <Grid item xs={12} md={4} lg={3}>
+                  <MDBox mb={1}>
+                    <MDTypography variant="h6"> Subclase: </MDTypography>
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} md={6} lg={9}>
+                  <MDBox mb={1}>
+                    <select name="subclase" className="form-control" onChange={handleChange}>
+                      <option key="0" value="0">
+                        Seleccione Subclase
+                      </option>
+                      <option key="1" value="1">
+                        Subclase 1
+                      </option>
+                      <option key="2" value="2">
+                        Subclase 2
+                      </option>
+                      <option key="3" value="3">
+                        Subclase 3
+                      </option>
+                      {/* {datatp.map((element) => (
                   <option key={element.pue_Codigo} value={element.pue_Codigo}>
                     {element.pue_Nombre}
                   </option>
                 ))} */}
-              </select>
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center" mb={2}>
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={1}>
-              <MDTypography variant="h6"> Hasta año: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={1}>
-              <MDInput
-                name="emp_Nacimiento"
-                type="date"
-                size="small"
-                onChange={handleChange}
-                // value={empleadoseleccionado && empleadoseleccionado.emp_Nacimiento}
-              />
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDButton variant="gradient" color="info" fullWidth onClick={() => peticionpost()}>
-              Consultar
-            </MDButton>
-          </Grid>
-          <Grid item xs={12} md={4} lg={3}>
-            <MDButton
-              variant="gradient"
-              color="light"
-              fullWidth
-              onClick={() => abrircerrarModalInsertar()}
-            >
-              Cancelar
-            </MDButton>
-          </Grid>
-        </Grid>
+                    </select>
+                  </MDBox>
+                </Grid>
+              </Grid>
+              <Grid container spacing={3} justifyContent="center" mb={2}>
+                <Grid item xs={12} md={4} lg={3}>
+                  <MDBox mb={1}>
+                    <MDTypography variant="h6"> Hasta año: </MDTypography>
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} md={6} lg={9}>
+                  <MDBox mb={1}>
+                    <Field as={OutlinedInput} name="depa_fecha" id="depa_fecha" type="date" />
+                  </MDBox>
+                  <ErrorMessage name="depa_fecha" component="small" className="error" />
+                </Grid>
+              </Grid>
+              <Grid container spacing={3} justifyContent="center">
+                <Grid item xs={12} md={4} lg={3}>
+                  <Button
+                    className="aceptar"
+                    endIcon={<SaveIcon />}
+                    type="submit"
+                    fullWidth
+                    onClick={() => peticionpost()}
+                  >
+                    Consultar
+                  </Button>
+                </Grid>
+                <Grid item xs={12} md={4} lg={3}>
+                  <Button
+                    className="cancelar"
+                    endIcon={<ClearIcon />}
+                    type="submit"
+                    fullWidth
+                    onClick={() => abrircerrarModalInsertar()}
+                  >
+                    Cancelar
+                  </Button>
+                </Grid>
+              </Grid>
+            </form>
+          )}
+        </Formik>
       </MDBox>
     </div>
   );
@@ -691,13 +734,13 @@ function DepreciacionAnual() {
             <Card>
               <div className="App">
                 <br />
-                <MDButton
-                  variant="gradient"
-                  color="success"
+                <Button
+                  className="insertar"
+                  endIcon={<AddCircleIcon />}
                   onClick={() => abrircerrarModalInsertar()}
                 >
-                  Consultar Depreciacion Anual
-                </MDButton>
+                  Consultar depreciacion anual
+                </Button>
                 <br />
                 <br />
                 <MaterialTable
