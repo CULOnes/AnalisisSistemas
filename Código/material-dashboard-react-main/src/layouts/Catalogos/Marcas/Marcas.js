@@ -7,13 +7,21 @@ import Card from "@mui/material/Card";
 import MDBox from "components/MDBox";
 import "styles/styles.css";
 import MaterialTable from "material-table";
-import { Modal } from "@material-ui/core";
+import { Modal, OutlinedInput } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 // import Swal from "sweetalert2";
 import MDInput from "components/MDInput";
 import MDTypography from "components/MDTypography";
 import Divider from "@mui/material/Divider";
 import MDButton from "components/MDButton";
+import { Formik, ErrorMessage, Field } from "formik";
+import * as Yup from "yup";
+import "./Marcas.css";
+import Button from "@mui/material/Button";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
+import SaveIcon from "@mui/icons-material/Save";
+import ClearIcon from "@mui/icons-material/Clear";
+import TextField from "@mui/material/TextField";
 
 const columns = [
   {
@@ -47,6 +55,16 @@ const columns = [
   //   field: "cli_Direccion",
   // },
 ];
+
+const valSchema = Yup.object().shape({
+  cc_nombre: Yup.string()
+    .matches(/^[a-zA-Z0-9]+$/, "Solo se permiten números y letras")
+    .required("El nombre de la marca es requerido")
+    .max(50, "El nombre no puede tener más de 50 caracteres"),
+  cc_descripcion: Yup.string()
+    .required("La descripción es requerida")
+    .max(250, "La descripción no puede tener más de 250 caracteres"),
+});
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -128,6 +146,12 @@ function Marcas() {
       ...prevState,
       [name]: value,
     }));
+  };
+
+  const onSubmit = (values, { resetForm }) => {
+    // eslint-disable-next-line no-console
+    console.log("Envío de Formulario:", values);
+    resetForm();
   };
 
   const peticionpost = async () => {
@@ -289,10 +313,10 @@ function Marcas() {
 
   const bodyInsertar = (
     <div className={styles.modal}>
-      <MDTypography variant="h3"> Agregar Nueva Marca </MDTypography>
+      <h2> Agregar Nueva Marca </h2>
       <Divider sx={{ marginTop: 1 }} light={false} />
       <MDBox pt={2} pb={1}>
-        <Grid container spacing={3} justifyContent="center">
+        {/* <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} md={4} lg={4}>
             <MDBox mb={2}>
               <MDTypography variant="h6"> Nombre </MDTypography>
@@ -326,7 +350,7 @@ function Marcas() {
               />
             </MDBox>
           </Grid>
-        </Grid>
+        </Grid> */}
         {/* <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} md={4} lg={3}>
             <MDBox mb={2}>
@@ -392,30 +416,102 @@ function Marcas() {
             </MDBox>
           </Grid>
         </Grid> */}
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={2}>
-              <MDTypography variant="h6"> </MDTypography>
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDButton variant="gradient" color="info" fullWidth onClick={() => peticionpost()}>
+        <Formik
+          initialValues={{
+            cc_nombre: "",
+            cc_descripcion: "",
+          }}
+          validationSchema={valSchema}
+          onSubmit={onSubmit}
+        >
+          {({ handleSubmit }) => (
+            <form onSubmit={handleSubmit}>
+              <Grid container spacing={3} justifyContent="center">
+                <Grid item xs={12} md={4} lg={4}>
+                  <MDBox>
+                    <MDTypography variant="h6"> Nombre Marca: </MDTypography>
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} md={6} lg={8}>
+                  <MDBox>
+                    <Field
+                      as={OutlinedInput}
+                      name="cc_nombre"
+                      id="cc_nombre"
+                      type="text"
+                      placeholder="Nombre Marca"
+                    />
+                  </MDBox>
+                  <ErrorMessage name="cc_nombre" component="small" className="error" />
+                </Grid>
+              </Grid>
+              <Grid container spacing={3} justifyContent="center">
+                <Grid item xs={12} md={4} lg={4}>
+                  <MDBox mt={4} mb={2}>
+                    <MDTypography variant="h6"> Descripción: </MDTypography>
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} md={6} lg={8}>
+                  <MDBox mt={2}>
+                    <Field
+                      as={TextField}
+                      name="cc_descripcion"
+                      id="cc_descripcion outlined-multiline-static"
+                      type="text"
+                      multiline
+                      fullWidth
+                      rows={2}
+                      placeholder="Descripcion"
+                    />
+                  </MDBox>
+                  <ErrorMessage name="cc_descripcion" component="small" className="error" />
+                </Grid>
+              </Grid>
+              <Grid container spacing={3} justifyContent="center">
+                <Grid item xs={12} md={4} lg={3}>
+                  <MDBox mb={2}>
+                    <MDTypography variant="h6"> </MDTypography>
+                  </MDBox>
+                </Grid>
+              </Grid>
+              <Grid container spacing={3} justifyContent="center" mt={1}>
+                <Grid item xs={12} md={4} lg={3}>
+                  <Button
+                    className="aceptar"
+                    endIcon={<SaveIcon />}
+                    type="submit"
+                    fullWidth
+                    onClick={() => peticionpost()}
+                  >
+                    Insertar
+                  </Button>
+                  {/* <MDButton variant="gradient" color="info" fullWidth onClick={() => peticionpost()}>
               Insertar
-            </MDButton>
-          </Grid>
-          <Grid item xs={12} md={4} lg={3}>
-            <MDButton
+            </MDButton> */}
+                </Grid>
+                <Grid item xs={12} md={4} lg={3}>
+                  <Button
+                    className="cancelar"
+                    endIcon={<ClearIcon />}
+                    type="submit"
+                    fullWidth
+                    onClick={() => abrircerrarModalInsertar()}
+                  >
+                    Cancelar
+                  </Button>
+                  {/* <MDButton
               variant="gradient"
               color="light"
               fullWidth
               onClick={() => abrircerrarModalInsertar()}
             >
               Cancelar
-            </MDButton>
-          </Grid>
-        </Grid>
+            </MDButton> */}
+                </Grid>
+              </Grid>
+            </form>
+          )}
+        </Formik>
       </MDBox>
     </div>
   );
@@ -580,13 +676,13 @@ function Marcas() {
             <Card>
               <div className="App">
                 <br />
-                <MDButton
-                  variant="gradient"
-                  color="success"
+                <Button
+                  className="insertar"
+                  endIcon={<AddCircleIcon />}
                   onClick={() => abrircerrarModalInsertar()}
                 >
-                  Insertar Marcas
-                </MDButton>
+                  Insertar Marca
+                </Button>
                 <br />
                 <br />
                 <MaterialTable
@@ -631,6 +727,7 @@ function Marcas() {
           </Grid>
         </Grid>
       </MDBox>
+      <footer>Vista creada por Wesley Morales(DBA)</footer>
     </DashboardLayout>
   );
 }

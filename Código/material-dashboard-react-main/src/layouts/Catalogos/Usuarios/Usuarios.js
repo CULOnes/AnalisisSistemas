@@ -7,13 +7,20 @@ import Card from "@mui/material/Card";
 import MDBox from "components/MDBox";
 import "styles/styles.css";
 import MaterialTable from "material-table";
-import { Modal } from "@material-ui/core";
+import { Modal, OutlinedInput } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 // import Swal from "sweetalert2";
 import MDInput from "components/MDInput";
 import MDTypography from "components/MDTypography";
 import Divider from "@mui/material/Divider";
 import MDButton from "components/MDButton";
+import { Formik, ErrorMessage, Field } from "formik";
+import * as Yup from "yup";
+import "./Usuarios.css";
+import Button from "@mui/material/Button";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
+import SaveIcon from "@mui/icons-material/Save";
+import ClearIcon from "@mui/icons-material/Clear";
 
 const columns = [
   {
@@ -28,11 +35,28 @@ const columns = [
     title: "Nombre",
     field: "usu_Nombre",
   },
-  {
-    title: "Clave",
-    field: "usu_Clave",
-  },
 ];
+
+const valSchema = Yup.object().shape({
+  cc_usuario: Yup.string()
+    .matches(/^[a-zA-Z0-9]+$/, "Solo se permiten números y letras")
+    .required("El usuario es requerido")
+    .max(50, "El nombre no puede tener más de 50 caracteres"),
+  cc_nombre: Yup.string()
+    .matches(/^[a-zA-Z0-9]+$/, "Solo se permiten números y letras")
+    .required("El nombre del usuario es requerido")
+    .max(50, "El nombre no puede tener más de 50 caracteres"),
+  cc_apellido: Yup.string()
+    .matches(/^[a-zA-Z0-9]+$/, "Solo se permiten números y letras")
+    .required("El apellido del usuario es requerido")
+    .max(50, "El nombre no puede tener más de 50 caracteres"),
+  cc_clave: Yup.string()
+    .required("La contraseña es requerida")
+    .max(50, "La contraseña no puede tener más de 50 caracteres"),
+  confirmarClave: Yup.string()
+    .required("Por favor, confirma tu contraseña")
+    .oneOf([Yup.ref("cc_clave")], "Las contraseñas no coinciden"),
+});
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -97,6 +121,12 @@ function Usuarios() {
       ...prevState,
       [name]: value,
     }));
+  };
+
+  const onSubmit = (values, { resetForm }) => {
+    // eslint-disable-next-line no-console
+    console.log("Envío de Formulario:", values);
+    resetForm();
   };
 
   const peticionpost = async () => {
@@ -252,96 +282,144 @@ function Usuarios() {
 
   const bodyInsertar = (
     <div className={styles.modal}>
-      <MDTypography variant="h3"> Agregar Nuevo Usuario </MDTypography>
+      <h2> Agregar Nuevo Usuario </h2>
       <Divider sx={{ marginTop: 1 }} light={false} />
-      <MDBox pt={2} pb={3}>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={2}>
-              <MDTypography variant="h6"> Usuario: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={2}>
-              <MDInput
-                type="text"
-                label="Usuario"
-                name="usu_NombreUsuario"
-                onChange={handleChange}
-              />
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={2}>
-              <MDTypography variant="h6"> Nombre: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={2}>
-              <MDInput type="text" label="Nombre" name="usu_Nombre" onChange={handleChange} />
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={2}>
-              <MDTypography variant="h6"> Apellido: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={2}>
-              <MDInput label="Apellido" name="usu_Apellido" type="email" onChange={handleChange} />
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={2}>
-              <MDTypography variant="h6"> Clave: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={2}>
-              <MDInput label="Clave" name="usu_Clave" type="password" onChange={handleChange} />
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={2}>
-              <MDTypography variant="h6"> Confirmar Clave: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={2}>
-              <MDInput
-                label="Confirmar Clave"
-                name="usu_Confirmar"
-                type="password"
-                onChange={handleChange}
-              />
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDButton variant="gradient" color="info" fullWidth onClick={() => peticionpost()}>
-              Insertar
-            </MDButton>
-          </Grid>
-          <Grid item xs={12} md={4} lg={3}>
-            <MDButton
-              variant="gradient"
-              color="light"
-              fullWidth
-              onClick={() => abrircerrarModalInsertar()}
-            >
-              Cancelar
-            </MDButton>
-          </Grid>
-        </Grid>
+      <MDBox pt={2} pb={2}>
+        <Formik
+          initialValues={{
+            cc_usuario: "",
+            cc_nombre: "",
+            cc_apellido: "",
+            cc_clave: "",
+            confirmarClave: "",
+          }}
+          validationSchema={valSchema}
+          onSubmit={onSubmit}
+        >
+          {({ handleSubmit }) => (
+            <form onSubmit={handleSubmit}>
+              <Grid container spacing={3} justifyContent="center">
+                <Grid item xs={12} md={4} lg={3}>
+                  <MDBox mb={2}>
+                    <MDTypography variant="h6"> Usuario: </MDTypography>
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} md={6} lg={9}>
+                  <MDBox>
+                    <Field
+                      as={OutlinedInput}
+                      name="cc_usuario"
+                      id="cc_usuario"
+                      type="text"
+                      placeholder="Nombre usuario"
+                    />
+                  </MDBox>
+                  <ErrorMessage name="cc_usuario" component="small" className="error" />
+                </Grid>
+              </Grid>
+              <Grid container spacing={3} justifyContent="center">
+                <Grid item xs={12} md={4} lg={3}>
+                  <MDBox mt={2}>
+                    <MDTypography variant="h6"> Nombre: </MDTypography>
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} md={6} lg={9}>
+                  <MDBox mt={2}>
+                    <Field
+                      as={OutlinedInput}
+                      name="cc_nombre"
+                      id="cc_nombre"
+                      type="text"
+                      placeholder="Nombre del usuario"
+                    />
+                  </MDBox>
+                  <ErrorMessage name="cc_nombre" component="small" className="error" />
+                </Grid>
+              </Grid>
+              <Grid container spacing={3} justifyContent="center">
+                <Grid item xs={12} md={4} lg={3}>
+                  <MDBox mt={2}>
+                    <MDTypography variant="h6"> Apellido: </MDTypography>
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} md={6} lg={9}>
+                  <MDBox mt={2}>
+                    <Field
+                      as={OutlinedInput}
+                      name="cc_apellido"
+                      id="cc_apellido"
+                      type="text"
+                      placeholder="Apellido del usuario"
+                    />
+                  </MDBox>
+                  <ErrorMessage name="cc_apellido" component="small" className="error" />
+                </Grid>
+              </Grid>
+              <Grid container spacing={3} justifyContent="center">
+                <Grid item xs={12} md={4} lg={3}>
+                  <MDBox mt={2}>
+                    <MDTypography variant="h6"> Contraseña: </MDTypography>
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} md={6} lg={9}>
+                  <MDBox mt={2}>
+                    <Field
+                      as={OutlinedInput}
+                      name="cc_clave"
+                      id="cc_clave"
+                      type="password"
+                      placeholder="Contraseña"
+                    />
+                  </MDBox>
+                  <ErrorMessage name="cc_clave" component="small" className="error" />
+                </Grid>
+              </Grid>
+              <Grid container spacing={3} justifyContent="center">
+                <Grid item xs={12} md={4} lg={3}>
+                  <MDBox mt={2}>
+                    <MDTypography variant="h6"> Confirmar Contraseña: </MDTypography>
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} md={6} lg={9}>
+                  <MDBox mt={2}>
+                    <Field
+                      as={OutlinedInput}
+                      name="confirmarClave"
+                      id="confirmarClave"
+                      type="password"
+                      placeholder="Confirmar contraseña"
+                    />
+                  </MDBox>
+                  <ErrorMessage name="confirmarClave" component="small" className="error" />
+                </Grid>
+              </Grid>
+              <Grid container spacing={3} justifyContent="center" mt={2}>
+                <Grid item xs={12} md={4} lg={3}>
+                  <Button
+                    className="aceptar"
+                    endIcon={<SaveIcon />}
+                    type="submit"
+                    fullWidth
+                    onClick={() => peticionpost()}
+                  >
+                    Insertar
+                  </Button>
+                </Grid>
+                <Grid item xs={12} md={4} lg={3}>
+                  <Button
+                    className="cancelar"
+                    endIcon={<ClearIcon />}
+                    type="submit"
+                    fullWidth
+                    onClick={() => abrircerrarModalInsertar()}
+                  >
+                    Cancelar
+                  </Button>
+                </Grid>
+              </Grid>
+            </form>
+          )}
+        </Formik>
       </MDBox>
     </div>
   );
@@ -468,13 +546,13 @@ function Usuarios() {
             <Card>
               <div className="App">
                 <br />
-                <MDButton
-                  variant="gradient"
-                  color="success"
+                <Button
+                  className="insertar"
+                  endIcon={<AddCircleIcon />}
                   onClick={() => abrircerrarModalInsertar()}
                 >
                   Insertar Usuario
-                </MDButton>
+                </Button>
                 <br />
                 <br />
                 <MaterialTable
@@ -502,7 +580,6 @@ function Usuarios() {
                     },
                   }}
                 />
-
                 <Modal open={modalinsertar} onClose={abrircerrarModalInsertar}>
                   {bodyInsertar}
                 </Modal>
@@ -519,6 +596,7 @@ function Usuarios() {
           </Grid>
         </Grid>
       </MDBox>
+      <footer>Vista creada por Wesley Morales(DBA)</footer>
     </DashboardLayout>
   );
 }

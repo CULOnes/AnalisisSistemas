@@ -7,13 +7,21 @@ import Card from "@mui/material/Card";
 import MDBox from "components/MDBox";
 import "styles/styles.css";
 import MaterialTable from "material-table";
-import { Modal } from "@material-ui/core";
+import { Modal, OutlinedInput } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-// import Swal from "sweetalert2";
+import Swal from "sweetalert2";
 import MDInput from "components/MDInput";
 import MDTypography from "components/MDTypography";
 import Divider from "@mui/material/Divider";
 import MDButton from "components/MDButton";
+import { Formik, ErrorMessage, Field } from "formik";
+import * as Yup from "yup";
+import "./Cuentas.css";
+import Button from "@mui/material/Button";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
+import SaveIcon from "@mui/icons-material/Save";
+import ClearIcon from "@mui/icons-material/Clear";
+import TextField from "@mui/material/TextField";
 
 const columns = [
   {
@@ -33,6 +41,17 @@ const columns = [
     field: "emp_Apellido",
   },
 ];
+
+const valSchema = Yup.object().shape({
+  cc_nombre: Yup.string()
+    .matches(/^[a-zA-Z0-9]+$/, "Solo se permiten números y letras")
+    .required("El nombre de la Cuenta es requerido")
+    .max(50, "El nombre no puede tener más de 50 caracteres"),
+  cc_descripcion: Yup.string()
+    .required("La descripción es requerida")
+    .max(250, "La descripción no puede tener más de 250 caracteres"),
+  Cue_TipoC: Yup.string().required("Este campo es obligatorio"),
+});
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -62,18 +81,10 @@ function Cuentas() {
   const [modaleditar, setModalEditar] = useState(false);
   const [showComponent, setShowComponent] = useState(false);
   const [modaleliminar, setModalEliminar] = useState(false);
-  const [empleadoseleccionado, setEmpleadoSeleccionado] = useState({
-    emp_Codigo: 0,
-    pue_Codigo: 0,
-    emp_Nombre: "",
-    emp_Apellido: "",
-    emp_Direccion: "",
-    emp_Telefono: 0,
-    emp_Dpi: "",
-    emp_Edad: 0,
-    emp_Nacimiento: 0,
-    emp_Nolicencia: "",
-    emp_Tipolicencia: "",
+  const [CuentaSeleccionada, setCuentaSeleccionada] = useState({
+    Cue_Nombre: "",
+    Cue_Descripcion: "",
+    Cue_TipoC: 0,
   });
 
   const abrircerrarModalInsertar = () => {
@@ -105,7 +116,7 @@ function Cuentas() {
   };
 
   const seleccionarEmpleado = (empleado, caso) => {
-    setEmpleadoSeleccionado(empleado);
+    setCuentaSeleccionada(empleado);
     if (caso === "Editar") {
       abrircerrarModalEditar();
     } else {
@@ -115,55 +126,79 @@ function Cuentas() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setEmpleadoSeleccionado((prevState) => ({
+    setCuentaSeleccionada((prevState) => ({
       ...prevState,
       [name]: value,
     }));
   };
 
+  const onSubmit = (values, { resetForm }) => {
+    // eslint-disable-next-line no-console
+    if (CuentaSeleccionada.Cue_TipoC === 0) {
+      Swal.fire({
+        icon: "info",
+        title: "",
+        text: "Debe especificar el tipo de cuenta",
+      });
+    } else {
+      // abrircerrarModalEditar();
+    }
+    console.log("Envío de Formulario:", values);
+    resetForm();
+  };
+
   const peticionpost = async () => {
-    // Swal.showLoading();
-    // if (
-    //   empleadoseleccionado.pue_Codigo === 0 ||
-    //   empleadoseleccionado.emp_Nombre === "" ||
-    //   empleadoseleccionado.emp_Apellido === "" ||
-    //   empleadoseleccionado.emp_Direccion === "" ||
-    //   empleadoseleccionado.emp_Telefono === 0 ||
-    //   empleadoseleccionado.emp_Dpi === "" ||
-    //   empleadoseleccionado.emp_Edad === 0 ||
-    //   empleadoseleccionado.emp_Nacimiento === 0
-    // ) {
-    //   abrircerrarModalInsertar();
-    //   Swal.close();
-    //   Swal.fire({
-    //     icon: "info",
-    //     title: "",
-    //     html: "Debe de llenar <b>todos</b> los campos",
-    //   });
-    // } else {
-    //   abrircerrarModalInsertar();
-    //   await axios
-    //     .post("https://localhost:7235/api/Empleados/registroempleados", empleadoseleccionado)
-    //     .then((response) => {
-    //       setData(data.concat(response.data));
-    //       Swal.close();
-    //       Swal.fire({
-    //         icon: "success",
-    //         title: "",
-    //         text: "Empleado creado exitosamente",
-    //         timer: 2500,
-    //       });
-    //     })
-    //     .catch((error) => {
-    //       Swal.close();
-    //       Swal.fire({
-    //         icon: "error",
-    //         title: "",
-    //         text: error.response.data,
-    //         timer: 2500,
-    //       });
-    //     });
-    // }
+    if (CuentaSeleccionada.Cue_TipoC === 0) {
+      Swal.fire({
+        icon: "info",
+        title: "",
+        text: "Debe especificar el tipo de cuenta",
+      });
+    } else {
+      // abrircerrarModalEditar();
+      // Swal.showLoading();
+      // if (
+      //   empleadoseleccionado.pue_Codigo === 0 ||
+      //   empleadoseleccionado.emp_Nombre === "" ||
+      //   empleadoseleccionado.emp_Apellido === "" ||
+      //   empleadoseleccionado.emp_Direccion === "" ||
+      //   empleadoseleccionado.emp_Telefono === 0 ||
+      //   empleadoseleccionado.emp_Dpi === "" ||
+      //   empleadoseleccionado.emp_Edad === 0 ||
+      //   empleadoseleccionado.emp_Nacimiento === 0
+      // ) {
+      //   abrircerrarModalInsertar();
+      //   Swal.close();
+      //   Swal.fire({
+      //     icon: "info",
+      //     title: "",
+      //     html: "Debe de llenar <b>todos</b> los campos",
+      //   });
+      // } else {
+      //   abrircerrarModalInsertar();
+      //   await axios
+      //     .post("https://localhost:7235/api/Empleados/registroempleados", empleadoseleccionado)
+      //     .then((response) => {
+      //       setData(data.concat(response.data));
+      //       Swal.close();
+      //       Swal.fire({
+      //         icon: "success",
+      //         title: "",
+      //         text: "Empleado creado exitosamente",
+      //         timer: 2500,
+      //       });
+      //     })
+      //     .catch((error) => {
+      //       Swal.close();
+      //       Swal.fire({
+      //         icon: "error",
+      //         title: "",
+      //         text: error.response.data,
+      //         timer: 2500,
+      //       });
+      //     });
+      // }
+    }
   };
 
   const peticionput = async () => {
@@ -298,73 +333,95 @@ function Cuentas() {
 
   const bodyInsertar = (
     <div className={styles.modal}>
-      <MDTypography variant="h3"> Agregar Nueva Cuenta </MDTypography>
+      <h2> Agregar Nueva Cuenta </h2>
       <Divider sx={{ marginTop: 1 }} light={false} />
       <MDBox pb={1}>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={4}>
-            <MDBox mb={1} pb={4}>
-              <MDTypography variant="h6"> Nombre: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={8}>
-            <MDBox mb={1}>
-              <MDInput
-                type="text"
-                label="Nombre"
-                name="emp_Nombre"
-                onChange={handleChange}
-                size="small"
-              />
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={4}>
-            <MDBox mb={1} pb={4}>
-              <MDTypography variant="h6"> Descripción: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={8}>
-            <MDBox mb={1}>
-              <MDInput
-                label="Descripcion"
-                name="emp_Apellido"
-                type="text"
-                onChange={handleChange}
-                size="small"
-              />
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={6} lg={4}>
-            <MDBox mb={2} pb={4}>
-              <MDTypography variant="h6"> Tipo de cuenta: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={8}>
-            <MDBox mb={2}>
-              <select name="pue_Codigo" className="form-control" onChange={handleChange}>
-                <option key="0" value="0">
-                  Seleccione una opcion
-                </option>
-                <option key="0" value="0">
-                  activo de control
-                </option>
-                <option key="0" value="0">
-                  activo fijo
-                </option>
-                {/* {datatp.map((element) => (
+        <Formik
+          initialValues={{
+            cc_nombre: "",
+            cc_descripcion: "",
+            Cue_TipoC: "",
+          }}
+          validationSchema={valSchema}
+          onSubmit={onSubmit}
+        >
+          {({ handleSubmit }) => (
+            <form onSubmit={handleSubmit}>
+              <Grid container spacing={3} justifyContent="center">
+                <Grid item xs={12} md={4} lg={4}>
+                  <MDBox mb={1} pb={4} mt={2}>
+                    <MDTypography variant="h6"> Nombre: </MDTypography>
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} md={6} lg={8}>
+                  <MDBox mt={2}>
+                    <Field
+                      as={OutlinedInput}
+                      name="cc_nombre"
+                      id="cc_nombre"
+                      type="text"
+                      placeholder="Nombre Cuenta"
+                    />
+                  </MDBox>
+                  <ErrorMessage name="cc_nombre" component="small" className="error" />
+                </Grid>
+              </Grid>
+              <Grid container spacing={3} justifyContent="center">
+                <Grid item xs={12} md={6} lg={4}>
+                  <MDBox pb={4} mt={2}>
+                    <MDTypography variant="h6"> Tipo de cuenta: </MDTypography>
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} md={6} lg={8}>
+                  <MDBox mt={2}>
+                    <select
+                      id="Cue_TipoC"
+                      name="Cue_TipoC"
+                      className="form-control"
+                      onBlur={Formik.handleBlur}
+                      onChange={handleChange}
+                    >
+                      <option key="0" value="0">
+                        Seleccione una opcion
+                      </option>
+                      <option key="0" value="0">
+                        activo de control
+                      </option>
+                      <option key="0" value="0">
+                        activo fijo
+                      </option>
+                      {/* {datatp.map((element) => (
                   <option key={element.pue_Codigo} value={element.pue_Codigo}>
                     {element.pue_Nombre}
                   </option>
                 ))} */}
-              </select>
-            </MDBox>
-          </Grid>
-        </Grid>
-        {/* <Grid container spacing={3} justifyContent="center">
+                    </select>
+                  </MDBox>
+                </Grid>
+              </Grid>
+              <Grid container spacing={3} justifyContent="center">
+                <Grid item xs={12} md={4} lg={4}>
+                  <MDBox mt={1} pb={4}>
+                    <MDTypography variant="h6"> Descripción: </MDTypography>
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} md={6} lg={8}>
+                  <MDBox mt={1}>
+                    <Field
+                      as={TextField}
+                      name="cc_descripcion"
+                      id="cc_descripcion outlined-multiline-static"
+                      type="text"
+                      multiline
+                      fullWidth
+                      rows={2}
+                      placeholder="Descripcion"
+                    />
+                  </MDBox>
+                  <ErrorMessage name="cc_descripcion" component="small" className="error" />
+                </Grid>
+              </Grid>
+              {/* <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} md={4} lg={3}>
             <MDBox mb={1}>
               <MDTypography variant="h6"> Meses de vida util: </MDTypography>
@@ -400,23 +457,33 @@ function Cuentas() {
             </MDBox>
           </Grid>
         </Grid> */}
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDButton variant="gradient" color="info" fullWidth onClick={() => peticionpost()}>
-              Insertar
-            </MDButton>
-          </Grid>
-          <Grid item xs={12} md={4} lg={3}>
-            <MDButton
-              variant="gradient"
-              color="light"
-              fullWidth
-              onClick={() => abrircerrarModalInsertar()}
-            >
-              Cancelar
-            </MDButton>
-          </Grid>
-        </Grid>
+              <Grid container spacing={3} justifyContent="center" mt={2} mb={3}>
+                <Grid item xs={12} md={4} lg={3}>
+                  <Button
+                    className="aceptar"
+                    endIcon={<SaveIcon />}
+                    type="submit"
+                    fullWidth
+                    onClick={() => peticionpost()}
+                  >
+                    Insertar
+                  </Button>
+                </Grid>
+                <Grid item xs={12} md={4} lg={3}>
+                  <Button
+                    className="cancelar"
+                    endIcon={<ClearIcon />}
+                    type="submit"
+                    fullWidth
+                    onClick={() => abrircerrarModalInsertar()}
+                  >
+                    Cancelar
+                  </Button>
+                </Grid>
+              </Grid>
+            </form>
+          )}
+        </Formik>
       </MDBox>
     </div>
   );
@@ -438,7 +505,7 @@ function Cuentas() {
                 name="pue_Codigo"
                 className="form-control"
                 onChange={handleChange}
-                value={empleadoseleccionado && empleadoseleccionado.pue_Codigo}
+                value={CuentaSeleccionada && CuentaSeleccionada.pue_Codigo}
               >
                 <option key="0" value="0">
                   Seleccione el Puesto
@@ -466,7 +533,7 @@ function Cuentas() {
                 name="emp_Nombre"
                 onChange={handleChange}
                 size="small"
-                value={empleadoseleccionado && empleadoseleccionado.emp_Nombre}
+                value={CuentaSeleccionada && CuentaSeleccionada.emp_Nombre}
               />
             </MDBox>
           </Grid>
@@ -485,7 +552,7 @@ function Cuentas() {
                 type="text"
                 onChange={handleChange}
                 size="small"
-                value={empleadoseleccionado && empleadoseleccionado.emp_Apellido}
+                value={CuentaSeleccionada && CuentaSeleccionada.emp_Apellido}
               />
             </MDBox>
           </Grid>
@@ -504,7 +571,7 @@ function Cuentas() {
                 type="number"
                 size="small"
                 onChange={handleChange}
-                value={empleadoseleccionado && empleadoseleccionado.emp_Telefono}
+                value={CuentaSeleccionada && CuentaSeleccionada.emp_Telefono}
               />
             </MDBox>
           </Grid>
@@ -523,7 +590,7 @@ function Cuentas() {
                 type="text"
                 size="small"
                 onChange={handleChange}
-                value={empleadoseleccionado && empleadoseleccionado.emp_Dpi}
+                value={CuentaSeleccionada && CuentaSeleccionada.emp_Dpi}
               />
             </MDBox>
           </Grid>
@@ -542,7 +609,7 @@ function Cuentas() {
                 type="number"
                 size="small"
                 onChange={handleChange}
-                value={empleadoseleccionado && empleadoseleccionado.emp_Edad}
+                value={CuentaSeleccionada && CuentaSeleccionada.emp_Edad}
               />
             </MDBox>
           </Grid>
@@ -561,7 +628,7 @@ function Cuentas() {
                 size="small"
                 onChange={handleChange}
                 disabled
-                // value={empleadoseleccionado && empleadoseleccionado.emp_Nacimiento}
+                value={CuentaSeleccionada && CuentaSeleccionada.emp_Nacimiento}
               />
             </MDBox>
           </Grid>
@@ -580,7 +647,7 @@ function Cuentas() {
                 type="text"
                 size="small"
                 onChange={handleChange}
-                value={empleadoseleccionado && empleadoseleccionado.emp_Nolicencia}
+                value={CuentaSeleccionada && CuentaSeleccionada.emp_Nolicencia}
               />
             </MDBox>
           </Grid>
@@ -599,7 +666,7 @@ function Cuentas() {
                 type="text"
                 size="small"
                 onChange={handleChange}
-                value={empleadoseleccionado && empleadoseleccionado.emp_Tipolicencia}
+                value={CuentaSeleccionada && CuentaSeleccionada.emp_Tipolicencia}
               />
             </MDBox>
           </Grid>
@@ -620,7 +687,7 @@ function Cuentas() {
                 multiline
                 rows={2}
                 onChange={handleChange}
-                value={empleadoseleccionado && empleadoseleccionado.emp_Direccion}
+                value={CuentaSeleccionada && CuentaSeleccionada.emp_Direccion}
               />
             </MDBox>
           </Grid>
@@ -650,7 +717,7 @@ function Cuentas() {
     <div className={styles.modal}>
       <p>
         Deseas Eliminar la cuenta
-        <b> {empleadoseleccionado && empleadoseleccionado.emp_Nombre}</b>?
+        <b> {CuentaSeleccionada && CuentaSeleccionada.emp_Nombre}</b>?
       </p>
       <div align="right">
         <MDButton color="secondary" onClick={() => peticiondelete()}>
@@ -670,13 +737,13 @@ function Cuentas() {
             <Card>
               <div className="App">
                 <br />
-                <MDButton
-                  variant="gradient"
-                  color="success"
+                <Button
+                  className="insertar"
+                  endIcon={<AddCircleIcon />}
                   onClick={() => abrircerrarModalInsertar()}
                 >
                   Insertar Cuenta
-                </MDButton>
+                </Button>
                 <br />
                 <br />
                 <MaterialTable
@@ -721,6 +788,7 @@ function Cuentas() {
           </Grid>
         </Grid>
       </MDBox>
+      <footer>Vista creada por Wesley Morales(DBA)</footer>
     </DashboardLayout>
   );
 }

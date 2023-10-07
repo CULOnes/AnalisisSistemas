@@ -3,17 +3,25 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
-import axios from "axios";
+// import axios from "axios";
 import MDBox from "components/MDBox";
 import "styles/styles.css";
 import MaterialTable from "material-table";
-import { Modal } from "@material-ui/core";
+import { Modal, OutlinedInput } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import Swal from "sweetalert2";
+// import Swal from "sweetalert2";
 import MDInput from "components/MDInput";
 import MDTypography from "components/MDTypography";
 import Divider from "@mui/material/Divider";
 import MDButton from "components/MDButton";
+import { Formik, ErrorMessage, Field } from "formik";
+import * as Yup from "yup";
+import "./Departamentos.css";
+import Button from "@mui/material/Button";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
+import SaveIcon from "@mui/icons-material/Save";
+import ClearIcon from "@mui/icons-material/Clear";
+import TextField from "@mui/material/TextField";
 
 const columns = [
   {
@@ -21,18 +29,32 @@ const columns = [
     field: "man_Codigo",
   },
   {
-    title: "Fecha",
+    title: "Nombre",
     field: "man_Fecha",
   },
   {
-    title: "Kilometraje",
+    title: "Descripcion",
     field: "man_Kilometraje",
   },
   {
-    title: "Estado",
+    title: "Jefe",
     field: "man_Estado",
   },
 ];
+
+const valSchema = Yup.object().shape({
+  cc_nombre: Yup.string()
+    .matches(/^[a-zA-Z0-9]+$/, "Solo se permiten números y letras")
+    .required("El nombre del departamento es requerido")
+    .max(50, "El nombre no puede tener más de 50 caracteres"),
+  cc_descripcion: Yup.string()
+    .required("La descripción es requerida")
+    .max(250, "La descripción no puede tener más de 250 caracteres"),
+  cc_jefe: Yup.string()
+    .matches(/^[a-zA-Z0-9]+$/, "Solo se permiten números y letras")
+    .required("El nombre del jefe es requerido")
+    .max(50, "El nombre no puede tener más de 50 caracteres"),
+});
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -56,9 +78,9 @@ const useStyles = makeStyles((theme) => ({
 
 function Departamentos() {
   const styles = useStyles();
-  const [data, setData] = useState([]);
-  const [datatr, setDatatr] = useState([]);
-  const [datain, setDatain] = useState([]);
+  const [data /* , setData */] = useState([]);
+  const [datatr /* , setDatatr */] = useState([]);
+  const [datain /* , setDatain */] = useState([]);
   const [modalinsertar, setModalInsertar] = useState(false);
   const [modaleditar, setModalEditar] = useState(false);
   const [showComponent, setShowComponent] = useState(false);
@@ -118,171 +140,177 @@ function Departamentos() {
     }));
   };
 
+  const onSubmit = (values, { resetForm }) => {
+    // eslint-disable-next-line no-console
+    console.log("Envío de Formulario:", values);
+    resetForm();
+  };
+
   const peticionpost = async () => {
-    Swal.showLoading();
-    if (
-      mantenimientoseleccionado.tiR_Codigo === 0 ||
-      mantenimientoseleccionado.ins_Codigo === 0 ||
-      mantenimientoseleccionado.man_Fecha === 0 ||
-      mantenimientoseleccionado.man_Estado === ""
-    ) {
-      abrircerrarModalInsertar();
-      Swal.close();
-      Swal.fire({
-        icon: "info",
-        title: "",
-        html: "Debe de llenar <b>todos</b> los campos",
-      });
-    } else {
-      abrircerrarModalInsertar();
-      await axios
-        .post(
-          "https://localhost:7235/api/Mantenimientos/registromantenimientos",
-          mantenimientoseleccionado
-        )
-        .then((response) => {
-          setData(data.concat(response.data));
-          Swal.close();
-          Swal.fire({
-            icon: "success",
-            title: "",
-            text: "Mantenimiento creado exitosamente",
-            timer: 2500,
-          });
-        })
-        .catch((error) => {
-          Swal.close();
-          Swal.fire({
-            icon: "error",
-            title: "",
-            text: error.response.data,
-            timer: 2500,
-          });
-        });
-    }
+    // Swal.showLoading();
+    // if (
+    //   mantenimientoseleccionado.tiR_Codigo === 0 ||
+    //   mantenimientoseleccionado.ins_Codigo === 0 ||
+    //   mantenimientoseleccionado.man_Fecha === 0 ||
+    //   mantenimientoseleccionado.man_Estado === ""
+    // ) {
+    //   abrircerrarModalInsertar();
+    //   Swal.close();
+    //   Swal.fire({
+    //     icon: "info",
+    //     title: "",
+    //     html: "Debe de llenar <b>todos</b> los campos",
+    //   });
+    // } else {
+    //   abrircerrarModalInsertar();
+    //   await axios
+    //     .post(
+    //       "https://localhost:7235/api/Mantenimientos/registromantenimientos",
+    //       mantenimientoseleccionado
+    //     )
+    //     .then((response) => {
+    //       setData(data.concat(response.data));
+    //       Swal.close();
+    //       Swal.fire({
+    //         icon: "success",
+    //         title: "",
+    //         text: "Mantenimiento creado exitosamente",
+    //         timer: 2500,
+    //       });
+    //     })
+    //     .catch((error) => {
+    //       Swal.close();
+    //       Swal.fire({
+    //         icon: "error",
+    //         title: "",
+    //         text: error.response.data,
+    //         timer: 2500,
+    //       });
+    //     });
+    // }
   };
 
   const peticionput = async () => {
-    console.log(mantenimientoseleccionado);
-    if (
-      mantenimientoseleccionado.tiR_Codigo === 0 ||
-      mantenimientoseleccionado.ins_Codigo === 0 ||
-      mantenimientoseleccionado.man_Fecha === 0 ||
-      mantenimientoseleccionado.man_Estado === ""
-    ) {
-      abrircerrarModalEditar();
-      Swal.close();
-      Swal.fire({
-        icon: "info",
-        title: "",
-        html: "Debe de llenar <b>todos</b> los campos",
-      });
-    } else {
-      abrircerrarModalEditar();
-      Swal.showLoading();
-      await axios
-        .put("https://localhost:7235/api/Mantenimientos/actualizar", mantenimientoseleccionado)
-        .then(() => {
-          const copiaArray = [...data];
-          const indice = copiaArray.findIndex(
-            (elemento) => elemento.man_Codigo === mantenimientoseleccionado.man_Codigo
-          );
-          if (indice !== -1) {
-            copiaArray[indice] = {
-              ...copiaArray[indice],
-              tiR_Codigo: mantenimientoseleccionado.tiR_Codigo,
-              ins_Codigo: mantenimientoseleccionado.ins_Codigo,
-              man_Fecha: mantenimientoseleccionado.man_Fecha,
-              man_Kilometraje: mantenimientoseleccionado.man_Kilometraje,
-              man_Estado: mantenimientoseleccionado.man_Estado,
-            };
-          }
-          setData(copiaArray);
-          Swal.close();
-          Swal.fire({
-            icon: "success",
-            title: "",
-            text: "Mantenimiento actualizado exitosamente",
-            timer: 2500,
-          });
-        })
-        .catch((error) => {
-          Swal.close();
-          Swal.fire({
-            icon: "error",
-            title: "",
-            text: error.response.data,
-            timer: 2500,
-          });
-        });
-    }
+    // console.log(mantenimientoseleccionado);
+    // if (
+    //   mantenimientoseleccionado.tiR_Codigo === 0 ||
+    //   mantenimientoseleccionado.ins_Codigo === 0 ||
+    //   mantenimientoseleccionado.man_Fecha === 0 ||
+    //   mantenimientoseleccionado.man_Estado === ""
+    // ) {
+    //   abrircerrarModalEditar();
+    //   Swal.close();
+    //   Swal.fire({
+    //     icon: "info",
+    //     title: "",
+    //     html: "Debe de llenar <b>todos</b> los campos",
+    //   });
+    // } else {
+    //   abrircerrarModalEditar();
+    //   Swal.showLoading();
+    //   await axios
+    //     .put("https://localhost:7235/api/Mantenimientos/actualizar", mantenimientoseleccionado)
+    //     .then(() => {
+    //       const copiaArray = [...data];
+    //       const indice = copiaArray.findIndex(
+    //         (elemento) => elemento.man_Codigo === mantenimientoseleccionado.man_Codigo
+    //       );
+    //       if (indice !== -1) {
+    //         copiaArray[indice] = {
+    //           ...copiaArray[indice],
+    //           tiR_Codigo: mantenimientoseleccionado.tiR_Codigo,
+    //           ins_Codigo: mantenimientoseleccionado.ins_Codigo,
+    //           man_Fecha: mantenimientoseleccionado.man_Fecha,
+    //           man_Kilometraje: mantenimientoseleccionado.man_Kilometraje,
+    //           man_Estado: mantenimientoseleccionado.man_Estado,
+    //         };
+    //       }
+    //       setData(copiaArray);
+    //       Swal.close();
+    //       Swal.fire({
+    //         icon: "success",
+    //         title: "",
+    //         text: "Mantenimiento actualizado exitosamente",
+    //         timer: 2500,
+    //       });
+    //     })
+    //     .catch((error) => {
+    //       Swal.close();
+    //       Swal.fire({
+    //         icon: "error",
+    //         title: "",
+    //         text: error.response.data,
+    //         timer: 2500,
+    //       });
+    //     });
+    // }
   };
 
   const peticiondelete = async () => {
-    abrircerrarModalEliminar();
-    Swal.showLoading();
-    await axios
-      .put("https://localhost:7235/api/Mantenimientos/eliminar", mantenimientoseleccionado)
-      .then(() => {
-        setData(
-          data.filter(
-            (mantenimiento) => mantenimiento.man_Codigo !== mantenimientoseleccionado.man_Codigo
-          )
-        );
-        Swal.close();
-        Swal.fire({
-          icon: "success",
-          title: "",
-          text: "Mantenimiento eliminado exitosamente",
-          timer: 2500,
-        });
-      })
-      .catch((error) => {
-        Swal.close();
-        Swal.fire({
-          icon: "error",
-          title: "",
-          text: error.response.data,
-          timer: 2500,
-        });
-      });
+    // abrircerrarModalEliminar();
+    // Swal.showLoading();
+    // await axios
+    //   .put("https://localhost:7235/api/Mantenimientos/eliminar", mantenimientoseleccionado)
+    //   .then(() => {
+    //     setData(
+    //       data.filter(
+    //         (mantenimiento) => mantenimiento.man_Codigo !== mantenimientoseleccionado.man_Codigo
+    //       )
+    //     );
+    //     Swal.close();
+    //     Swal.fire({
+    //       icon: "success",
+    //       title: "",
+    //       text: "Mantenimiento eliminado exitosamente",
+    //       timer: 2500,
+    //     });
+    //   })
+    //   .catch((error) => {
+    //     Swal.close();
+    //     Swal.fire({
+    //       icon: "error",
+    //       title: "",
+    //       text: error.response.data,
+    //       timer: 2500,
+    //     });
+    //   });
   };
 
   const peticionget = async () => {
-    Swal.showLoading();
-    await axios
-      .get("https://localhost:7235/api/Mantenimientos/mantenimientos")
-      .then((response) => {
-        setData(response.data);
-        Swal.close();
-      })
-      .catch((error) => {
-        Swal.close();
-        Swal.fire({
-          icon: "error",
-          title: "",
-          text: error.response.data,
-          timer: 2500,
-        });
-      });
+    // Swal.showLoading();
+    // await axios
+    //   .get("https://localhost:7235/api/Mantenimientos/mantenimientos")
+    //   .then((response) => {
+    //     setData(response.data);
+    //     Swal.close();
+    //   })
+    //   .catch((error) => {
+    //     Swal.close();
+    //     Swal.fire({
+    //       icon: "error",
+    //       title: "",
+    //       text: error.response.data,
+    //       timer: 2500,
+    //     });
+    //   });
   };
 
   const peticiongettr = async () => {
-    await axios
-      .get("https://localhost:7235/api/TiposReparaciones/tiposreparaciones")
-      .then((response) => {
-        setDatatr(response.data);
-      })
-      .catch();
+    // await axios
+    //   .get("https://localhost:7235/api/TiposReparaciones/tiposreparaciones")
+    //   .then((response) => {
+    //     setDatatr(response.data);
+    //   })
+    //   .catch();
   };
 
   const peticiongetin = async () => {
-    await axios
-      .get("https://localhost:7235/api/Inspecciones/inspecciones")
-      .then((response) => {
-        setDatain(response.data);
-      })
-      .catch();
+    // await axios
+    //   .get("https://localhost:7235/api/Inspecciones/inspecciones")
+    //   .then((response) => {
+    //     setDatain(response.data);
+    //   })
+    //   .catch();
   };
 
   useEffect(() => {
@@ -300,122 +328,107 @@ function Departamentos() {
 
   const bodyInsertar = (
     <div className={styles.modal}>
-      <MDTypography variant="h3"> Agregar Nuevo Mantenimiento </MDTypography>
+      <h2> Agregar Nuevo Departamento </h2>
       <Divider sx={{ marginTop: 1 }} light={false} />
       <MDBox pt={2} pb={3}>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={2}>
-              <MDTypography variant="h6"> Tipo de Reparacion: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={2}>
-              <select name="tiR_Codigo" className="form-control" onChange={handleChange}>
-                <option key="0" value="0">
-                  Seleccione el Tipo de Reparacion
-                </option>
-                {datatr.map((element) => (
-                  <option key={element.tiR_Codigo} value={element.tiR_Codigo}>
-                    {element.tiR_Nombre}
-                  </option>
-                ))}
-              </select>
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={2}>
-              <MDTypography variant="h6"> Inspeccion: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={2}>
-              <select name="ins_Codigo" className="form-control" onChange={handleChange}>
-                <option key="0" value="0">
-                  Seleccione Inspeccion
-                </option>
-                {datain.map((element) => (
-                  <option key={element.ins_Codigo} value={element.ins_Codigo}>
-                    {element.ins_Descripcion}
-                  </option>
-                ))}
-              </select>
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={2}>
-              <MDTypography variant="h6"> Fecha: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={2}>
-              <MDInput name="man_Fecha" type="Date" onChange={handleChange} />
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={2}>
-              <MDTypography variant="h6"> Kilometraje: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={2}>
-              <MDInput
-                label="Kilometraje"
-                name="man_Kilometraje"
-                type="number"
-                onChange={handleChange}
-              />
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={2}>
-              <MDTypography variant="h6"> Estado: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={2}>
-              <select name="man_Estado" className="form-control" onChange={handleChange}>
-                <option key="0" value="0">
-                  Seleccione Estado
-                </option>
-                <option key="1" value="Registrado">
-                  Registrado
-                </option>
-                <option key="2" value="En Curso">
-                  En Curso
-                </option>
-                <option key="3" value="Completado">
-                  Completado
-                </option>
-              </select>
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDButton variant="gradient" color="info" fullWidth onClick={() => peticionpost()}>
-              Insertar
-            </MDButton>
-          </Grid>
-          <Grid item xs={12} md={4} lg={3}>
-            <MDButton
-              variant="gradient"
-              color="light"
-              fullWidth
-              onClick={() => abrircerrarModalInsertar()}
-            >
-              Cancelar
-            </MDButton>
-          </Grid>
-        </Grid>
+        <Formik
+          initialValues={{
+            cc_nombre: "",
+            cc_descripcion: "",
+            cc_jefe: "",
+          }}
+          validationSchema={valSchema}
+          onSubmit={onSubmit}
+        >
+          {({ handleSubmit }) => (
+            <form onSubmit={handleSubmit}>
+              <Grid container spacing={3} justifyContent="center">
+                <Grid item xs={12} md={4} lg={3}>
+                  <MDBox>
+                    <MDTypography variant="h6"> Nombre: </MDTypography>
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} md={6} lg={9}>
+                  <MDBox>
+                    <Field
+                      as={OutlinedInput}
+                      name="cc_nombre"
+                      id="cc_nombre"
+                      type="text"
+                      placeholder="Nombre departamento"
+                    />
+                  </MDBox>
+                  <ErrorMessage name="cc_nombre" component="small" className="error" />
+                </Grid>
+              </Grid>
+              <Grid container spacing={3} justifyContent="center">
+                <Grid item xs={12} md={4} lg={3}>
+                  <MDBox mt={2}>
+                    <MDTypography variant="h6"> Nombre del jefe: </MDTypography>
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} md={6} lg={9}>
+                  <MDBox mt={2}>
+                    <Field
+                      as={OutlinedInput}
+                      name="cc_jefe"
+                      id="cc_jefe"
+                      type="text"
+                      placeholder="Nombre del jefe"
+                    />
+                  </MDBox>
+                  <ErrorMessage name="cc_jefe" component="small" className="error" />
+                </Grid>
+              </Grid>
+              <Grid container spacing={3} justifyContent="center">
+                <Grid item xs={12} md={4} lg={3}>
+                  <MDBox mt={2}>
+                    <MDTypography variant="h6"> Descripcion </MDTypography>
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} md={6} lg={9}>
+                  <MDBox mt={2}>
+                    <Field
+                      as={TextField}
+                      name="cc_descripcion"
+                      id="cc_descripcion outlined-multiline-static"
+                      type="text"
+                      multiline
+                      fullWidth
+                      rows={2}
+                      placeholder="Descripcion"
+                    />
+                  </MDBox>
+                  <ErrorMessage name="cc_descripcion" component="small" className="error" />
+                </Grid>
+              </Grid>
+              <Grid container spacing={3} justifyContent="center" mt={2}>
+                <Grid item xs={12} md={4} lg={3}>
+                  <Button
+                    className="aceptar"
+                    endIcon={<SaveIcon />}
+                    type="submit"
+                    fullWidth
+                    onClick={() => peticionpost()}
+                  >
+                    Insertar
+                  </Button>
+                </Grid>
+                <Grid item xs={12} md={4} lg={3}>
+                  <Button
+                    className="cancelar"
+                    endIcon={<ClearIcon />}
+                    type="submit"
+                    fullWidth
+                    onClick={() => abrircerrarModalInsertar()}
+                  >
+                    Cancelar
+                  </Button>
+                </Grid>
+              </Grid>
+            </form>
+          )}
+        </Formik>
       </MDBox>
     </div>
   );
@@ -588,13 +601,13 @@ function Departamentos() {
             <Card>
               <div className="App">
                 <br />
-                <MDButton
-                  variant="gradient"
-                  color="success"
+                <Button
+                  className="insertar"
+                  endIcon={<AddCircleIcon />}
                   onClick={() => abrircerrarModalInsertar()}
                 >
-                  Insertar Mantenimiento
-                </MDButton>
+                  Insertar Departamento
+                </Button>
                 <br />
                 <br />
                 <MaterialTable
@@ -639,6 +652,7 @@ function Departamentos() {
           </Grid>
         </Grid>
       </MDBox>
+      <footer>Vista creada por Wesley Morales(DBA)</footer>
     </DashboardLayout>
   );
 }
