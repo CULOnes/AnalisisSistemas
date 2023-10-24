@@ -143,6 +143,8 @@ function CentrosCosto() {
     console.log("Envío de Formulario:", values);
     resetForm();
 
+    abrircerrarModalInsertar();
+
     Swal.fire({
       icon: "success",
       title: "Formulario Enviado",
@@ -377,6 +379,7 @@ function CentrosCosto() {
                       id="cc_nombre"
                       type="text"
                       placeholder="Centro Costo"
+                      className="form-control"
                     />
                   </MDBox>
                   <ErrorMessage name="cc_nombre" component="small" className="error" />
@@ -396,6 +399,7 @@ function CentrosCosto() {
                       id="cc_cuenta"
                       type="number"
                       placeholder="Cuenta"
+                      className="form-control"
                     />
                   </MDBox>
                   <ErrorMessage name="cc_cuenta" component="small" className="error" />

@@ -11,7 +11,7 @@ import { Modal, OutlinedInput } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import Swal from "sweetalert2";
 // import MDInput from "components/MDInput";
-import MDTypography from "components/MDTypography";
+// import MDTypography from "components/MDTypography";
 import Divider from "@mui/material/Divider";
 import MDButton from "components/MDButton";
 import { Formik, Field, ErrorMessage } from "formik";
@@ -406,7 +406,7 @@ function TransferenciaActivos() {
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={4} lg={5}>
                   <MDBox mb={2}>
-                    <MDTypography variant="h6"> Custodio que Entrega: </MDTypography>
+                    <h4> Custodio que Entrega: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={7}>
@@ -447,12 +447,12 @@ function TransferenciaActivos() {
                 </Grid>
               </Grid>
               <Grid container spacing={3} justifyContent="center">
-                <Grid item xs={12} md={4} lg={5}>
+                <Grid item xs={12} md={4} lg={4}>
                   <MDBox mb={4} mt={1}>
-                    <MDTypography variant="h6"> Nuevo Custodio: </MDTypography>
+                    <h4> Nuevo Custodio: </h4>
                   </MDBox>
                 </Grid>
-                <Grid item xs={12} md={6} lg={7}>
+                <Grid item xs={12} md={6} lg={8}>
                   <MDBox mt={1}>
                     <Field
                       as="select"
@@ -462,7 +462,7 @@ function TransferenciaActivos() {
                       placeholder="Seleccione una Opción:"
                       // onChange={handleChange}
                     >
-                      <option key="0" value="opcion0">
+                      <option key="0" value="0">
                         Seleccione Custodio:
                       </option>
                       <option key="1" value="opcion1">
@@ -493,7 +493,7 @@ function TransferenciaActivos() {
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={4} lg={5}>
                   <MDBox mb={4} mt={1}>
-                    <MDTypography variant="h6">Activos a Transferir: </MDTypography>
+                    <h4>Activos a Transferir: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={7}>
@@ -538,7 +538,7 @@ function TransferenciaActivos() {
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={4} lg={5}>
                   <MDBox mb={4} mt={1}>
-                    <MDTypography variant="h6"> Ubicación Destino: </MDTypography>
+                    <h4> Ubicación Destino: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={7}>
@@ -583,7 +583,7 @@ function TransferenciaActivos() {
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={4} lg={5}>
                   <MDBox mb={4} mt={1}>
-                    <MDTypography variant="h6"> Centro de Costo Destino: </MDTypography>
+                    <h4> Centro de Costo Destino: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={7}>
@@ -665,7 +665,7 @@ function TransferenciaActivos() {
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={4} lg={3}>
                   <MDBox mb={2}>
-                    <MDTypography variant="h6"> Fecha: </MDTypography>
+                    <h4> Fecha: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={9}>
@@ -675,6 +675,7 @@ function TransferenciaActivos() {
                       name="transfAct_fecha"
                       id="transfAct_fecha"
                       type="date"
+                      className="form-control"
                       // value={empleadoseleccionado && empleadoseleccionado.emp_Nacimiento}
                     />
                   </MDBox>
@@ -728,11 +729,11 @@ function TransferenciaActivos() {
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={4} lg={3}>
                   <MDBox mt={3}>
-                    <MDTypography variant="h6"> Observaciones: </MDTypography>
+                    <h4> Observaciones: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={9}>
-                  <MDBox mt={2} mb={2}>
+                  <MDBox mb={4}>
                     <Field
                       as={TextField}
                       type="text"

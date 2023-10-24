@@ -55,7 +55,7 @@ const useStyles = makeStyles((theme) => ({
   modal: {
     borderRadius: "5%",
     position: "absolute",
-    width: 650,
+    width: 850,
     backgroundColor: theme.palette.background.paper,
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 0),
@@ -673,7 +673,7 @@ function TransferenciaActivos() {
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={4} lg={3}>
                   <MDBox mb={4}>
-                    <MDTypography variant="h6"> Nombre Activo: </MDTypography>
+                    <h4> Nombre Activo: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={9}>
@@ -694,7 +694,7 @@ function TransferenciaActivos() {
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={4} lg={2}>
                   <MDBox mb={4} mt={2}>
-                    <MDTypography variant="h6"> Marca: </MDTypography>
+                    <h4> Marca: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={4}>
@@ -732,7 +732,7 @@ function TransferenciaActivos() {
                 </Grid>
                 <Grid item xs={12} md={4} lg={2}>
                   <MDBox mb={4} mt={2}>
-                    <MDTypography variant="h6"> Estado: </MDTypography>
+                    <h4> Estado: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={4}>
@@ -772,7 +772,7 @@ function TransferenciaActivos() {
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={4} lg={2}>
                   <MDBox mb={4} mt={2}>
-                    <MDTypography variant="h6"> Precio: </MDTypography>
+                    <h4> Precio: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={10}>
@@ -844,7 +844,7 @@ function TransferenciaActivos() {
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={4} lg={4}>
                   <MDBox mb={4}>
-                    <MDTypography variant="h6"> Nombre Custodio: </MDTypography>
+                    <h4> Nombre Custodio: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={8}>
@@ -884,7 +884,7 @@ function TransferenciaActivos() {
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={4} lg={4}>
                   <MDBox mb={4} mt={1}>
-                    <MDTypography variant="h6"> Centro de Costo: </MDTypography>
+                    <h4> Centro de Costo: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={8}>
@@ -924,7 +924,7 @@ function TransferenciaActivos() {
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={4} lg={2}>
                   <MDBox mb={4} mt={1}>
-                    <MDTypography variant="h6"> Cuenta: </MDTypography>
+                    <h4> Cuenta: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={4}>
@@ -962,7 +962,7 @@ function TransferenciaActivos() {
                 </Grid>
                 <Grid item xs={12} md={4} lg={2}>
                   <MDBox mb={4} mt={1}>
-                    <MDTypography variant="h6"> Ubicación Activo: </MDTypography>
+                    <h4> Ubicación Activo: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={4}>
@@ -999,7 +999,7 @@ function TransferenciaActivos() {
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={4} lg={3}>
                   <MDBox mb={4}>
-                    <MDTypography variant="h6"> Clase Activo: </MDTypography>
+                    <h4> Clase Activo: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={9}>
@@ -1082,7 +1082,7 @@ function TransferenciaActivos() {
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={4} lg={4}>
                   <MDBox mb={4}>
-                    <MDTypography variant="h6"> Vida Útil (Meses): </MDTypography>
+                    <h4> Vida Útil (Meses): </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={8}>
@@ -1104,7 +1104,7 @@ function TransferenciaActivos() {
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={4} lg={5}>
                   <MDBox mb={4} mt={2}>
-                    <MDTypography variant="h6"> Fecha Inicio Depreciación: </MDTypography>
+                    <h4> Fecha Inicio Depreciación: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={7}>
@@ -1129,7 +1129,7 @@ function TransferenciaActivos() {
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={4} lg={5}>
                   <MDBox mb={4} mt={2}>
-                    <MDTypography variant="h6"> Valor a Depreciar Mensual: </MDTypography>
+                    <h4> Valor a Depreciar Mensual: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={7}>
@@ -1139,6 +1139,7 @@ function TransferenciaActivos() {
                       name="compra_valorDepreciar"
                       id="compra_valorDepreciar"
                       type="number"
+                      className="form-control"
                       readOnly
                       // value={empleadoseleccionado && empleadoseleccionado.emp_Nacimiento}
                     />
@@ -1197,7 +1198,7 @@ function TransferenciaActivos() {
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={4} lg={4}>
                   <MDBox mb={4}>
-                    <MDTypography variant="h6"> Próximo Mantenimiento: </MDTypography>
+                    <h4> Próximo Mantenimiento: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={8}>
@@ -1217,7 +1218,7 @@ function TransferenciaActivos() {
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={4} lg={2}>
                   <MDBox mb={4} mt={1}>
-                    <MDTypography variant="h6"> Fecha Inicio del Seguro: </MDTypography>
+                    <h4> Fecha Inicio del Seguro: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={4}>
@@ -1235,7 +1236,7 @@ function TransferenciaActivos() {
                 </Grid>
                 <Grid item xs={12} md={4} lg={2}>
                   <MDBox mb={4} mt={1}>
-                    <MDTypography variant="h6"> Fecha Fin del Seguro: </MDTypography>
+                    <h4> Fecha Fin del Seguro: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={4}>
@@ -1259,7 +1260,7 @@ function TransferenciaActivos() {
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={4} lg={3}>
                   <MDBox mb={4} mt={1}>
-                    <MDTypography variant="h6"> Monto Asegurado: </MDTypography>
+                    <h4> Monto Asegurado: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={9}>
@@ -1280,7 +1281,7 @@ function TransferenciaActivos() {
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={4} lg={2}>
                   <MDBox mb={4} mt={1}>
-                    <MDTypography variant="h6"> Fecha Inicio de Garantía: </MDTypography>
+                    <h4> Fecha Inicio de Garantía: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={4}>
@@ -1298,7 +1299,7 @@ function TransferenciaActivos() {
                 </Grid>
                 <Grid item xs={12} md={2} lg={2}>
                   <MDBox mb={4} mt={1}>
-                    <MDTypography variant="h6"> Fecha Fin de Garantía: </MDTypography>
+                    <h4> Fecha Fin de Garantía: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={4}>

@@ -50,7 +50,7 @@ const valSchema = Yup.object().shape({
   cc_descripcion: Yup.string()
     .required("La descripción es requerida")
     .max(250, "La descripción no puede tener más de 250 caracteres"),
-  Cue_TipoC: Yup.string().required("Este campo es obligatorio"),
+  Cue_TipoC: Yup.string().required("El Tipo de Cuenta es requerido"),
 });
 
 const useStyles = makeStyles((theme) => ({
@@ -133,72 +133,71 @@ function Cuentas() {
   };
 
   const onSubmit = (values, { resetForm }) => {
-    // eslint-disable-next-line no-console
-    if (CuentaSeleccionada.Cue_TipoC === 0) {
-      Swal.fire({
-        icon: "info",
-        title: "",
-        text: "Debe especificar el tipo de cuenta",
-      });
-    } else {
-      // abrircerrarModalEditar();
-    }
     console.log("Envío de Formulario:", values);
     resetForm();
+
+    abrircerrarModalInsertar();
+
+    Swal.fire({
+      icon: "success",
+      title: "Formulario Enviado",
+      text: "El formulario se ha enviado con éxito",
+      timer: 2500, // Controla cuánto tiempo se muestra el mensaje (en milisegundos)
+      timerProgressBar: true, // Muestra una barra de progreso durante el tiempo de visualización
+    });
   };
 
   const peticionpost = async () => {
-    if (CuentaSeleccionada.Cue_TipoC === 0) {
-      Swal.fire({
-        icon: "info",
-        title: "",
-        text: "Debe especificar el tipo de cuenta",
-      });
-    } else {
-      // abrircerrarModalEditar();
-      // Swal.showLoading();
-      // if (
-      //   empleadoseleccionado.pue_Codigo === 0 ||
-      //   empleadoseleccionado.emp_Nombre === "" ||
-      //   empleadoseleccionado.emp_Apellido === "" ||
-      //   empleadoseleccionado.emp_Direccion === "" ||
-      //   empleadoseleccionado.emp_Telefono === 0 ||
-      //   empleadoseleccionado.emp_Dpi === "" ||
-      //   empleadoseleccionado.emp_Edad === 0 ||
-      //   empleadoseleccionado.emp_Nacimiento === 0
-      // ) {
-      //   abrircerrarModalInsertar();
-      //   Swal.close();
-      //   Swal.fire({
-      //     icon: "info",
-      //     title: "",
-      //     html: "Debe de llenar <b>todos</b> los campos",
-      //   });
-      // } else {
-      //   abrircerrarModalInsertar();
-      //   await axios
-      //     .post("https://localhost:7235/api/Empleados/registroempleados", empleadoseleccionado)
-      //     .then((response) => {
-      //       setData(data.concat(response.data));
-      //       Swal.close();
-      //       Swal.fire({
-      //         icon: "success",
-      //         title: "",
-      //         text: "Empleado creado exitosamente",
-      //         timer: 2500,
-      //       });
-      //     })
-      //     .catch((error) => {
-      //       Swal.close();
-      //       Swal.fire({
-      //         icon: "error",
-      //         title: "",
-      //         text: error.response.data,
-      //         timer: 2500,
-      //       });
-      //     });
-      // }
-    }
+    // if (CuentaSeleccionada.Cue_TipoC === 0) {
+    //   Swal.fire({
+    //     icon: "info",
+    //     title: "",
+    //     text: "Debe especificar el tipo de cuenta",
+    //   });
+    // } else {
+    // abrircerrarModalEditar();
+    // Swal.showLoading();
+    // if (
+    //   empleadoseleccionado.pue_Codigo === 0 ||
+    //   empleadoseleccionado.emp_Nombre === "" ||
+    //   empleadoseleccionado.emp_Apellido === "" ||
+    //   empleadoseleccionado.emp_Direccion === "" ||
+    //   empleadoseleccionado.emp_Telefono === 0 ||
+    //   empleadoseleccionado.emp_Dpi === "" ||
+    //   empleadoseleccionado.emp_Edad === 0 ||
+    //   empleadoseleccionado.emp_Nacimiento === 0
+    // ) {
+    //   abrircerrarModalInsertar();
+    //   Swal.close();
+    //   Swal.fire({
+    //     icon: "info",
+    //     title: "",
+    //     html: "Debe de llenar <b>todos</b> los campos",
+    //   });
+    // } else {
+    //   abrircerrarModalInsertar();
+    //   await axios
+    //     .post("https://localhost:7235/api/Empleados/registroempleados", empleadoseleccionado)
+    //     .then((response) => {
+    //       setData(data.concat(response.data));
+    //       Swal.close();
+    //       Swal.fire({
+    //         icon: "success",
+    //         title: "",
+    //         text: "Empleado creado exitosamente",
+    //         timer: 2500,
+    //       });
+    //     })
+    //     .catch((error) => {
+    //       Swal.close();
+    //       Swal.fire({
+    //         icon: "error",
+    //         title: "",
+    //         text: error.response.data,
+    //         timer: 2500,
+    //       });
+    //     });
+    // }
   };
 
   const peticionput = async () => {
@@ -350,7 +349,7 @@ function Cuentas() {
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={4} lg={4}>
                   <MDBox mb={1} pb={4} mt={2}>
-                    <MDTypography variant="h6"> Nombre: </MDTypography>
+                    <h4> Nombre: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={8}>
@@ -360,6 +359,7 @@ function Cuentas() {
                       name="cc_nombre"
                       id="cc_nombre"
                       type="text"
+                      className="form-control"
                       placeholder="Nombre Cuenta"
                     />
                   </MDBox>
@@ -367,27 +367,27 @@ function Cuentas() {
                 </Grid>
               </Grid>
               <Grid container spacing={3} justifyContent="center">
-                <Grid item xs={12} md={6} lg={4}>
-                  <MDBox pb={4} mt={2}>
-                    <MDTypography variant="h6"> Tipo de cuenta: </MDTypography>
+                <Grid item xs={12} md={4} lg={4}>
+                  <MDBox mb={4}>
+                    <h4> Tipo de cuenta: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={8}>
-                  <MDBox mt={2}>
-                    <select
+                  <MDBox mt={1}>
+                    <Field
+                      as="select"
                       id="Cue_TipoC"
                       name="Cue_TipoC"
                       className="form-control"
-                      onBlur={Formik.handleBlur}
-                      onChange={handleChange}
+                      placeholder="Seleccione una Opción"
                     >
                       <option key="0" value="0">
-                        Seleccione una opcion
+                        Seleccione un Tipo de Cuenta:
                       </option>
-                      <option key="0" value="0">
+                      <option key="1" value="opcion1">
                         activo de control
                       </option>
-                      <option key="0" value="0">
+                      <option key="2" value="opcion2">
                         activo fijo
                       </option>
                       {/* {datatp.map((element) => (
@@ -395,14 +395,15 @@ function Cuentas() {
                     {element.pue_Nombre}
                   </option>
                 ))} */}
-                    </select>
+                    </Field>
                   </MDBox>
+                  <ErrorMessage name="Cue_TipoC" component="small" className="error" />
                 </Grid>
               </Grid>
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={4} lg={4}>
                   <MDBox mt={1} pb={4}>
-                    <MDTypography variant="h6"> Descripción: </MDTypography>
+                    <h4> Descripción: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={8}>

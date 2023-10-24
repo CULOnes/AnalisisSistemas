@@ -10,7 +10,7 @@ import MaterialTable from "material-table";
 import { Modal, OutlinedInput } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import Swal from "sweetalert2";
-import MDTypography from "components/MDTypography";
+// import MDTypography from "components/MDTypography";
 import Divider from "@mui/material/Divider";
 import MDButton from "components/MDButton";
 import SaveIcon from "@mui/icons-material/Save";
@@ -31,22 +31,31 @@ const columns = [
     field: "emp_Codigo",
   },
   {
-    title: "Nombre",
+    title: "Activo",
     field: "emp_Nombre",
   },
   {
-    title: "Apellido",
+    title: "Ubicación Física",
+    field: "emp_Nombre",
+  },
+  {
+    title: "Especificaciones",
     field: "emp_Apellido",
   },
   {
-    title: "Telefono",
+    title: "Descripción",
     field: "emp_Telefono",
   },
   {
-    title: "Edad",
+    title: "Observaciones",
     field: "emp_Edad",
   },
 ];
+
+const valSchema0 = Yup.object().shape({
+  ubicacionfisica: Yup.string().required("Seleccione una Ubicación"),
+  custodio: Yup.string().required("Selecicone un Custodio"),
+});
 
 const valSchema = Yup.object().shape({
   codigo_activo: Yup.string()
@@ -70,7 +79,7 @@ const valSchema2 = Yup.object().shape({
     .max(10, "La serie no puede tener más de 10 caracteres"),
   especificaciones: Yup.string()
     .matches(/^[a-zA-Z0-9]*$/, "Solo se permiten números y letras")
-    .required("La especificacion es requerida")
+    .required("Las especificaciones son requeridas")
     .max(25, "La especificacion no puede tener más de 25 caracteres"),
   descripcion: Yup.string()
     .matches(/^[a-zA-Z0-9]*$/, "Solo se permiten números y letras")
@@ -79,6 +88,9 @@ const valSchema2 = Yup.object().shape({
   observaciones: Yup.string()
     .matches(/^[a-zA-Z0-9]*$/, "Solo se permiten números y letras")
     .max(250, "Las observaciones no puede tener más de 250 caracteres"),
+  estado: Yup.string().required("El estado es requerido"),
+  custodio2: Yup.string().required("El custodio es requerido"),
+  ubicacion_fisica: Yup.string().required("La ubicación es requerida"),
 });
 
 const useStyles = makeStyles((theme) => ({
@@ -116,12 +128,20 @@ function RealizarConstatacion() {
   const [modaleditar, setModalEditar] = useState(false);
   const [showComponent, setShowComponent] = useState(false);
   const [modaleliminar, setModalEliminar] = useState(false);
-  const [constatacionseleccionada, setConstatacionSeleccionada] = useState({
+  const [modalsiguiente, setModalSiguiente] = useState(false);
+  const [constatacionseleccionada /* setConstatacionSeleccionada */] = useState({
+    codigo_activo: 0,
     ubicacionfisica: 0,
     custodio: 0,
     ubicacion_fisica: 0,
     custodio2: 0,
     estado: 0,
+    marca: 0,
+    modelo: 0,
+    serie: 0,
+    especificaciones: 0,
+    observaciones: 0,
+    descripcion: 0,
   });
 
   const abrircerrarModalInsertar = () => {
@@ -131,6 +151,15 @@ function RealizarConstatacion() {
   const abrircerrarModalEditar = () => {
     setModalEditar(!modaleditar);
     abrircerrarModalInsertar();
+  };
+
+  const abrircerrarModalSiguiente = () => {
+    setModalSiguiente(!modalsiguiente);
+    abrircerrarModalSiguiente();
+  };
+
+  const abrircerrarModalFormulario = () => {
+    setModalEditar(!modaleditar);
   };
 
   const abrircerrarModalEliminar = () => {
@@ -152,7 +181,6 @@ function RealizarConstatacion() {
     // });
     setModalEliminar(!modaleliminar);
   };
-
   // const seleccionarEmpleado = (empleado, caso) => {
   //   setEmpleadoSeleccionado(empleado);
   //   if (caso === "Editar") {
@@ -162,145 +190,129 @@ function RealizarConstatacion() {
   //   }
   // };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setConstatacionSeleccionada((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-  };
+  // const handleChange = (e) => {
+  //   const { name, value } = e.target;
+  //   setConstatacionSeleccionada((prevState) => ({
+  //     ...prevState,
+  //     [name]: value,
+  //   }));
+  // };
 
-  const peticionpost = async () => {
-    // Swal.showLoading();
-    if (constatacionseleccionada.ubicacionfisica === 0) {
-      Swal.fire({
-        icon: "info",
-        title: "",
-        text: "Debe seleccionar una ubicacion física",
-      });
-    } else if (constatacionseleccionada.custodio === 0) {
-      Swal.fire({
-        icon: "info",
-        title: "",
-        text: "Debe seleccionar un custodio",
-      });
-    } else {
-      abrircerrarModalEditar();
-      //   await axios
-      //     .post("https://localhost:7235/api/Empleados/registroempleados", empleadoseleccionado)
-      //     .then((response) => {
-      //       setData(data.concat(response.data));
-      //       Swal.close();
-      //       Swal.fire({
-      //         icon: "success",
-      //         title: "",
-      //         text: "Empleado creado exitosamente",
-      //         timer: 2500,
-      //       });
-      //     })
-      //     .catch((error) => {
-      //       Swal.close();
-      //       Swal.fire({
-      //         icon: "error",
-      //         title: "",
-      //         text: error.response.data,
-      //         timer: 2500,
-      //       });
-      //     });
-    }
+  // const peticionpost = async () => {
+  // Swal.showLoading();
+  //   await axios
+  //     .post("https://localhost:7235/api/Empleados/registroempleados", empleadoseleccionado)
+  //     .then((response) => {
+  //       setData(data.concat(response.data));
+  //       Swal.close();
+  //       Swal.fire({
+  //         icon: "success",
+  //         title: "",
+  //         text: "Empleado creado exitosamente",
+  //         timer: 2500,
+  //       });
+  //     })
+  //     .catch((error) => {
+  //       Swal.close();
+  //       Swal.fire({
+  //         icon: "error",
+  //         title: "",
+  //         text: error.response.data,
+  //         timer: 2500,
+  //       });
+  //     });
+  // };
+
+  const validar = (values, { resetForm }) => {
+    console.log("Envío de Formulario:", values);
+    resetForm();
+
+    abrircerrarModalEditar();
   };
 
   const validaractivo = (values, { resetForm }) => {
     console.log("Envío de Formulario:", values);
     resetForm();
+
+    abrircerrarModalFormulario();
   };
 
   const validarinfo = (values, { resetForm }) => {
     console.log("Envío de Formulario:", values);
     resetForm();
+
+    abrircerrarModalFormulario();
+
+    Swal.fire({
+      icon: "success",
+      title: "Formulario Enviado",
+      text: "El formulario se ha enviado con éxito",
+      timer: 2500, // Controla cuánto tiempo se muestra el mensaje (en milisegundos)
+      timerProgressBar: true, // Muestra una barra de progreso durante el tiempo de visualización
+    });
   };
 
   const peticionput = async () => {
-    if (constatacionseleccionada.estado === 0) {
-      Swal.fire({
-        icon: "info",
-        title: "",
-        text: "Debe seleccionar un estado",
-      });
-    } else if (constatacionseleccionada.ubicacion_fisica === 0) {
-      Swal.fire({
-        icon: "info",
-        title: "",
-        text: "Debe seleccionar una ubicacion fisica",
-      });
-    } else if (constatacionseleccionada.custodio2 === 0) {
-      Swal.fire({
-        icon: "info",
-        title: "",
-        text: "Debe seleccionar un custodio",
-      });
-
-      // if (
-      //   empleadoseleccionado.pue_Codigo === 0 ||
-      //   empleadoseleccionado.emp_Nombre === "" ||
-      //   empleadoseleccionado.emp_Apellido === "" ||
-      //   empleadoseleccionado.emp_Direccion === "" ||
-      //   empleadoseleccionado.emp_Telefono === 0 ||
-      //   empleadoseleccionado.emp_Dpi === "" ||
-      //   empleadoseleccionado.emp_Edad === 0 ||
-      //   empleadoseleccionado.emp_Nacimiento === 0
-      // ) {
-      //   abrircerrarModalEditar();
-      //   Swal.close();
-      //   Swal.fire({
-      //     icon: "info",
-      //     title: "",
-      //     html: "Debe de llenar <b>todos</b> los campos",
-      //   });
-      // } else {
-      //   abrircerrarModalEditar();
-      //   Swal.showLoading();
-      //   await axios
-      //     .put("https://localhost:7235/api/Empleados/actualizar", empleadoseleccionado)
-      //     .then(() => {
-      //       const copiaArray = [...data];
-      //       const indice = copiaArray.findIndex(
-      //         (elemento) => elemento.emp_Codigo === empleadoseleccionado.emp_Codigo
-      //       );
-      //       if (indice !== -1) {
-      //         copiaArray[indice] = {
-      //           ...copiaArray[indice],
-      //           pue_Codigo: empleadoseleccionado.pue_Codigo,
-      //           emp_Nombre: empleadoseleccionado.emp_Nombre,
-      //           emp_Apellido: empleadoseleccionado.emp_Apellido,
-      //           emp_Direccion: empleadoseleccionado.emp_Direccion,
-      //           emp_Telefono: empleadoseleccionado.emp_Telefono,
-      //           emp_Dpi: empleadoseleccionado.emp_Dpi,
-      //           emp_Edad: empleadoseleccionado.emp_Edad,
-      //           emp_Nacimiento: empleadoseleccionado.emp_Nacimiento,
-      //           emp_Nolicencia: empleadoseleccionado.emp_Nolicencia,
-      //           emp_Tipolicencia: empleadoseleccionado.emp_Tipolicencia,
-      //         };
-      //       }
-      //       setData(copiaArray);
-      //       Swal.close();
-      //       Swal.fire({
-      //         icon: "success",
-      //         title: "",
-      //         text: "Empleado actualizado exitosamente",
-      //         timer: 2500,
-      //       });
-      //     })
-      //     .catch((error) => {
-      //       Swal.close();
-      //       Swal.fire({
-      //         icon: "error",
-      //         title: "",
-      //         text: error.response.data,
-      //         timer: 2500,
-      //       });
-      //     });
-    }
+    // if (
+    //   empleadoseleccionado.pue_Codigo === 0 ||
+    //   empleadoseleccionado.emp_Nombre === "" ||
+    //   empleadoseleccionado.emp_Apellido === "" ||
+    //   empleadoseleccionado.emp_Direccion === "" ||
+    //   empleadoseleccionado.emp_Telefono === 0 ||
+    //   empleadoseleccionado.emp_Dpi === "" ||
+    //   empleadoseleccionado.emp_Edad === 0 ||
+    //   empleadoseleccionado.emp_Nacimiento === 0
+    // ) {
+    //   abrircerrarModalEditar();
+    //   Swal.close();
+    //   Swal.fire({
+    //     icon: "info",
+    //     title: "",
+    //     html: "Debe de llenar <b>todos</b> los campos",
+    //   });
+    // } else {
+    //   abrircerrarModalEditar();
+    //   Swal.showLoading();
+    //   await axios
+    //     .put("https://localhost:7235/api/Empleados/actualizar", empleadoseleccionado)
+    //     .then(() => {
+    //       const copiaArray = [...data];
+    //       const indice = copiaArray.findIndex(
+    //         (elemento) => elemento.emp_Codigo === empleadoseleccionado.emp_Codigo
+    //       );
+    //       if (indice !== -1) {
+    //         copiaArray[indice] = {
+    //           ...copiaArray[indice],
+    //           pue_Codigo: empleadoseleccionado.pue_Codigo,
+    //           emp_Nombre: empleadoseleccionado.emp_Nombre,
+    //           emp_Apellido: empleadoseleccionado.emp_Apellido,
+    //           emp_Direccion: empleadoseleccionado.emp_Direccion,
+    //           emp_Telefono: empleadoseleccionado.emp_Telefono,
+    //           emp_Dpi: empleadoseleccionado.emp_Dpi,
+    //           emp_Edad: empleadoseleccionado.emp_Edad,
+    //           emp_Nacimiento: empleadoseleccionado.emp_Nacimiento,
+    //           emp_Nolicencia: empleadoseleccionado.emp_Nolicencia,
+    //           emp_Tipolicencia: empleadoseleccionado.emp_Tipolicencia,
+    //         };
+    //       }
+    //       setData(copiaArray);
+    //       Swal.close();
+    //       Swal.fire({
+    //         icon: "success",
+    //         title: "",
+    //         text: "Empleado actualizado exitosamente",
+    //         timer: 2500,
+    //       });
+    //     })
+    //     .catch((error) => {
+    //       Swal.close();
+    //       Swal.fire({
+    //         icon: "error",
+    //         title: "",
+    //         text: error.response.data,
+    //         timer: 2500,
+    //       });
+    //     });
   };
 
   const peticiondelete = async () => {
@@ -374,109 +386,128 @@ function RealizarConstatacion() {
       <h2> Realizar Constatacion Fisica </h2>
       <Divider sx={{ marginTop: 1 }} light={false} />
       <MDBox pb={1}>
-        <Grid container spacing={3} justifyContent="center" mb={4}>
-          <Grid item xs={12} md={4} lg={5}>
-            <MDBox mb={1}>
-              <h4> Seleccione Ubicacion Fisica: </h4>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={7}>
-            <MDBox mb={1}>
-              <select name="ubicacionfisica" className="combo" onChange={handleChange}>
-                <option key="0" value="0">
-                  Seleccione Ubicacion Fisica
-                </option>
-                <option key="1" value="0">
-                  Ubicacion 1
-                </option>
-                <option key="2" value="0">
-                  Ubicacion 2
-                </option>
-                <option key="3" value="0">
-                  Ubicacion 3
-                </option>
-                <option key="4" value="0">
-                  Ubicacion 4
-                </option>
-                <option key="5" value="0">
-                  Ubicacion 5
-                </option>
-                {/* {datatp.map((element) => (
+        <Formik
+          initialValues={{
+            ubicacionfisica: "",
+            custodio: "",
+          }}
+          validationSchema={valSchema0}
+          onSubmit={validar}
+        >
+          {({ handleSubmit }) => (
+            <form onSubmit={handleSubmit}>
+              <Grid container spacing={3} justifyContent="center" mb={4}>
+                <Grid item xs={12} md={4} lg={5}>
+                  <MDBox mb={1}>
+                    <h4> Seleccione Ubicacion Fisica: </h4>
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} md={6} lg={7}>
+                  <MDBox mb={1}>
+                    <Field
+                      as="select"
+                      id="ubicacionfisica"
+                      name="ubicacionfisica"
+                      className="form-control"
+                    >
+                      <option key="0" value="0">
+                        Seleccione Ubicacion Fisica:
+                      </option>
+                      <option key="1" value="opcion1">
+                        Ubicacion 1
+                      </option>
+                      <option key="2" value="opcion2">
+                        Ubicacion 2
+                      </option>
+                      <option key="3" value="opcion3">
+                        Ubicacion 3
+                      </option>
+                      <option key="4" value="opcion4">
+                        Ubicacion 4
+                      </option>
+                      <option key="5" value="opcion5">
+                        Ubicacion 5
+                      </option>
+                      {/* {datatp.map((element) => (
                   <option key={element.pue_Codigo} value={element.pue_Codigo}>
                     {element.pue_Nombre}
                   </option>
                 ))} */}
-              </select>
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center" mb={4}>
-          <Grid item xs={12} md={4} lg={5}>
-            <MDBox mb={1}>
-              <h4> Seleccione Custodio: </h4>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={7}>
-            <MDBox mb={1}>
-              <select name="custodio" className="combo" onChange={handleChange}>
-                <option key="0" value="0">
-                  Seleccione Custodio
-                </option>
-                <option key="1" value="0">
-                  Custodio 1
-                </option>
-                <option key="2" value="0">
-                  Custodio 2
-                </option>
-                <option key="3" value="0">
-                  Custodio 3
-                </option>
-                <option key="4" value="0">
-                  Custodio 4
-                </option>
-                <option key="5" value="0">
-                  Custodio 5
-                </option>
-                {/* {datatp.map((element) => (
+                    </Field>
+                  </MDBox>
+                  <ErrorMessage name="ubicacionfisica" component="small" className="error" />
+                </Grid>
+              </Grid>
+              <Grid container spacing={3} justifyContent="center" mb={4}>
+                <Grid item xs={12} md={4} lg={5}>
+                  <MDBox mb={1}>
+                    <h4> Seleccione Custodio: </h4>
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} md={6} lg={7}>
+                  <MDBox mb={1}>
+                    <Field as="select" id="custodio" name="custodio" className="form-control">
+                      <option key="0" value="0">
+                        Seleccione Custodio:
+                      </option>
+                      <option key="1" value="opcion1">
+                        Custodio 1
+                      </option>
+                      <option key="2" value="opcion2">
+                        Custodio 2
+                      </option>
+                      <option key="3" value="opcion3">
+                        Custodio 3
+                      </option>
+                      <option key="4" value="opcion4">
+                        Custodio 4
+                      </option>
+                      <option key="5" value="opcion5">
+                        Custodio 5
+                      </option>
+                      {/* {datatp.map((element) => (
                   <option key={element.pue_Codigo} value={element.pue_Codigo}>
                     {element.pue_Nombre}
                   </option>
                 ))} */}
-              </select>
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center" mb={1}>
-          <Grid item xs={12} md={4} lg={3}>
-            <Button
-              className="aceptar"
-              endIcon={<ArrowForwardIosIcon />}
-              type="submit"
-              fullWidth
-              onClick={() => peticionpost()}
-            >
-              Siguiente
-            </Button>
-          </Grid>
-          <Grid item xs={12} md={4} lg={3}>
-            <MDButton
-              className="cancelar"
-              endIcon={<ClearIcon />}
-              type="submit"
-              fullWidth
-              onClick={() => abrircerrarModalInsertar()}
-            >
-              Cancelar
-            </MDButton>
-          </Grid>
-        </Grid>
+                    </Field>
+                  </MDBox>
+                  <ErrorMessage name="custodio" component="small" className="error" />
+                </Grid>
+              </Grid>
+              <Grid container spacing={3} justifyContent="center" mb={1}>
+                <Grid item xs={12} md={4} lg={3}>
+                  <Button
+                    className="aceptar"
+                    endIcon={<ArrowForwardIosIcon />}
+                    type="submit"
+                    fullWidth
+                  >
+                    Siguiente
+                  </Button>
+                </Grid>
+                <Grid item xs={12} md={4} lg={3}>
+                  <MDButton
+                    className="cancelar"
+                    endIcon={<ClearIcon />}
+                    type="submit"
+                    fullWidth
+                    onClick={() => abrircerrarModalInsertar()}
+                  >
+                    Cancelar
+                  </MDButton>
+                </Grid>
+              </Grid>
+            </form>
+          )}
+        </Formik>
       </MDBox>
     </div>
   );
 
   const bodyEditar = (
     <div className={styles.modal2}>
-      <h2> Constatacion Fisica </h2>
+      <h2> Constatación Física </h2>
       <Divider sx={{ marginTop: 1 }} light={false} />
       <MDBox pb={1}>
         <Formik
@@ -491,7 +522,7 @@ function RealizarConstatacion() {
               <Grid container spacing={3} justifyContent="center" mb={2}>
                 <Grid item xs={12} md={4} lg={2}>
                   <MDBox>
-                    <MDTypography variant="h6"> Activo: </MDTypography>
+                    <h4> Activo: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={4}>
@@ -501,7 +532,7 @@ function RealizarConstatacion() {
                       name="codigo_activo"
                       id="codigo_activo"
                       type="text"
-                      className="campos"
+                      className="form-control"
                       placeholder="Activo"
                     />
                     <br />
@@ -515,7 +546,7 @@ function RealizarConstatacion() {
                     fullWidth
                     type="submit"
                     endIcon={<SearchIcon />}
-                    onClick={() => peticiondelete()}
+                    oncClick={() => abrircerrarModalSiguiente}
                   >
                     Consultar
                   </MDButton>
@@ -533,6 +564,9 @@ function RealizarConstatacion() {
             especificaciones: "",
             descripcion: "",
             observaciones: "",
+            estado: "",
+            custodio2: "",
+            ubicacion_fisica: "",
           }}
           validationSchema={valSchema2}
           onSubmit={validarinfo}
@@ -542,7 +576,7 @@ function RealizarConstatacion() {
               <Grid container spacing={3} justifyContent="center" mb={2}>
                 <Grid item xs={12} md={6} lg={2}>
                   <MDBox>
-                    <MDTypography variant="h6"> Marca: </MDTypography>
+                    <h4> Marca: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={4}>
@@ -552,7 +586,7 @@ function RealizarConstatacion() {
                       name="marca"
                       id="marca"
                       type="text"
-                      className="campos"
+                      className="form-control"
                       placeholder="Marca"
                     />
                     <br />
@@ -561,7 +595,7 @@ function RealizarConstatacion() {
                 </Grid>
                 <Grid item xs={12} md={6} lg={2}>
                   <MDBox>
-                    <MDTypography variant="h6"> Modelo: </MDTypography>
+                    <h4> Modelo: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={4}>
@@ -571,7 +605,7 @@ function RealizarConstatacion() {
                       name="modelo"
                       id="modelo"
                       type="text"
-                      className="campos"
+                      className="form-control"
                       placeholder="Modelo"
                     />
                     <br />
@@ -582,7 +616,7 @@ function RealizarConstatacion() {
               <Grid container spacing={3} justifyContent="center" mb={2}>
                 <Grid item xs={12} md={4} lg={1}>
                   <MDBox>
-                    <MDTypography variant="h6"> Serie: </MDTypography>
+                    <h4> Serie: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={11}>
@@ -592,7 +626,7 @@ function RealizarConstatacion() {
                       name="serie"
                       id="serie"
                       type="text"
-                      className="campos"
+                      className="form-control"
                       placeholder="Serie"
                     />
                     <br />
@@ -603,28 +637,28 @@ function RealizarConstatacion() {
               <Grid container spacing={3} justifyContent="center" mb={2}>
                 <Grid item xs={12} md={4} lg={2}>
                   <MDBox>
-                    <MDTypography variant="h6"> Estado: </MDTypography>
+                    <h4> Estado: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={4}>
                   <MDBox>
-                    <select name="estado" className="combosegundocompleto" onChange={handleChange}>
+                    <Field as="select" id="estado" name="estado" className="form-control">
                       <option key="0" value="0">
-                        Seleccione Estado
+                        Seleccione Estado:
                       </option>
-                      <option key="1" value="1">
+                      <option key="1" value="opcion1">
                         Estado 1
                       </option>
-                      <option key="2" value="2">
+                      <option key="2" value="opcion2">
                         Estado 2
                       </option>
-                      <option key="3" value="3">
+                      <option key="3" value="opcion3">
                         Estado 3
                       </option>
-                      <option key="4" value="4">
+                      <option key="4" value="opcion4">
                         Estado 4
                       </option>
-                      <option key="5" value="5">
+                      <option key="5" value="opcion5">
                         Estado 5
                       </option>
                       {/* {datatp.map((element) => (
@@ -632,37 +666,34 @@ function RealizarConstatacion() {
                     {element.pue_Nombre}
                   </option>
                 ))} */}
-                    </select>
+                    </Field>
                   </MDBox>
+                  <ErrorMessage name="estado" component="small" className="error" />
                 </Grid>
                 <Grid item xs={12} md={4} lg={2}>
                   <MDBox>
-                    <MDTypography variant="h6"> Custodio: </MDTypography>
+                    <h4> Custodio: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={4}>
                   <MDBox>
-                    <select
-                      name="custodio2"
-                      className="combosegundocompleto"
-                      onChange={handleChange}
-                    >
+                    <Field as="select" id="custodio2" name="custodio2" className="form-control">
                       <option key="0" value="0">
-                        Seleccione Custodio
+                        Seleccione Custodio:
                       </option>
-                      <option key="1" value="1">
+                      <option key="1" value="opcion1">
                         Custodio 1
                       </option>
-                      <option key="2" value="2">
+                      <option key="2" value="opcion2">
                         Custodio 2
                       </option>
-                      <option key="3" value="3">
+                      <option key="3" value="opcion3">
                         Custodio 3
                       </option>
-                      <option key="4" value="4">
+                      <option key="4" value="opcion4">
                         Custodio 4
                       </option>
-                      <option key="5" value="5">
+                      <option key="5" value="opcion5">
                         Custodio 5
                       </option>
                       {/* {datatp.map((element) => (
@@ -670,39 +701,41 @@ function RealizarConstatacion() {
                     {element.pue_Nombre}
                   </option>
                 ))} */}
-                    </select>
+                    </Field>
                   </MDBox>
+                  <ErrorMessage name="custodio2" component="small" className="error" />
                 </Grid>
               </Grid>
               <Grid container spacing={3} justifyContent="center" mb={2}>
                 <Grid item xs={12} md={4} lg={3}>
                   <MDBox>
-                    <MDTypography variant="h6"> Ubicacion Fisica: </MDTypography>
+                    <h4> Ubicacion Fisica: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={9}>
                   <MDBox>
-                    <select
+                    <Field
+                      as="select"
+                      id="ubicacion_fisica"
                       name="ubicacion_fisica"
-                      className="combosegundo"
-                      onChange={handleChange}
+                      className="form-control"
                     >
                       <option key="0" value="0">
-                        Ubicacion Fisica
+                        Seleccione Ubicacion:
                       </option>
-                      <option key="1" value="1">
+                      <option key="1" value="opcion1">
                         Ubicacion 1
                       </option>
-                      <option key="2" value="2">
+                      <option key="2" value="opcion2">
                         Ubicacion 2
                       </option>
-                      <option key="3" value="3">
+                      <option key="3" value="opcion3">
                         Ubicacion 3
                       </option>
-                      <option key="4" value="4">
+                      <option key="4" value="opcion4">
                         Ubicacion 4
                       </option>
-                      <option key="5" value="5">
+                      <option key="5" value="opcion5">
                         Ubicacion 5
                       </option>
                       {/* {datatp.map((element) => (
@@ -710,14 +743,15 @@ function RealizarConstatacion() {
                     {element.pue_Nombre}
                   </option>
                 ))} */}
-                    </select>
+                    </Field>
                   </MDBox>
+                  <ErrorMessage name="ubicacion_fisica" component="small" className="error" />
                 </Grid>
               </Grid>
               <Grid container spacing={3} justifyContent="center" mb={2}>
                 <Grid item xs={12} md={4} lg={3}>
                   <MDBox>
-                    <MDTypography variant="h6"> Especificaciones: </MDTypography>
+                    <h4> Especificaciones: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={9}>
@@ -738,7 +772,7 @@ function RealizarConstatacion() {
               <Grid container spacing={3} justifyContent="center" mb={2}>
                 <Grid item xs={12} md={4} lg={2}>
                   <MDBox>
-                    <MDTypography variant="h6"> Descripcion: </MDTypography>
+                    <h4> Descripcion: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={10}>
@@ -759,7 +793,7 @@ function RealizarConstatacion() {
               <Grid container spacing={3} justifyContent="center" mb={2}>
                 <Grid item xs={12} md={4} lg={3}>
                   <MDBox>
-                    <MDTypography variant="h6"> Observaciones: </MDTypography>
+                    <h4> Observaciones: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={9}>
@@ -790,13 +824,7 @@ function RealizarConstatacion() {
                   </MDButton>
                 </Grid>
                 <Grid item xs={12} md={4} lg={3}>
-                  <MDButton
-                    className="aceptar"
-                    endIcon={<SaveIcon />}
-                    type="submit"
-                    fullWidth
-                    onClick={() => peticionput()}
-                  >
+                  <MDButton className="aceptar" endIcon={<SaveIcon />} type="submit" fullWidth>
                     Actualizar
                   </MDButton>
                 </Grid>
@@ -854,7 +882,7 @@ function RealizarConstatacion() {
                 <MaterialTable
                   columns={columns}
                   data={data}
-                  title="Empleados"
+                  title="Constataciones Físicas"
                   // actions={[
                   //   {
                   //     icon: "edit",

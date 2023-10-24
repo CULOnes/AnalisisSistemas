@@ -16,9 +16,11 @@ import Divider from "@mui/material/Divider";
 import MDButton from "components/MDButton";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import "./ReporteActivos.css";
+import Button from "@mui/material/Button";
 import { Formik, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import SaveIcon from "@mui/icons-material/Save";
+import ClearIcon from "@mui/icons-material/Clear";
 
 const columns = [
   {
@@ -34,15 +36,11 @@ const columns = [
     field: "emp_Apellido",
   },
   {
-    title: "Empresa",
+    title: "Marca",
     field: "emp_Telefono",
   },
   {
-    title: "Ciudad",
-    field: "emp_Edad",
-  },
-  {
-    title: "Ubicacion",
+    title: "Estado",
     field: "emp_Edad",
   },
   {
@@ -50,25 +48,27 @@ const columns = [
     field: "emp_Edad",
   },
   {
-    title: "Tipo de Activo",
-    field: "emp_Edad",
-  },
-  {
     title: "Clase",
     field: "emp_Edad",
   },
   {
-    title: "Subclase",
+    title: "Ubicacion",
+    field: "emp_Edad",
+  },
+  {
+    title: "Tipo de Activo",
     field: "emp_Edad",
   },
 ];
 
 const valSchema = Yup.object().shape({
+  tipo_busqueda: Yup.string().required("El tipo de busqueda es obligatorio"),
   criterio: Yup.string()
     .matches(/^[a-zA-Z0-9]*$/, "Solo se permiten números y letras")
     .required("El criterio de busqueda es obligatorio"),
   fecha_inicio: Yup.date().max(new Date(), "La fecha no puede ser mayor que la fecha actual"),
   fecha_fin: Yup.date().max(new Date(), "La fecha no puede ser mayor que la fecha actual"),
+  tipo_reporte: Yup.string().required("El tipo de reporte es obligatorio"),
 });
 
 const useStyles = makeStyles((theme) => ({
@@ -103,6 +103,9 @@ function ReporteActivos() {
   const [isChecked2, setIsChecked2] = useState(false);
   const [empleadoseleccionado, setEmpleadoSeleccionado] = useState({
     tipo_busqueda: 0,
+    criterio_busqueda: 0,
+    fecha_inicio: 0,
+    fecha_fin: 0,
     tipo_reporte: 0,
   });
 
@@ -152,62 +155,47 @@ function ReporteActivos() {
   };
 
   const peticionpost = async () => {
-    if (empleadoseleccionado.tipo_busqueda === 0) {
-      Swal.fire({
-        icon: "info",
-        title: "",
-        text: "Debe seleccionar un tipo de busqueda",
-      });
-    } else if (empleadoseleccionado.tipo_reporte === 0) {
-      Swal.fire({
-        icon: "info",
-        title: "",
-        text: "Debe seleccionar un tipo de reporte",
-      });
-    } else {
-      abrircerrarModalInsertar();
-      // Swal.showLoading();
-      // if (
-      //   empleadoseleccionado.pue_Codigo === 0 ||
-      //   empleadoseleccionado.emp_Nombre === "" ||
-      //   empleadoseleccionado.emp_Apellido === "" ||
-      //   empleadoseleccionado.emp_Direccion === "" ||
-      //   empleadoseleccionado.emp_Telefono === 0 ||
-      //   empleadoseleccionado.emp_Dpi === "" ||
-      //   empleadoseleccionado.emp_Edad === 0 ||
-      //   empleadoseleccionado.emp_Nacimiento === 0
-      // ) {
-      //   abrircerrarModalInsertar();
-      //   Swal.close();
-      //   Swal.fire({
-      //     icon: "info",
-      //     title: "",
-      //     html: "Debe de llenar <b>todos</b> los campos",
-      //   });
-      // } else {
-      //   abrircerrarModalInsertar();
-      //   await axios
-      //     .post("https://localhost:7235/api/Empleados/registroempleados", empleadoseleccionado)
-      //     .then((response) => {
-      //       setData(data.concat(response.data));
-      //       Swal.close();
-      //       Swal.fire({
-      //         icon: "success",
-      //         title: "",
-      //         text: "Empleado creado exitosamente",
-      //         timer: 2500,
-      //       });
-      //     })
-      //     .catch((error) => {
-      //       Swal.close();
-      //       Swal.fire({
-      //         icon: "error",
-      //         title: "",
-      //         text: error.response.data,
-      //         timer: 2500,
-      //       });
-      //     });
-    }
+    // Swal.showLoading();
+    // if (
+    //   empleadoseleccionado.pue_Codigo === 0 ||
+    //   empleadoseleccionado.emp_Nombre === "" ||
+    //   empleadoseleccionado.emp_Apellido === "" ||
+    //   empleadoseleccionado.emp_Direccion === "" ||
+    //   empleadoseleccionado.emp_Telefono === 0 ||
+    //   empleadoseleccionado.emp_Dpi === "" ||
+    //   empleadoseleccionado.emp_Edad === 0 ||
+    //   empleadoseleccionado.emp_Nacimiento === 0
+    // ) {
+    //   abrircerrarModalInsertar();
+    //   Swal.close();
+    //   Swal.fire({
+    //     icon: "info",
+    //     title: "",
+    //     html: "Debe de llenar <b>todos</b> los campos",
+    //   });
+    // } else {
+    //   abrircerrarModalInsertar();
+    //   await axios
+    //     .post("https://localhost:7235/api/Empleados/registroempleados", empleadoseleccionado)
+    //     .then((response) => {
+    //       setData(data.concat(response.data));
+    //       Swal.close();
+    //       Swal.fire({
+    //         icon: "success",
+    //         title: "",
+    //         text: "Empleado creado exitosamente",
+    //         timer: 2500,
+    //       });
+    //     })
+    //     .catch((error) => {
+    //       Swal.close();
+    //       Swal.fire({
+    //         icon: "error",
+    //         title: "",
+    //         text: error.response.data,
+    //         timer: 2500,
+    //       });
+    //     });
   };
 
   const peticionput = async () => {
@@ -331,6 +319,16 @@ function ReporteActivos() {
   const validarinfo = (values, { resetForm }) => {
     console.log("Envío de Formulario:", values);
     resetForm();
+
+    abrircerrarModalInsertar();
+
+    Swal.fire({
+      icon: "success",
+      title: "Formulario Enviado",
+      text: "El formulario se ha enviado con éxito",
+      timer: 2500, // Controla cuánto tiempo se muestra el mensaje (en milisegundos)
+      timerProgressBar: true, // Muestra una barra de progreso durante el tiempo de visualización
+    });
   };
 
   const handleCheckboxChange = (event) => {
@@ -360,9 +358,11 @@ function ReporteActivos() {
       <MDBox pb={1}>
         <Formik
           initialValues={{
-            criterio: "",
+            tipo_busqueda: "",
+            criterio_busqueda: "",
             fecha_inicio: "",
             fecha_fin: "",
+            tipo_reporte: "",
           }}
           validationSchema={valSchema}
           onSubmit={validarinfo}
@@ -371,32 +371,37 @@ function ReporteActivos() {
             <form onSubmit={handleSubmit}>
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={4} lg={5}>
-                  <MDBox mb={2}>
-                    <MDTypography variant="h6"> Tipo de Busqueda: </MDTypography>
+                  <MDBox mt={2} pb={4}>
+                    <h4> Tipo de Busqueda: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={7}>
-                  <MDBox mb={2}>
-                    <select name="tipo_busqueda" className="combo" onChange={handleChange}>
+                  <MDBox mt={2}>
+                    <Field
+                      as="select"
+                      id="tipo_busqueda"
+                      name="tipo_busqueda"
+                      className="form-control"
+                    >
                       <option key="0" value="0">
-                        Seleccione el Tipo de Busqueda
+                        Seleccione el Tipo de Busqueda:
                       </option>
-                      <option key="1" value="1">
+                      <option key="1" value="opcion1">
                         Ubicacion Fisica
                       </option>
-                      <option key="2" value="2">
+                      <option key="2" value="opcion2">
                         Proveedor
                       </option>
-                      <option key="3" value="3">
+                      <option key="3" value="opcion3">
                         Custodio
                       </option>
-                      <option key="4" value="4">
+                      <option key="4" value="opcion4">
                         Tipo y Clase
                       </option>
-                      <option key="5" value="5">
+                      <option key="5" value="opcion5">
                         Estado
                       </option>
-                      <option key="6" value="6">
+                      <option key="6" value="opcion6">
                         Marca
                       </option>
                       {/* {datatp.map((element) => (
@@ -404,35 +409,36 @@ function ReporteActivos() {
                     {element.pue_Nombre}
                   </option>
                 ))} */}
-                    </select>
+                    </Field>
                   </MDBox>
+                  <ErrorMessage name="tipo_busqueda" component="small" className="error" />
                 </Grid>
               </Grid>
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={4} lg={5}>
                   <MDBox mb={2}>
-                    <MDTypography variant="h6"> Criterio de Busqueda: </MDTypography>
+                    <h4> Criterio de Busqueda: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={7}>
-                  <MDBox mb={2}>
+                  <MDBox>
                     <Field
                       as={OutlinedInput}
                       name="criterio"
                       id="criterio"
                       type="text"
-                      className="campos"
+                      className="form-control"
                       placeholder="Criterio de Busqueda"
                     />
                     <br />
-                    <ErrorMessage name="criterio" component="small" className="error" />
                   </MDBox>
+                  <ErrorMessage name="criterio" component="small" className="error" />
                 </Grid>
               </Grid>
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={4} lg={7}>
                   <MDBox mb={2}>
-                    <MDTypography variant="h6"> ¿Buscar por fecha de compra? </MDTypography>
+                    <h4> ¿Buscar por fecha de compra? </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={5}>
@@ -451,7 +457,7 @@ function ReporteActivos() {
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={4} lg={5}>
                   <MDBox mb={2}>
-                    <MDTypography variant="h6"> Fecha Inicio: </MDTypography>
+                    <h4> Fecha Inicio: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={7}>
@@ -461,18 +467,18 @@ function ReporteActivos() {
                       name="fecha_inicio"
                       id="fecha_inicio"
                       type="date"
-                      className="campos"
+                      className="form-control"
                       disabled={!isChecked}
                     />
                     <br />
-                    <ErrorMessage name="fecha_inicio" component="small" className="error" />
                   </MDBox>
+                  <ErrorMessage name="fecha_inicio" component="small" className="error" />
                 </Grid>
               </Grid>
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={4} lg={5}>
                   <MDBox mb={2}>
-                    <MDTypography variant="h6"> Fecha Fin: </MDTypography>
+                    <h4> Fecha Fin: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={7}>
@@ -482,39 +488,44 @@ function ReporteActivos() {
                       name="fecha_fin"
                       id="fecha_fin"
                       type="date"
-                      className="campos"
+                      className="form-control"
                       disabled={!isChecked}
                     />
                     <br />
-                    <ErrorMessage name="fecha_fin" component="small" className="error" />
                   </MDBox>
+                  <ErrorMessage name="fecha_fin" component="small" className="error" />
                 </Grid>
               </Grid>
               <Grid container spacing={3} justifyContent="center">
-                <Grid item xs={12} md={6} lg={5}>
-                  <MDBox mb={2}>
-                    <MDTypography variant="h6"> Tipo de Reporte: </MDTypography>
+                <Grid item xs={12} md={4} lg={5}>
+                  <MDBox mt={2} pb={2}>
+                    <h4> Tipo de Reporte: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={7}>
-                  <MDBox mb={2}>
-                    <select name="tipo_reporte" className="combo" onChange={handleChange}>
+                  <MDBox mt={2}>
+                    <Field
+                      as="select"
+                      id="tipo_reporte"
+                      name="tipo_reporte"
+                      className="form-control"
+                    >
                       <option key="0" value="0">
-                        Seleccione el Tipo de Reporte
+                        Seleccione el Tipo de Reporte:
                       </option>
-                      <option key="1" value="1">
+                      <option key="1" value="opcion1">
                         Contable
                       </option>
-                      <option key="2" value="2">
+                      <option key="2" value="opcion2">
                         Custodio
                       </option>
-                      <option key="3" value="3">
+                      <option key="3" value="opcion3">
                         De Mantenimiento
                       </option>
-                      <option key="4" value="4">
+                      <option key="4" value="opcion4">
                         Financiero
                       </option>
-                      <option key="5" value="5">
+                      <option key="5" value="opcion5">
                         General
                       </option>
                       {/* {datatp.map((element) => (
@@ -522,18 +533,19 @@ function ReporteActivos() {
                           {element.pue_Nombre}
                         </option>
                       ))} */}
-                    </select>
+                    </Field>
                   </MDBox>
+                  <ErrorMessage name="tipo_reporte" component="small" className="error" />
                 </Grid>
               </Grid>
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={4} lg={7}>
-                  <MDBox mb={4}>
-                    <MDTypography variant="h6"> ¿Incluir bajas del mes actual? </MDTypography>
+                  <MDBox mt={1} mb={4}>
+                    <h4> ¿Incluir bajas del mes actual? </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={5}>
-                  <MDBox mb={1}>
+                  <MDBox mt={1}>
                     <Field
                       type="checkbox"
                       name="fecha_compra"
@@ -547,7 +559,7 @@ function ReporteActivos() {
               </Grid>
               <Grid container spacing={3} justifyContent="center" mb={1}>
                 <Grid item xs={12} md={4} lg={3}>
-                  <MDButton
+                  <Button
                     className="aceptar"
                     endIcon={<SaveIcon />}
                     type="submit"
@@ -555,17 +567,18 @@ function ReporteActivos() {
                     onClick={() => peticionpost()}
                   >
                     Consultar
-                  </MDButton>
+                  </Button>
                 </Grid>
                 <Grid item xs={12} md={4} lg={3}>
-                  <MDButton
-                    variant="gradient"
-                    color="light"
+                  <Button
+                    classname="cancelar"
+                    endIcon={<ClearIcon />}
+                    type="submit"
                     fullWidth
                     onClick={() => abrircerrarModalInsertar()}
                   >
                     Cancelar
-                  </MDButton>
+                  </Button>
                 </Grid>
               </Grid>
             </form>

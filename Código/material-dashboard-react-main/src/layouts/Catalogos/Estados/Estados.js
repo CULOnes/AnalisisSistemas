@@ -9,7 +9,7 @@ import "styles/styles.css";
 import MaterialTable from "material-table";
 import { Modal, OutlinedInput } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-// import Swal from "sweetalert2";
+import Swal from "sweetalert2";
 import MDInput from "components/MDInput";
 import MDTypography from "components/MDTypography";
 import Divider from "@mui/material/Divider";
@@ -148,6 +148,16 @@ function Estados() {
     // eslint-disable-next-line no-console
     console.log("Envío de Formulario:", values);
     resetForm();
+
+    abrircerrarModalInsertar();
+
+    Swal.fire({
+      icon: "success",
+      title: "Formulario Enviado",
+      text: "El formulario se ha enviado con éxito",
+      timer: 2500, // Controla cuánto tiempo se muestra el mensaje (en milisegundos)
+      timerProgressBar: true, // Muestra una barra de progreso durante el tiempo de visualización
+    });
   };
 
   const peticionpost = async () => {
@@ -321,9 +331,7 @@ function Estados() {
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={4} lg={8}>
                   <MDBox mb={2} pb={3}>
-                    <MDTypography variant="h6">
-                      En este estado, ¿El activo se considera como dado de baja?
-                    </MDTypography>
+                    <h4>En este estado, ¿El activo se considera como dado de baja?</h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={4}>
@@ -357,7 +365,7 @@ function Estados() {
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={4} lg={3}>
                   <MDBox mt={2}>
-                    <MDTypography variant="h6"> Nombre: </MDTypography>
+                    <h4> Nombre: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={9}>
@@ -367,6 +375,7 @@ function Estados() {
                       name="cc_nombre"
                       id="cc_nombre"
                       type="text"
+                      className="form-control"
                       placeholder="Nombre del estado"
                     />
                   </MDBox>
@@ -376,7 +385,7 @@ function Estados() {
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={4} lg={3}>
                   <MDBox mt={2} pb={3}>
-                    <MDTypography variant="h6"> Descripción: </MDTypography>
+                    <h4> Descripción: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={9}>

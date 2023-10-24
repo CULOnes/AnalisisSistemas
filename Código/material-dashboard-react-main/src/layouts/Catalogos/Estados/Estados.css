@@ -27,6 +27,15 @@
     font-size: 12px !important;
 }
 
+.form-control{
+    /* width: 75%; */
+    height: 35px !important;
+    border-radius: 10px !important;
+    border: solid #CACACA 1px !important;
+    outline: none !important;
+    font-size: 16px !important;
+}
+
 .swal2-container {
     z-index: 9999; /* El valor puede ser ajustado según tus necesidades */
 }
