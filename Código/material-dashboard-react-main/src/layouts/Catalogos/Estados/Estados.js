@@ -3,14 +3,13 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
-// import axios from "axios";
+import axios from "axios";
 import MDBox from "components/MDBox";
 import "styles/styles.css";
 import MaterialTable from "material-table";
 import { Modal, OutlinedInput } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-// import Swal from "sweetalert2";
-import MDInput from "components/MDInput";
+import Swal from "sweetalert2";
 import MDTypography from "components/MDTypography";
 import Divider from "@mui/material/Divider";
 import MDButton from "components/MDButton";
@@ -26,43 +25,24 @@ import TextField from "@mui/material/TextField";
 const columns = [
   {
     title: "ID",
-    field: "com_Codigo",
+    field: "est_Codigo",
   },
   {
-    title: "Descripcion",
-    field: "com_TipoCombustible",
+    title: "Nombre",
+    field: "est_Nombre",
   },
   {
     title: "¿Dado de baja?",
-    field: "com_Marca",
+    field: "est_Baja",
   },
 ];
 
-function CheckboxComponent() {
-  const [isChecked, setIsChecked] = useState(false);
-
-  const handleCheckboxChange = () => {
-    setIsChecked(!isChecked);
-  };
-
-  return (
-    <div>
-      <input
-        className="check"
-        type="checkbox"
-        checked={isChecked}
-        onChange={handleCheckboxChange}
-      />
-    </div>
-  );
-}
-
 const valSchema = Yup.object().shape({
-  cc_nombre: Yup.string()
+  est_Nombre: Yup.string()
     .matches(/^[a-zA-Z0-9]+$/, "Solo se permiten números y letras")
     .required("El nombre del estado es requerido")
     .max(50, "El nombre no puede tener más de 50 caracteres"),
-  cc_descripcion: Yup.string()
+  est_Descripcion: Yup.string()
     .required("La descripción es requerida")
     .max(250, "La descripción no puede tener más de 250 caracteres"),
 });
@@ -89,14 +69,15 @@ const useStyles = makeStyles((theme) => ({
 
 function Estados() {
   const styles = useStyles();
-  const [data /* , setData */] = useState([]);
+  const [data, setData] = useState([]);
   const [modalinsertar, setModalInsertar] = useState(false);
   const [modaleditar, setModalEditar] = useState(false);
   const [modaleliminar, setModalEliminar] = useState(false);
   const [showComponent, setShowComponent] = useState(false);
-  const [EstadoSeleccionado, setEstadoSeleccionado] = useState({
-    Est_Descripcion: "",
-    Est_Baja: 0,
+  const [estadoSeleccionado, setEstadoSeleccionado] = useState({
+    est_Descripcion: "",
+    est_Nombre: "",
+    est_Baja: false,
   });
 
   const abrircerrarModalInsertar = () => {
@@ -127,8 +108,8 @@ function Estados() {
     setModalEliminar(!modaleliminar);
   };
 
-  const seleccionarCombustible = (combustible, caso) => {
-    setEstadoSeleccionado(combustible);
+  const seleccionarEstado = (estado, caso) => {
+    setEstadoSeleccionado(estado);
     if (caso === "Editar") {
       abrircerrarModalEditar();
     } else {
@@ -136,160 +117,133 @@ function Estados() {
     }
   };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setEstadoSeleccionado((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
+  const peticionpost = async (values) => {
+    Swal.showLoading();
+    if (values.est_Nombre === "" || values.est_Descripcion === "") {
+      abrircerrarModalInsertar();
+      Swal.close();
+      Swal.fire({
+        icon: "info",
+        title: "",
+        html: "Debe de llenar <b>todos</b> los campos",
+      });
+    } else {
+      abrircerrarModalInsertar();
+      await axios
+        .post("https://localhost:7235/api/Estados/registroestados", values)
+        .then((response) => {
+          setData(data.concat(response.data));
+          Swal.close();
+          Swal.fire({
+            icon: "success",
+            title: "",
+            text: "Estado creado exitosamente",
+            timer: 2500,
+          });
+        })
+        .catch((error) => {
+          Swal.close();
+          Swal.fire({
+            icon: "error",
+            title: "",
+            text: error.response.data,
+            timer: 2500,
+          });
+        });
+    }
   };
 
-  const onSubmit = (values, { resetForm }) => {
-    // eslint-disable-next-line no-console
-    console.log("Envío de Formulario:", values);
-    resetForm();
-  };
-
-  const peticionpost = async () => {
-    // abrircerrarModalEditar();
-    // Swal.showLoading();
-    // if (
-    //   combustibleseleccionado.com_TipoCombustible === "" ||
-    //   combustibleseleccionado.com_Marca === ""
-    // ) {
-    //   abrircerrarModalInsertar();
-    //   Swal.close();
-    //   Swal.fire({
-    //     icon: "info",
-    //     title: "",
-    //     html: "Debe de llenar <b>todos</b> los campos",
-    //   });
-    // } else {
-    //   abrircerrarModalInsertar();
-    //   await axios
-    //     .post(
-    //       "https://localhost:7235/api/Combustibles/registrocombustibles",
-    //       combustibleseleccionado
-    //     )
-    //     .then((response) => {
-    //       setData(data.concat(response.data));
-    //       Swal.close();
-    //       Swal.fire({
-    //         icon: "success",
-    //         title: "",
-    //         text: "Combustible creado exitosamente",
-    //         timer: 2500,
-    //       });
-    //     })
-    //     .catch((error) => {
-    //       Swal.close();
-    //       Swal.fire({
-    //         icon: "error",
-    //         title: "",
-    //         text: error.response.data,
-    //         timer: 2500,
-    //       });
-    //     });
-    // }
-  };
-
-  const peticionput = async () => {
-    // if (
-    //   combustibleseleccionado.com_TipoCombustible === "" ||
-    //   combustibleseleccionado.com_Marca === ""
-    // ) {
-    //   abrircerrarModalEditar();
-    //   Swal.close();
-    //   Swal.fire({
-    //     icon: "info",
-    //     title: "",
-    //     html: "Debe de llenar <b>todos</b> los campos",
-    //   });
-    // } else {
-    //   abrircerrarModalEditar();
-    //   Swal.showLoading();
-    //   await axios
-    //     .put("https://localhost:7235/api/Combustibles/actualizar", combustibleseleccionado)
-    //     .then(() => {
-    //       const copiaArray = [...data];
-    //       const indice = copiaArray.findIndex(
-    //         (elemento) => elemento.com_Codigo === combustibleseleccionado.com_Codigo
-    //       );
-    //       if (indice !== -1) {
-    //         copiaArray[indice] = {
-    //           ...copiaArray[indice],
-    //           com_TipoCombustible: combustibleseleccionado.com_TipoCombustible,
-    //           com_Marca: combustibleseleccionado.com_Marca,
-    //         };
-    //       }
-    //       setData(copiaArray);
-    //       Swal.close();
-    //       Swal.fire({
-    //         icon: "success",
-    //         title: "",
-    //         text: "Combustible actualizado exitosamente",
-    //         timer: 2500,
-    //       });
-    //     })
-    //     .catch((error) => {
-    //       Swal.close();
-    //       Swal.fire({
-    //         icon: "error",
-    //         title: "",
-    //         text: error.response.data,
-    //         timer: 2500,
-    //       });
-    //     });
-    // }
+  const peticionput = async (values) => {
+    if (values.est_Nombre === "" || values.est_Descripcion === "") {
+      abrircerrarModalEditar();
+      Swal.close();
+      Swal.fire({
+        icon: "info",
+        title: "",
+        html: "Debe de llenar <b>todos</b> los campos",
+      });
+    } else {
+      abrircerrarModalEditar();
+      Swal.showLoading();
+      await axios
+        .put("https://localhost:7235/api/Estados/actualizar", values)
+        .then(() => {
+          const copiaArray = [...data];
+          const indice = copiaArray.findIndex(
+            (elemento) => elemento.est_Codigo === values.est_Codigo
+          );
+          if (indice !== -1) {
+            copiaArray[indice] = {
+              ...copiaArray[indice],
+              est_Nombre: values.est_Nombre,
+              est_Descripcion: values.est_Descripcion,
+              est_Baja: values.est_Baja,
+            };
+          }
+          setData(copiaArray);
+          Swal.close();
+          Swal.fire({
+            icon: "success",
+            title: "",
+            text: "Estado actualizado exitosamente",
+            timer: 2500,
+          });
+        })
+        .catch((error) => {
+          Swal.close();
+          Swal.fire({
+            icon: "error",
+            title: "",
+            text: error.response.data,
+            timer: 2500,
+          });
+        });
+    }
   };
 
   const peticiondelete = async () => {
-    // abrircerrarModalEliminar();
-    // Swal.showLoading();
-    // await axios
-    //   .put("https://localhost:7235/api/Combustibles/eliminar", combustibleseleccionado)
-    //   .then(() => {
-    //     setData(
-    //       data.filter(
-    //         (combustible) => combustible.com_Codigo !== combustibleseleccionado.com_Codigo
-    //       )
-    //     );
-    //     Swal.close();
-    //     Swal.fire({
-    //       icon: "success",
-    //       title: "",
-    //       text: "Combustible eliminado exitosamente",
-    //       timer: 2500,
-    //     });
-    //   })
-    //   .catch((error) => {
-    //     Swal.close();
-    //     Swal.fire({
-    //       icon: "error",
-    //       title: "",
-    //       text: error.response.data,
-    //       timer: 2500,
-    //     });
-    //   });
+    abrircerrarModalEliminar();
+    Swal.showLoading();
+    await axios
+      .put("https://localhost:7235/api/Estados/eliminar", estadoSeleccionado)
+      .then(() => {
+        setData(data.filter((estado) => estado.est_Codigo !== estadoSeleccionado.est_Codigo));
+        Swal.close();
+        Swal.fire({
+          icon: "success",
+          title: "",
+          text: "Combustible eliminado exitosamente",
+          timer: 2500,
+        });
+      })
+      .catch((error) => {
+        Swal.close();
+        Swal.fire({
+          icon: "error",
+          title: "",
+          text: error.response.data,
+          timer: 2500,
+        });
+      });
   };
 
   const peticionget = async () => {
-    // Swal.showLoading();
-    // await axios
-    //   .get("https://localhost:7235/api/Combustibles/combustibles")
-    //   .then((response) => {
-    //     setData(response.data);
-    //     Swal.close();
-    //   })
-    //   .catch((error) => {
-    //     Swal.close();
-    //     Swal.fire({
-    //       icon: "error",
-    //       title: "",
-    //       text: error.response.data,
-    //       timer: 2500,
-    //     });
-    //   });
+    Swal.showLoading();
+    await axios
+      .get("https://localhost:7235/api/Estados/estados")
+      .then((response) => {
+        setData(response.data);
+        Swal.close();
+      })
+      .catch((error) => {
+        Swal.close();
+        Swal.fire({
+          icon: "error",
+          title: "",
+          text: error.response.data,
+          timer: 2500,
+        });
+      });
   };
 
   useEffect(() => {
@@ -310,11 +264,12 @@ function Estados() {
       <MDBox pt={2} pb={1}>
         <Formik
           initialValues={{
-            cc_nombre: "",
-            cc_descripcion: "",
+            est_Nombre: "",
+            est_Descripcion: "",
+            est_Baja: false,
           }}
           validationSchema={valSchema}
-          onSubmit={onSubmit}
+          onSubmit={peticionpost}
         >
           {({ handleSubmit }) => (
             <form onSubmit={handleSubmit}>
@@ -328,29 +283,7 @@ function Estados() {
                 </Grid>
                 <Grid item xs={12} md={6} lg={4}>
                   <MDBox mt={3} mb={2}>
-                    <CheckboxComponent /> {}
-                    {/* <select
-                      id="Est_Baja"
-                      name="Est_Baja"
-                      className="form-control"
-                      onBlur={Formik.handleBlur}
-                      onChange={handleChange}
-                    >
-                      <option key="0" value="0">
-                        Seleccione una opcion
-                      </option>
-                      <option key="0" value="0">
-                        Si
-                      </option>
-                      <option key="0" value="0">
-                        No
-                      </option> */}
-                    {/* {datatp.map((element) => (
-                  <option key={element.pue_Codigo} value={element.pue_Codigo}>
-                    {element.pue_Nombre}
-                  </option>
-                ))} */}
-                    {/* </select> */}
+                    <Field type="checkbox" name="est_Baja" id="est_Baja" className="cuadrito" />
                   </MDBox>
                 </Grid>
               </Grid>
@@ -364,13 +297,13 @@ function Estados() {
                   <MDBox mt={2}>
                     <Field
                       as={OutlinedInput}
-                      name="cc_nombre"
-                      id="cc_nombre"
+                      name="est_Nombre"
+                      id="est_Nombre"
                       type="text"
                       placeholder="Nombre del estado"
                     />
                   </MDBox>
-                  <ErrorMessage name="cc_nombre" component="small" className="error" />
+                  <ErrorMessage name="est_Nombre" component="small" className="error" />
                 </Grid>
               </Grid>
               <Grid container spacing={3} justifyContent="center">
@@ -383,8 +316,8 @@ function Estados() {
                   <MDBox mt={2}>
                     <Field
                       as={TextField}
-                      name="cc_descripcion"
-                      id="cc_descripcion outlined-multiline-static"
+                      name="est_Descripcion"
+                      id="est_Descripcion outlined-multiline-static"
                       type="text"
                       multiline
                       fullWidth
@@ -392,18 +325,12 @@ function Estados() {
                       placeholder="Descripcion"
                     />
                   </MDBox>
-                  <ErrorMessage name="cc_descripcion" component="small" className="error" />
+                  <ErrorMessage name="est_Descripcion" component="small" className="error" />
                 </Grid>
               </Grid>
               <Grid container spacing={3} justifyContent="center" mt={2}>
                 <Grid item xs={12} md={4} lg={3}>
-                  <Button
-                    className="aceptar"
-                    endIcon={<SaveIcon />}
-                    type="submit"
-                    fullWidth
-                    onClick={() => peticionpost()}
-                  >
+                  <Button className="aceptar" endIcon={<SaveIcon />} type="submit" fullWidth>
                     Insertar
                   </Button>
                 </Grid>
@@ -428,62 +355,97 @@ function Estados() {
 
   const bodyEditar = (
     <div className={styles.modal}>
-      <MDTypography variant="h3"> Editar Estado </MDTypography>
+      <h2> Editar Estado </h2>
       <Divider sx={{ marginTop: 1 }} light={false} />
       <MDBox pt={2} pb={3}>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={2}>
-              <MDTypography variant="h6"> Descripcion: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={2}>
-              <MDInput
-                type="text"
-                label="Nombre"
-                name="com_TipoCombustible"
-                onChange={handleChange}
-                value={EstadoSeleccionado && EstadoSeleccionado.com_TipoCombustible}
-              />
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={2}>
-              <MDTypography variant="h6"> Descripcion: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={2}>
-              <MDInput
-                type="text"
-                label="Desccripcion"
-                name="com_Marca"
-                onChange={handleChange}
-                value={EstadoSeleccionado && EstadoSeleccionado.com_Marca}
-              />
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDButton variant="gradient" color="info" fullWidth onClick={() => peticionput()}>
-              Actualizar
-            </MDButton>
-          </Grid>
-          <Grid item xs={12} md={4} lg={3}>
-            <MDButton
-              variant="gradient"
-              color="light"
-              fullWidth
-              onClick={() => abrircerrarModalEditar()}
-            >
-              Cancelar
-            </MDButton>
-          </Grid>
-        </Grid>
+        <Formik
+          initialValues={{
+            est_Nombre: estadoSeleccionado && estadoSeleccionado.est_Nombre,
+            est_Descripcion: estadoSeleccionado && estadoSeleccionado.est_Descripcion,
+            est_Baja: estadoSeleccionado && estadoSeleccionado.est_Baja,
+            est_Codigo: estadoSeleccionado && estadoSeleccionado.est_Codigo,
+          }}
+          validationSchema={valSchema}
+          onSubmit={peticionput}
+        >
+          {({ handleSubmit }) => (
+            <form onSubmit={handleSubmit}>
+              <Grid container spacing={3} justifyContent="center">
+                <Grid item xs={12} md={4} lg={8}>
+                  <MDBox mb={2} pb={3}>
+                    <MDTypography variant="h6">
+                      En este estado, ¿El activo se considera como dado de baja?
+                    </MDTypography>
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} md={6} lg={4}>
+                  <MDBox mt={3} mb={2}>
+                    <Field type="checkbox" name="est_Baja" id="est_Baja" className="cuadrito" />
+                  </MDBox>
+                </Grid>
+              </Grid>
+              <Grid container spacing={3} justifyContent="center">
+                <Grid item xs={12} md={4} lg={3}>
+                  <MDBox mt={2}>
+                    <MDTypography variant="h6"> Nombre: </MDTypography>
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} md={6} lg={9}>
+                  <MDBox mt={2}>
+                    <Field
+                      as={OutlinedInput}
+                      name="est_Nombre"
+                      id="est_Nombre"
+                      type="text"
+                      placeholder="Nombre del estado"
+                    />
+                  </MDBox>
+                  <ErrorMessage name="est_Nombre" component="small" className="error" />
+                </Grid>
+              </Grid>
+              <Grid container spacing={3} justifyContent="center">
+                <Grid item xs={12} md={4} lg={3}>
+                  <MDBox mt={2} pb={3}>
+                    <MDTypography variant="h6"> Descripción: </MDTypography>
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} md={6} lg={9}>
+                  <MDBox mt={2}>
+                    <Field
+                      as={TextField}
+                      name="est_Descripcion"
+                      id="est_Descripcion outlined-multiline-static"
+                      type="text"
+                      multiline
+                      fullWidth
+                      rows={2}
+                      placeholder="Descripcion"
+                    />
+                  </MDBox>
+                  <ErrorMessage name="est_Descripcion" component="small" className="error" />
+                </Grid>
+              </Grid>
+              <Grid container spacing={3} justifyContent="center" mt={2}>
+                <Grid item xs={12} md={4} lg={3}>
+                  <Button className="aceptar" endIcon={<SaveIcon />} type="submit" fullWidth>
+                    Insertar
+                  </Button>
+                </Grid>
+                <Grid item xs={12} md={4} lg={3}>
+                  <Button
+                    className="cancelar"
+                    endIcon={<ClearIcon />}
+                    type="submit"
+                    fullWidth
+                    onClick={() => abrircerrarModalEditar()}
+                  >
+                    Cancelar
+                  </Button>
+                </Grid>
+              </Grid>
+            </form>
+          )}
+        </Formik>
       </MDBox>
     </div>
   );
@@ -492,7 +454,7 @@ function Estados() {
     <div className={styles.modal}>
       <p>
         Deseas Eliminar el Estado
-        <b> {EstadoSeleccionado && EstadoSeleccionado.com_TipoCombustible}</b>?
+        <b> {estadoSeleccionado && estadoSeleccionado.com_TipoCombustible}</b>?
       </p>
       <div align="right">
         <MDButton color="secondary" onClick={() => peticiondelete()}>
@@ -529,12 +491,12 @@ function Estados() {
                     {
                       icon: "edit",
                       tooltip: "Editar Combustible",
-                      onClick: (event, rowData) => seleccionarCombustible(rowData, "Editar"),
+                      onClick: (event, rowData) => seleccionarEstado(rowData, "Editar"),
                     },
                     {
                       icon: "delete",
                       tooltip: "Eliminar Combustible",
-                      onClick: (event, rowData) => seleccionarCombustible(rowData, "Eliminar"),
+                      onClick: (event, rowData) => seleccionarEstado(rowData, "Eliminar"),
                     },
                   ]}
                   options={{

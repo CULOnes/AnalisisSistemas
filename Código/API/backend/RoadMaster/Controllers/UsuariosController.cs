@@ -48,8 +48,8 @@ namespace RoadMaster.Controllers
             try
             {
 
-                var encriptedPassword = log.encripter(login.contraseña);
-                var query = db.Usuarios.Where(x => x.Usu_NombreUsuario == login.usuario && x.Usu_Contrasena == encriptedPassword).FirstOrDefault();
+                var encriptedPassword = log.encripter(login.Usu_Clave);
+                var query = db.Usuarios.Where(x => x.Usu_NombreUsuario == login.Usu_NombreUsuario && x.Usu_Clave == encriptedPassword).FirstOrDefault();
 
                 if (query == null)
                 {
@@ -67,7 +67,7 @@ namespace RoadMaster.Controllers
 
 
         [HttpPut("actualizar")]
-        public async ValueTask<ActionResult<UsuariosResponseDTO>> Actualizar(UsuariosRequestDTO usuarios)
+        public async ValueTask<ActionResult<UsuariosResponseDTO>> Actualizar(UsuariosRequestDTOE usuarios)
         {
             try
             {
@@ -77,7 +77,6 @@ namespace RoadMaster.Controllers
                 usuario.Usu_NombreUsuario = usuarios.Usu_NombreUsuario;
                 usuario.Usu_Nombre = usuarios.Usu_Nombre;
                 usuario.Usu_Apellido = usuarios.Usu_Apellido;
-                usuario.Usu_Correo = usuarios.Usu_Correo;
 
                 db.Entry(usuario).State = EntityState.Modified;
                 db.SaveChanges();
@@ -99,7 +98,7 @@ namespace RoadMaster.Controllers
 
                 //var id = query.Count() + 1;
 
-                var encriptedpassword = log.encripter(usuarios.Usu_Contrasena);
+                var encriptedpassword = log.encripter(usuarios.Usu_Clave);
 
                 var usuario = new Usuarios
                 {
@@ -107,8 +106,7 @@ namespace RoadMaster.Controllers
                     Usu_NombreUsuario = usuarios.Usu_NombreUsuario,
                     Usu_Nombre = usuarios.Usu_Nombre,
                     Usu_Apellido = usuarios.Usu_Apellido,
-                    Usu_Correo = usuarios.Usu_Correo,
-                    Usu_Contrasena = encriptedpassword
+                    Usu_Clave = encriptedpassword
                 };
 
                 await db.Usuarios.AddAsync(usuario);
@@ -144,8 +142,8 @@ namespace RoadMaster.Controllers
 
     public class LoginRequets
     {
-        public string usuario { get; set; }
-        public string contraseña { get; set; }
+        public string Usu_NombreUsuario { get; set; }
+        public string Usu_Clave { get; set; }
     }
 
     public class LoginResponse

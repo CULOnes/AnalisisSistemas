@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "4KippztQg/9az3LYhgLRtydIyA/sCamcMz3cWJBPMJ7E7YsZ9Use+IH5yTB4tcKWL/SKM3R4so7bvujtusFPmg==",
+  "dgSpecHash": "nMXdX4zfQL+r9453Mm2Vast14vAfq2hpx2mE94/josdGZD43eWli/2sQk8DTQ0fMooHwObfRAbZWBGINmnre6A==",
   "success": true,
-  "projectFilePath": "C:\\Users\\tavit\\OneDrive\\Escritorio\\Proyecto Analisis\\AnalisisSistemas\\Código\\API\\backend\\RoadMaster\\RoadMaster.csproj",
+  "projectFilePath": "C:\\Users\\tavit\\OneDrive\\Escritorio\\Activos Fijos\\AnalisisSistemas\\Código\\API\\backend\\RoadMaster\\RoadMaster.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\tavit\\.nuget\\packages\\azure.core\\1.24.0\\azure.core.1.24.0.nupkg.sha512",
     "C:\\Users\\tavit\\.nuget\\packages\\azure.identity\\1.6.0\\azure.identity.1.6.0.nupkg.sha512",

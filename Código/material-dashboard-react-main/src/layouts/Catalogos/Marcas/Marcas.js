@@ -3,14 +3,13 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
-// import axios from "axios";
+import axios from "axios";
 import MDBox from "components/MDBox";
 import "styles/styles.css";
 import MaterialTable from "material-table";
 import { Modal, OutlinedInput } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-// import Swal from "sweetalert2";
-import MDInput from "components/MDInput";
+import Swal from "sweetalert2";
 import MDTypography from "components/MDTypography";
 import Divider from "@mui/material/Divider";
 import MDButton from "components/MDButton";
@@ -26,42 +25,24 @@ import TextField from "@mui/material/TextField";
 const columns = [
   {
     title: "ID",
-    field: "cli_Codigo",
+    field: "mar_Codigo",
   },
   {
     title: "Nombre",
-    field: "cli_Nombre",
+    field: "mar_Nombre",
   },
   {
     title: "Descripción",
-    field: "cli_Apellido",
+    field: "mar_Descripcion",
   },
-  // {
-  //   title: "Correo",
-  //   field: "cli_Correo",
-  // },
-  // {
-  //   title: "Celular",
-  //   field: "cli_TelefonoCelular",
-  //   type: "number",
-  // },
-  // {
-  //   title: "Telefono Secundario",
-  //   field: "cli_TelefonoSecundario",
-  //   type: "number",
-  // },
-  // {
-  //   title: "Direccion",
-  //   field: "cli_Direccion",
-  // },
 ];
 
 const valSchema = Yup.object().shape({
-  cc_nombre: Yup.string()
+  mar_Nombre: Yup.string()
     .matches(/^[a-zA-Z0-9]+$/, "Solo se permiten números y letras")
     .required("El nombre de la marca es requerido")
     .max(50, "El nombre no puede tener más de 50 caracteres"),
-  cc_descripcion: Yup.string()
+  mar_Descripcion: Yup.string()
     .required("La descripción es requerida")
     .max(250, "La descripción no puede tener más de 250 caracteres"),
 });
@@ -88,19 +69,15 @@ const useStyles = makeStyles((theme) => ({
 
 function Marcas() {
   const styles = useStyles();
-  const [data /* , setData */] = useState([]);
+  const [data, setData] = useState([]);
   const [modalinsertar, setModalInsertar] = useState(false);
   const [modaleditar, setModalEditar] = useState(false);
   const [showComponent, setShowComponent] = useState(false);
   const [modaleliminar, setModalEliminar] = useState(false);
-  const [clienteseleccionado, setClienteSeleccionado] = useState({
-    cli_Codigo: 0,
-    cli_Nombre: "",
-    cli_Apellido: "",
-    cli_Correo: "",
-    cli_TelefonoCelular: 0,
-    cli_TelefonoSecundario: 0,
-    Cli_Direccion: "",
+  const [marcaseleccionada, setMarcaSeleccionada] = useState({
+    mar_Codigo: 0,
+    mar_Nombre: "",
+    mar_Descripcion: "",
   });
 
   const abrircerrarModalInsertar = () => {
@@ -112,27 +89,11 @@ function Marcas() {
   };
 
   const abrircerrarModalEliminar = () => {
-    // Swal.fire({
-    //   title: "",
-    //   html: `Estas seguro que deseas eliminar <b>${
-    //     clienteseleccionado && clienteseleccionado.cli_Nombre
-    //   }</b>`,
-    //   icon: "warning",
-    //   showCancelButton: true,
-    //   cancelButtonText: "Cancelar",
-    //   confirmButtonColor: "#3085d6",
-    //   cancelButtonColor: "#d33",
-    //   confirmButtonText: "Eliminar",
-    // }).then((result) => {
-    //   if (result.isConfirmed) {
-    //     peticiondelete();
-    //   }
-    // });
     setModalEliminar(!modaleliminar);
   };
 
-  const seleccionarCliente = (cliente, caso) => {
-    setClienteSeleccionado(cliente);
+  const seleccionarMarca = (marca, caso) => {
+    setMarcaSeleccionada(marca);
     if (caso === "Editar") {
       abrircerrarModalEditar();
     } else {
@@ -140,164 +101,132 @@ function Marcas() {
     }
   };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setClienteSeleccionado((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
+  const peticionpost = async (values) => {
+    Swal.showLoading();
+    if (values.mar_Nombre === "" || values.mar_Descripcion === "") {
+      abrircerrarModalInsertar();
+      Swal.close();
+      Swal.fire({
+        icon: "info",
+        title: "",
+        html: "Debe de llenar <b>todos</b> los campos",
+      });
+    } else {
+      abrircerrarModalInsertar();
+      await axios
+        .post("https://localhost:7235/api/Marcas/registromarca", values)
+        .then((response) => {
+          setData(data.concat(response.data));
+          Swal.close();
+          Swal.fire({
+            icon: "success",
+            title: "",
+            text: "Marca creada exitosamente",
+            timer: 2500,
+          });
+        })
+        .catch((error) => {
+          Swal.close();
+          Swal.fire({
+            icon: "error",
+            title: "",
+            text: error.response.data,
+            timer: 2500,
+          });
+        });
+    }
   };
 
-  const onSubmit = (values, { resetForm }) => {
-    // eslint-disable-next-line no-console
-    console.log("Envío de Formulario:", values);
-    resetForm();
-  };
-
-  const peticionpost = async () => {
-    // Swal.showLoading();
-    // if (
-    //   clienteseleccionado.cli_Nombre === "" ||
-    //   clienteseleccionado.cli_Apellido === "" ||
-    //   clienteseleccionado.cli_Correo === "" ||
-    //   clienteseleccionado.cli_TelefonoCelular === 0 ||
-    //   clienteseleccionado.cli_TelefonoSecundario === 0 ||
-    //   clienteseleccionado.cli_Direccion === ""
-    // ) {
-    //   abrircerrarModalInsertar();
-    //   Swal.close();
-    //   Swal.fire({
-    //     icon: "info",
-    //     title: "",
-    //     html: "Debe de llenar <b>todos</b> los campos",
-    //   });
-    // } else {
-    //   abrircerrarModalInsertar();
-    //   await axios
-    //     .post("https://localhost:7235/api/Clientes/registroclientes", clienteseleccionado)
-    //     .then((response) => {
-    //       setData(data.concat(response.data));
-    //       Swal.close();
-    //       Swal.fire({
-    //         icon: "success",
-    //         title: "",
-    //         text: "Cliente creado exitosamente",
-    //         timer: 2500,
-    //       });
-    //     })
-    //     .catch((error) => {
-    //       Swal.close();
-    //       Swal.fire({
-    //         icon: "error",
-    //         title: "",
-    //         text: error.response.data,
-    //         timer: 2500,
-    //       });
-    //     });
-    // }
-  };
-
-  const peticionput = async () => {
-    // if (
-    //   clienteseleccionado.cli_Nombre === "" ||
-    //   clienteseleccionado.cli_Apellido === "" ||
-    //   clienteseleccionado.cli_Correo === "" ||
-    //   clienteseleccionado.cli_TelefonoCelular === 0 ||
-    //   clienteseleccionado.cli_TelefonoSecundario === 0 ||
-    //   clienteseleccionado.cli_Direccion === ""
-    // ) {
-    //   abrircerrarModalEditar();
-    //   Swal.close();
-    //   Swal.fire({
-    //     icon: "info",
-    //     title: "",
-    //     html: "Debe de llenar <b>todos</b> los campos",
-    //   });
-    // } else {
-    //   abrircerrarModalEditar();
-    //   Swal.showLoading();
-    //   await axios
-    //     .put("https://localhost:7235/api/Clientes/actualizar", clienteseleccionado)
-    //     .then(() => {
-    //       const copiaArray = [...data];
-    //       const indice = copiaArray.findIndex(
-    //         (elemento) => elemento.cli_Codigo === clienteseleccionado.cli_Codigo
-    //       );
-    //       if (indice !== -1) {
-    //         copiaArray[indice] = {
-    //           ...copiaArray[indice],
-    //           cli_Nombre: clienteseleccionado.cli_Nombre,
-    //           cli_Apellido: clienteseleccionado.cli_Apellido,
-    //           cli_Correo: clienteseleccionado.cli_Correo,
-    //           cli_TelefonoCelular: clienteseleccionado.cli_TelefonoCelular,
-    //           cli_TelefonoSecundario: clienteseleccionado.cli_TelefonoSecundario,
-    //           cli_Direccion: clienteseleccionado.cli_Direccion,
-    //         };
-    //       }
-    //       setData(copiaArray);
-    //       Swal.close();
-    //       Swal.fire({
-    //         icon: "success",
-    //         title: "",
-    //         text: "Cliente actualizado exitosamente",
-    //         timer: 2500,
-    //       });
-    //     })
-    //     .catch((error) => {
-    //       Swal.close();
-    //       Swal.fire({
-    //         icon: "error",
-    //         title: "",
-    //         text: error.response.data,
-    //         timer: 2500,
-    //       });
-    //     });
-    // }
+  const peticionput = async (values) => {
+    if (values.mar_Nombre === "" || values.mar_Descripcion === "") {
+      abrircerrarModalEditar();
+      Swal.close();
+      Swal.fire({
+        icon: "info",
+        title: "",
+        html: "Debe de llenar <b>todos</b> los campos",
+      });
+    } else {
+      abrircerrarModalEditar();
+      Swal.showLoading();
+      await axios
+        .put("https://localhost:7235/api/Marcas/actualizar", values)
+        .then(() => {
+          const copiaArray = [...data];
+          const indice = copiaArray.findIndex(
+            (elemento) => elemento.mar_Codigo === values.mar_Codigo
+          );
+          if (indice !== -1) {
+            copiaArray[indice] = {
+              ...copiaArray[indice],
+              mar_Nombre: values.mar_Nombre,
+              mar_Descripcion: values.mar_Descripcion,
+            };
+          }
+          setData(copiaArray);
+          Swal.close();
+          Swal.fire({
+            icon: "success",
+            title: "",
+            text: "Marca actualizada exitosamente",
+            timer: 2500,
+          });
+        })
+        .catch((error) => {
+          Swal.close();
+          Swal.fire({
+            icon: "error",
+            title: "",
+            text: error.response.data,
+            timer: 2500,
+          });
+        });
+    }
   };
 
   const peticiondelete = async () => {
-    // abrircerrarModalEliminar();
-    // Swal.showLoading();
-    // await axios
-    //   .put("https://localhost:7235/api/Clientes/eliminar", clienteseleccionado)
-    //   .then(() => {
-    //     setData(data.filter((cliente) => cliente.cli_Codigo !== clienteseleccionado.cli_Codigo));
-    //     Swal.close();
-    //     Swal.fire({
-    //       icon: "success",
-    //       title: "",
-    //       text: "Cliente eliminado exitosamente",
-    //       timer: 2500,
-    //     });
-    //   })
-    //   .catch((error) => {
-    //     Swal.close();
-    //     Swal.fire({
-    //       icon: "error",
-    //       title: "",
-    //       text: error.response.data,
-    //       timer: 2500,
-    //     });
-    //   });
+    abrircerrarModalEliminar();
+    Swal.showLoading();
+    await axios
+      .put("https://localhost:7235/api/Marcas/eliminar", marcaseleccionada)
+      .then(() => {
+        setData(data.filter((marca) => marca.mar_Codigo !== marcaseleccionada.mar_Codigo));
+        Swal.close();
+        Swal.fire({
+          icon: "success",
+          title: "",
+          text: "Marca eliminada exitosamente",
+          timer: 2500,
+        });
+      })
+      .catch((error) => {
+        Swal.close();
+        Swal.fire({
+          icon: "error",
+          title: "",
+          text: error.response.data,
+          timer: 2500,
+        });
+      });
   };
 
   const peticionget = async () => {
-    // Swal.showLoading();
-    // await axios
-    //   .get("https://localhost:7235/api/Clientes/clientes")
-    //   .then((response) => {
-    //     setData(response.data);
-    //     Swal.close();
-    //   })
-    //   .catch((error) => {
-    //     Swal.close();
-    //     Swal.fire({
-    //       icon: "error",
-    //       title: "",
-    //       text: error.response.data,
-    //       timer: 2500,
-    //     });
-    //   });
+    Swal.showLoading();
+    await axios
+      .get("https://localhost:7235/api/Marcas/marcas")
+      .then((response) => {
+        setData(response.data);
+        Swal.close();
+      })
+      .catch((error) => {
+        Swal.close();
+        Swal.fire({
+          icon: "error",
+          title: "",
+          text: error.response.data,
+          timer: 2500,
+        });
+      });
   };
 
   useEffect(() => {
@@ -316,113 +245,13 @@ function Marcas() {
       <h2> Agregar Nueva Marca </h2>
       <Divider sx={{ marginTop: 1 }} light={false} />
       <MDBox pt={2} pb={1}>
-        {/* <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={4}>
-            <MDBox mb={2}>
-              <MDTypography variant="h6"> Nombre </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={8}>
-            <MDBox mb={2}>
-              <MDInput
-                type="text"
-                label="Nombre"
-                name="cli_Nombre"
-                maxLength="3"
-                onChange={handleChange}
-              />
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={4}>
-            <MDBox mb={2}>
-              <MDTypography variant="h6"> Descripción: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={8}>
-            <MDBox mb={2}>
-              <MDInput
-                type="text"
-                label="Descripción"
-                name="cli_Apellido"
-                onChange={handleChange}
-              />
-            </MDBox>
-          </Grid>
-        </Grid> */}
-        {/* <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={2}>
-              <MDTypography variant="h6"> Correo: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={2}>
-              <MDInput label="Correo" name="cli_Correo" type="email" onChange={handleChange} />
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={2}>
-              <MDTypography variant="h6"> Codigo: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={2}>
-              <MDInput
-                label="Codigo"
-                name="cli_TelefonoCelular"
-                type="number"
-                onChange={handleChange}
-              />
-            </MDBox>
-          </Grid>
-        </Grid> */}
-        {/* <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={2}>
-              <MDTypography variant="h6"> Telefono Secundario: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={2}>
-              <MDInput
-                label="Telefono Secundario"
-                name="cli_TelefonoSecundario"
-                type="number"
-                onChange={handleChange}
-              />
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={2}>
-              <MDTypography variant="h6"> Direccion: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={2}>
-              <MDInput
-                label="Direccion"
-                name="cli_Direccion"
-                type="text"
-                onChange={handleChange}
-                multiline
-                rows={3}
-              />
-            </MDBox>
-          </Grid>
-        </Grid> */}
         <Formik
           initialValues={{
-            cc_nombre: "",
-            cc_descripcion: "",
+            mar_Nombre: "",
+            mar_Descripcion: "",
           }}
           validationSchema={valSchema}
-          onSubmit={onSubmit}
+          onSubmit={peticionpost}
         >
           {({ handleSubmit }) => (
             <form onSubmit={handleSubmit}>
@@ -436,13 +265,13 @@ function Marcas() {
                   <MDBox>
                     <Field
                       as={OutlinedInput}
-                      name="cc_nombre"
-                      id="cc_nombre"
+                      name="mar_Nombre"
+                      id="mar_Nombre"
                       type="text"
                       placeholder="Nombre Marca"
                     />
                   </MDBox>
-                  <ErrorMessage name="cc_nombre" component="small" className="error" />
+                  <ErrorMessage name="mar_Nombre" component="small" className="error" />
                 </Grid>
               </Grid>
               <Grid container spacing={3} justifyContent="center">
@@ -455,8 +284,8 @@ function Marcas() {
                   <MDBox mt={2}>
                     <Field
                       as={TextField}
-                      name="cc_descripcion"
-                      id="cc_descripcion outlined-multiline-static"
+                      name="mar_Descripcion"
+                      id="mar_Descripcion outlined-multiline-static"
                       type="text"
                       multiline
                       fullWidth
@@ -464,30 +293,14 @@ function Marcas() {
                       placeholder="Descripcion"
                     />
                   </MDBox>
-                  <ErrorMessage name="cc_descripcion" component="small" className="error" />
-                </Grid>
-              </Grid>
-              <Grid container spacing={3} justifyContent="center">
-                <Grid item xs={12} md={4} lg={3}>
-                  <MDBox mb={2}>
-                    <MDTypography variant="h6"> </MDTypography>
-                  </MDBox>
+                  <ErrorMessage name="mar_Descripcion" component="small" className="error" />
                 </Grid>
               </Grid>
               <Grid container spacing={3} justifyContent="center" mt={1}>
                 <Grid item xs={12} md={4} lg={3}>
-                  <Button
-                    className="aceptar"
-                    endIcon={<SaveIcon />}
-                    type="submit"
-                    fullWidth
-                    onClick={() => peticionpost()}
-                  >
+                  <Button className="aceptar" endIcon={<SaveIcon />} type="submit" fullWidth>
                     Insertar
                   </Button>
-                  {/* <MDButton variant="gradient" color="info" fullWidth onClick={() => peticionpost()}>
-              Insertar
-            </MDButton> */}
                 </Grid>
                 <Grid item xs={12} md={4} lg={3}>
                   <Button
@@ -499,14 +312,6 @@ function Marcas() {
                   >
                     Cancelar
                   </Button>
-                  {/* <MDButton
-              variant="gradient"
-              color="light"
-              fullWidth
-              onClick={() => abrircerrarModalInsertar()}
-            >
-              Cancelar
-            </MDButton> */}
                 </Grid>
               </Grid>
             </form>
@@ -518,136 +323,82 @@ function Marcas() {
 
   const bodyEditar = (
     <div className={styles.modal}>
-      <MDTypography variant="h3"> Editar Marca </MDTypography>
+      <h2> Editar Marca </h2>
       <Divider sx={{ marginTop: 1 }} light={false} />
       <MDBox pt={2} pb={3}>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={2}>
-              <MDTypography variant="h6"> Descripcion: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={2}>
-              <MDInput
-                type="text"
-                label="Nombre"
-                name="cli_Nombre"
-                onChange={handleChange}
-                value={clienteseleccionado && clienteseleccionado.cli_Nombre}
-              />
-            </MDBox>
-          </Grid>
-        </Grid>
-        {/* <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={2}>
-              <MDTypography variant="h6"> Apellido: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={2}>
-              <MDInput
-                type="text"
-                label="Apellido"
-                name="cli_Apellido"
-                onChange={handleChange}
-                value={clienteseleccionado && clienteseleccionado.cli_Apellido}
-              />
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={2}>
-              <MDTypography variant="h6"> Correo: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={2}>
-              <MDInput
-                label="Correo"
-                name="cli_Correo"
-                type="email"
-                onChange={handleChange}
-                value={clienteseleccionado && clienteseleccionado.cli_Correo}
-              />
-            </MDBox>
-          </Grid>
-        </Grid> */}
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={2}>
-              <MDTypography variant="h6"> Codigo: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={2}>
-              <MDInput
-                label="Codigo"
-                name="cli_TelefonoCelular"
-                type="number"
-                onChange={handleChange}
-                value={clienteseleccionado && clienteseleccionado.cli_TelefonoCelular}
-              />
-            </MDBox>
-          </Grid>
-        </Grid>
-        {/* <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={2}>
-              <MDTypography variant="h6"> Telefono Secundario: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={2}>
-              <MDInput
-                label="Telefono Secundario"
-                name="cli_TelefonoSecundario"
-                type="number"
-                onChange={handleChange}
-                value={clienteseleccionado && clienteseleccionado.cli_TelefonoSecundario}
-              />
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={2}>
-              <MDTypography variant="h6"> Direccion: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={2}>
-              <MDInput
-                label="Direccion"
-                name="cli_Direccion"
-                type="text"
-                onChange={handleChange}
-                multiline
-                rows={3}
-                value={clienteseleccionado && clienteseleccionado.cli_Direccion}
-              />
-            </MDBox>
-          </Grid>
-        </Grid> */}
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDButton variant="gradient" color="info" fullWidth onClick={() => peticionput()}>
-              Actualizar
-            </MDButton>
-          </Grid>
-          <Grid item xs={12} md={4} lg={3}>
-            <MDButton
-              variant="gradient"
-              color="light"
-              fullWidth
-              onClick={() => abrircerrarModalEditar()}
-            >
-              Cancelar
-            </MDButton>
-          </Grid>
-        </Grid>
+        <Formik
+          initialValues={{
+            mar_Nombre: marcaseleccionada && marcaseleccionada.mar_Nombre,
+            mar_Descripcion: marcaseleccionada && marcaseleccionada.mar_Descripcion,
+            mar_Codigo: marcaseleccionada && marcaseleccionada.mar_Codigo,
+          }}
+          validationSchema={valSchema}
+          onSubmit={peticionput}
+        >
+          {({ handleSubmit }) => (
+            <form onSubmit={handleSubmit}>
+              <Grid container spacing={3} justifyContent="center">
+                <Grid item xs={12} md={4} lg={4}>
+                  <MDBox>
+                    <MDTypography variant="h6"> Nombre Marca: </MDTypography>
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} md={6} lg={8}>
+                  <MDBox>
+                    <Field
+                      as={OutlinedInput}
+                      name="mar_Nombre"
+                      id="mar_Nombre"
+                      type="text"
+                      placeholder="Nombre Marca"
+                    />
+                  </MDBox>
+                  <ErrorMessage name="mar_Nombre" component="small" className="error" />
+                </Grid>
+              </Grid>
+              <Grid container spacing={3} justifyContent="center">
+                <Grid item xs={12} md={4} lg={4}>
+                  <MDBox mt={4} mb={2}>
+                    <MDTypography variant="h6"> Descripción: </MDTypography>
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} md={6} lg={8}>
+                  <MDBox mt={2}>
+                    <Field
+                      as={TextField}
+                      name="mar_Descripcion"
+                      id="mar_Descripcion outlined-multiline-static"
+                      type="text"
+                      multiline
+                      fullWidth
+                      rows={2}
+                      placeholder="Descripcion"
+                    />
+                  </MDBox>
+                  <ErrorMessage name="mar_Descripcion" component="small" className="error" />
+                </Grid>
+              </Grid>
+              <Grid container spacing={3} justifyContent="center" mt={1}>
+                <Grid item xs={12} md={4} lg={3}>
+                  <Button className="aceptar" endIcon={<SaveIcon />} type="submit" fullWidth>
+                    Actualizar
+                  </Button>
+                </Grid>
+                <Grid item xs={12} md={4} lg={3}>
+                  <Button
+                    className="cancelar"
+                    endIcon={<ClearIcon />}
+                    type="submit"
+                    fullWidth
+                    onClick={() => abrircerrarModalEditar()}
+                  >
+                    Cancelar
+                  </Button>
+                </Grid>
+              </Grid>
+            </form>
+          )}
+        </Formik>
       </MDBox>
     </div>
   );
@@ -656,7 +407,7 @@ function Marcas() {
     <div className={styles.modal}>
       <p>
         Deseas Eliminar la Marca
-        <b> {clienteseleccionado && clienteseleccionado.cli_Nombre}</b>?
+        <b> {marcaseleccionada && marcaseleccionada.mar_Nombre}</b>?
       </p>
       <div align="right">
         <MDButton color="secondary" onClick={() => peticiondelete()}>
@@ -692,13 +443,13 @@ function Marcas() {
                   actions={[
                     {
                       icon: "edit",
-                      tooltip: "Editar Cliente",
-                      onClick: (event, rowData) => seleccionarCliente(rowData, "Editar"),
+                      tooltip: "Editar Marca",
+                      onClick: (event, rowData) => seleccionarMarca(rowData, "Editar"),
                     },
                     {
                       icon: "delete",
-                      tooltip: "Eliminar Cliente",
-                      onClick: (event, rowData) => seleccionarCliente(rowData, "Eliminar"),
+                      tooltip: "Eliminar Marca",
+                      onClick: (event, rowData) => seleccionarMarca(rowData, "Eliminar"),
                     },
                   ]}
                   options={{

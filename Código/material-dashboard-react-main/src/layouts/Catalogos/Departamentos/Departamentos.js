@@ -3,14 +3,13 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
-// import axios from "axios";
+import axios from "axios";
 import MDBox from "components/MDBox";
 import "styles/styles.css";
 import MaterialTable from "material-table";
 import { Modal, OutlinedInput } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-// import Swal from "sweetalert2";
-import MDInput from "components/MDInput";
+import Swal from "sweetalert2";
 import MDTypography from "components/MDTypography";
 import Divider from "@mui/material/Divider";
 import MDButton from "components/MDButton";
@@ -26,31 +25,27 @@ import TextField from "@mui/material/TextField";
 const columns = [
   {
     title: "ID",
-    field: "man_Codigo",
+    field: "dep_Codigo",
   },
   {
     title: "Nombre",
-    field: "man_Fecha",
-  },
-  {
-    title: "Descripcion",
-    field: "man_Kilometraje",
+    field: "dep_Nombre",
   },
   {
     title: "Jefe",
-    field: "man_Estado",
+    field: "dep_Jefe",
   },
 ];
 
 const valSchema = Yup.object().shape({
-  cc_nombre: Yup.string()
+  dep_Nombre: Yup.string()
     .matches(/^[a-zA-Z0-9]+$/, "Solo se permiten números y letras")
     .required("El nombre del departamento es requerido")
     .max(50, "El nombre no puede tener más de 50 caracteres"),
-  cc_descripcion: Yup.string()
+  dep_Descripcion: Yup.string()
     .required("La descripción es requerida")
     .max(250, "La descripción no puede tener más de 250 caracteres"),
-  cc_jefe: Yup.string()
+  dep_Jefe: Yup.string()
     .matches(/^[a-zA-Z0-9]+$/, "Solo se permiten números y letras")
     .required("El nombre del jefe es requerido")
     .max(50, "El nombre no puede tener más de 50 caracteres"),
@@ -78,20 +73,16 @@ const useStyles = makeStyles((theme) => ({
 
 function Departamentos() {
   const styles = useStyles();
-  const [data /* , setData */] = useState([]);
-  const [datatr /* , setDatatr */] = useState([]);
-  const [datain /* , setDatain */] = useState([]);
+  const [data, setData] = useState([]);
   const [modalinsertar, setModalInsertar] = useState(false);
   const [modaleditar, setModalEditar] = useState(false);
   const [showComponent, setShowComponent] = useState(false);
   const [modaleliminar, setModalEliminar] = useState(false);
-  const [mantenimientoseleccionado, setMantenimientoSeleccionado] = useState({
-    man_Codigo: 0,
-    tiR_Codigo: 0,
-    ins_Codigo: 0,
-    man_Fecha: 0,
-    man_Kilometraje: 0,
-    man_Estado: "",
+  const [departamentoseleccionado, setDepartamentoSeleccionado] = useState({
+    dep_Codigo: 0,
+    dep_Nombre: "",
+    dep_Descripcion: "",
+    dep_Jefe: "",
   });
 
   const abrircerrarModalInsertar = () => {
@@ -122,9 +113,9 @@ function Departamentos() {
     setModalEliminar(!modaleliminar);
   };
 
-  const seleccionarMantenimiento = (mantenimiento, caso) => {
-    setMantenimientoSeleccionado(mantenimiento);
-    console.log(mantenimientoseleccionado);
+  const seleccionarDepartamento = (departamento, caso) => {
+    setDepartamentoSeleccionado(departamento);
+    console.log(departamentoseleccionado);
     if (caso === "Editar") {
       abrircerrarModalEditar();
     } else {
@@ -132,167 +123,138 @@ function Departamentos() {
     }
   };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setMantenimientoSeleccionado((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
+  const peticionpost = async (values) => {
+    Swal.showLoading();
+    if (values.dep_Nombre === "" || values.dep_Descripcion === "" || values.dep_Jefe === "") {
+      abrircerrarModalInsertar();
+      Swal.close();
+      Swal.fire({
+        icon: "info",
+        title: "",
+        html: "Debe de llenar <b>todos</b> los campos",
+      });
+    } else {
+      abrircerrarModalInsertar();
+      await axios
+        .post("https://localhost:7235/api/Departamentos/registrodepartamentos", values)
+        .then((response) => {
+          setData(data.concat(response.data));
+          Swal.close();
+          Swal.fire({
+            icon: "success",
+            title: "",
+            text: "Departamento creado exitosamente",
+            timer: 2500,
+          });
+        })
+        .catch((error) => {
+          Swal.close();
+          Swal.fire({
+            icon: "error",
+            title: "",
+            text: error.response.data,
+            timer: 2500,
+          });
+        });
+    }
   };
 
-  const onSubmit = (values, { resetForm }) => {
-    // eslint-disable-next-line no-console
-    console.log("Envío de Formulario:", values);
-    resetForm();
-  };
-
-  const peticionpost = async () => {
-    // Swal.showLoading();
-    // if (
-    //   mantenimientoseleccionado.tiR_Codigo === 0 ||
-    //   mantenimientoseleccionado.ins_Codigo === 0 ||
-    //   mantenimientoseleccionado.man_Fecha === 0 ||
-    //   mantenimientoseleccionado.man_Estado === ""
-    // ) {
-    //   abrircerrarModalInsertar();
-    //   Swal.close();
-    //   Swal.fire({
-    //     icon: "info",
-    //     title: "",
-    //     html: "Debe de llenar <b>todos</b> los campos",
-    //   });
-    // } else {
-    //   abrircerrarModalInsertar();
-    //   await axios
-    //     .post(
-    //       "https://localhost:7235/api/Mantenimientos/registromantenimientos",
-    //       mantenimientoseleccionado
-    //     )
-    //     .then((response) => {
-    //       setData(data.concat(response.data));
-    //       Swal.close();
-    //       Swal.fire({
-    //         icon: "success",
-    //         title: "",
-    //         text: "Mantenimiento creado exitosamente",
-    //         timer: 2500,
-    //       });
-    //     })
-    //     .catch((error) => {
-    //       Swal.close();
-    //       Swal.fire({
-    //         icon: "error",
-    //         title: "",
-    //         text: error.response.data,
-    //         timer: 2500,
-    //       });
-    //     });
-    // }
-  };
-
-  const peticionput = async () => {
-    // console.log(mantenimientoseleccionado);
-    // if (
-    //   mantenimientoseleccionado.tiR_Codigo === 0 ||
-    //   mantenimientoseleccionado.ins_Codigo === 0 ||
-    //   mantenimientoseleccionado.man_Fecha === 0 ||
-    //   mantenimientoseleccionado.man_Estado === ""
-    // ) {
-    //   abrircerrarModalEditar();
-    //   Swal.close();
-    //   Swal.fire({
-    //     icon: "info",
-    //     title: "",
-    //     html: "Debe de llenar <b>todos</b> los campos",
-    //   });
-    // } else {
-    //   abrircerrarModalEditar();
-    //   Swal.showLoading();
-    //   await axios
-    //     .put("https://localhost:7235/api/Mantenimientos/actualizar", mantenimientoseleccionado)
-    //     .then(() => {
-    //       const copiaArray = [...data];
-    //       const indice = copiaArray.findIndex(
-    //         (elemento) => elemento.man_Codigo === mantenimientoseleccionado.man_Codigo
-    //       );
-    //       if (indice !== -1) {
-    //         copiaArray[indice] = {
-    //           ...copiaArray[indice],
-    //           tiR_Codigo: mantenimientoseleccionado.tiR_Codigo,
-    //           ins_Codigo: mantenimientoseleccionado.ins_Codigo,
-    //           man_Fecha: mantenimientoseleccionado.man_Fecha,
-    //           man_Kilometraje: mantenimientoseleccionado.man_Kilometraje,
-    //           man_Estado: mantenimientoseleccionado.man_Estado,
-    //         };
-    //       }
-    //       setData(copiaArray);
-    //       Swal.close();
-    //       Swal.fire({
-    //         icon: "success",
-    //         title: "",
-    //         text: "Mantenimiento actualizado exitosamente",
-    //         timer: 2500,
-    //       });
-    //     })
-    //     .catch((error) => {
-    //       Swal.close();
-    //       Swal.fire({
-    //         icon: "error",
-    //         title: "",
-    //         text: error.response.data,
-    //         timer: 2500,
-    //       });
-    //     });
-    // }
+  const peticionput = async (values) => {
+    if (values.dep_Nombre === "" || values.dep_Descripcion === "" || values.dep_Jefe === "") {
+      abrircerrarModalEditar();
+      Swal.close();
+      Swal.fire({
+        icon: "info",
+        title: "",
+        html: "Debe de llenar <b>todos</b> los campos",
+      });
+    } else {
+      abrircerrarModalEditar();
+      Swal.showLoading();
+      await axios
+        .put("https://localhost:7235/api/Departamentos/actualizar", values)
+        .then(() => {
+          const copiaArray = [...data];
+          const indice = copiaArray.findIndex(
+            (elemento) => elemento.dep_Codigo === values.dep_Codigo
+          );
+          if (indice !== -1) {
+            copiaArray[indice] = {
+              ...copiaArray[indice],
+              dep_Codigo: values.dep_Codigo,
+              dep_Nombre: values.dep_Nombre,
+              dep_Descripcion: values.dep_Descripcion,
+              dep_Jefe: values.dep_Jefe,
+            };
+          }
+          setData(copiaArray);
+          Swal.close();
+          Swal.fire({
+            icon: "success",
+            title: "",
+            text: "Departamento actualizado exitosamente",
+            timer: 2500,
+          });
+        })
+        .catch((error) => {
+          Swal.close();
+          Swal.fire({
+            icon: "error",
+            title: "",
+            text: error.response.data,
+            timer: 2500,
+          });
+        });
+    }
   };
 
   const peticiondelete = async () => {
-    // abrircerrarModalEliminar();
-    // Swal.showLoading();
-    // await axios
-    //   .put("https://localhost:7235/api/Mantenimientos/eliminar", mantenimientoseleccionado)
-    //   .then(() => {
-    //     setData(
-    //       data.filter(
-    //         (mantenimiento) => mantenimiento.man_Codigo !== mantenimientoseleccionado.man_Codigo
-    //       )
-    //     );
-    //     Swal.close();
-    //     Swal.fire({
-    //       icon: "success",
-    //       title: "",
-    //       text: "Mantenimiento eliminado exitosamente",
-    //       timer: 2500,
-    //     });
-    //   })
-    //   .catch((error) => {
-    //     Swal.close();
-    //     Swal.fire({
-    //       icon: "error",
-    //       title: "",
-    //       text: error.response.data,
-    //       timer: 2500,
-    //     });
-    //   });
+    abrircerrarModalEliminar();
+    Swal.showLoading();
+    await axios
+      .put("https://localhost:7235/api/Departamentos/eliminar", departamentoseleccionado)
+      .then(() => {
+        setData(
+          data.filter(
+            (departamento) => departamento.dep_Codigo !== departamentoseleccionado.dep_Codigo
+          )
+        );
+        Swal.close();
+        Swal.fire({
+          icon: "success",
+          title: "",
+          text: "Departamento eliminado exitosamente",
+          timer: 2500,
+        });
+      })
+      .catch((error) => {
+        Swal.close();
+        Swal.fire({
+          icon: "error",
+          title: "",
+          text: error.response.data,
+          timer: 2500,
+        });
+      });
   };
 
   const peticionget = async () => {
-    // Swal.showLoading();
-    // await axios
-    //   .get("https://localhost:7235/api/Mantenimientos/mantenimientos")
-    //   .then((response) => {
-    //     setData(response.data);
-    //     Swal.close();
-    //   })
-    //   .catch((error) => {
-    //     Swal.close();
-    //     Swal.fire({
-    //       icon: "error",
-    //       title: "",
-    //       text: error.response.data,
-    //       timer: 2500,
-    //     });
-    //   });
+    Swal.showLoading();
+    await axios
+      .get("https://localhost:7235/api/Departamentos/departamentos")
+      .then((response) => {
+        setData(response.data);
+        Swal.close();
+      })
+      .catch((error) => {
+        Swal.close();
+        Swal.fire({
+          icon: "error",
+          title: "",
+          text: error.response.data,
+          timer: 2500,
+        });
+      });
   };
 
   const peticiongettr = async () => {
@@ -333,12 +295,12 @@ function Departamentos() {
       <MDBox pt={2} pb={3}>
         <Formik
           initialValues={{
-            cc_nombre: "",
-            cc_descripcion: "",
-            cc_jefe: "",
+            dep_Nombre: "",
+            dep_Descripcion: "",
+            dep_Jefe: "",
           }}
           validationSchema={valSchema}
-          onSubmit={onSubmit}
+          onSubmit={peticionpost}
         >
           {({ handleSubmit }) => (
             <form onSubmit={handleSubmit}>
@@ -352,13 +314,13 @@ function Departamentos() {
                   <MDBox>
                     <Field
                       as={OutlinedInput}
-                      name="cc_nombre"
-                      id="cc_nombre"
+                      name="dep_Nombre"
+                      id="dep_Nombre"
                       type="text"
                       placeholder="Nombre departamento"
                     />
                   </MDBox>
-                  <ErrorMessage name="cc_nombre" component="small" className="error" />
+                  <ErrorMessage name="dep_Nombre" component="small" className="error" />
                 </Grid>
               </Grid>
               <Grid container spacing={3} justifyContent="center">
@@ -371,13 +333,13 @@ function Departamentos() {
                   <MDBox mt={2}>
                     <Field
                       as={OutlinedInput}
-                      name="cc_jefe"
-                      id="cc_jefe"
+                      name="dep_Jefe"
+                      id="dep_Jefe"
                       type="text"
                       placeholder="Nombre del jefe"
                     />
                   </MDBox>
-                  <ErrorMessage name="cc_jefe" component="small" className="error" />
+                  <ErrorMessage name="dep_Jefe" component="small" className="error" />
                 </Grid>
               </Grid>
               <Grid container spacing={3} justifyContent="center">
@@ -390,8 +352,8 @@ function Departamentos() {
                   <MDBox mt={2}>
                     <Field
                       as={TextField}
-                      name="cc_descripcion"
-                      id="cc_descripcion outlined-multiline-static"
+                      name="dep_Descripcion"
+                      id="dep_Descripcion outlined-multiline-static"
                       type="text"
                       multiline
                       fullWidth
@@ -399,18 +361,12 @@ function Departamentos() {
                       placeholder="Descripcion"
                     />
                   </MDBox>
-                  <ErrorMessage name="cc_descripcion" component="small" className="error" />
+                  <ErrorMessage name="dep_Descripcion" component="small" className="error" />
                 </Grid>
               </Grid>
               <Grid container spacing={3} justifyContent="center" mt={2}>
                 <Grid item xs={12} md={4} lg={3}>
-                  <Button
-                    className="aceptar"
-                    endIcon={<SaveIcon />}
-                    type="submit"
-                    fullWidth
-                    onClick={() => peticionpost()}
-                  >
+                  <Button className="aceptar" endIcon={<SaveIcon />} type="submit" fullWidth>
                     Insertar
                   </Button>
                 </Grid>
@@ -435,144 +391,102 @@ function Departamentos() {
 
   const bodyEditar = (
     <div className={styles.modal}>
-      <MDTypography variant="h3"> Editar Mantenimiento </MDTypography>
+      <h2> Editar Mantenimiento </h2>
       <Divider sx={{ marginTop: 1 }} light={false} />
       <MDBox pt={2} pb={3}>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={2}>
-              <MDTypography variant="h6"> Tipo de Reparacion: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={2}>
-              <select
-                name="tiR_Codigo"
-                className="form-control"
-                onChange={handleChange}
-                value={mantenimientoseleccionado && mantenimientoseleccionado.tiR_Codigo}
-              >
-                <option key="0" value="0">
-                  Seleccione el Tipo de Reparacion
-                </option>
-                {datatr.map((element) => (
-                  <option key={element.tiR_Codigo} value={element.tiR_Codigo}>
-                    {element.tiR_Nombre}
-                  </option>
-                ))}
-              </select>
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={2}>
-              <MDTypography variant="h6"> Inspeccion: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={2}>
-              <select
-                name="ins_Codigo"
-                className="form-control"
-                onChange={handleChange}
-                value={mantenimientoseleccionado && mantenimientoseleccionado.ins_Codigo}
-              >
-                <option key="0" value="0">
-                  Seleccione Inspeccion
-                </option>
-                {datain.map((element) => (
-                  <option key={element.ins_Codigo} value={element.ins_Codigo}>
-                    {element.ins_Descripcion}
-                  </option>
-                ))}
-              </select>
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={2}>
-              <MDTypography variant="h6"> Fecha: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={2}>
-              <MDInput
-                name="man_Fecha"
-                type="Date"
-                onChange={handleChange}
-                disabled
-                // value={mantenimientoseleccionado && mantenimientoseleccionado.man_Fecha}
-              />
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={2}>
-              <MDTypography variant="h6"> Kilometraje: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={2}>
-              <MDInput
-                label="Kilometraje"
-                name="man_Kilometraje"
-                type="number"
-                onChange={handleChange}
-                value={mantenimientoseleccionado && mantenimientoseleccionado.man_Kilometraje}
-              />
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={2}>
-              <MDTypography variant="h6"> Estado: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={2}>
-              <select
-                name="man_Estado"
-                className="form-control"
-                onChange={handleChange}
-                value={mantenimientoseleccionado && mantenimientoseleccionado.man_Estado}
-              >
-                <option key="0" value="0">
-                  Seleccione Estado
-                </option>
-                <option key="1" value="Registrado">
-                  Registrado
-                </option>
-                <option key="2" value="En Curso">
-                  En Curso
-                </option>
-                <option key="3" value="Completado">
-                  Completado
-                </option>
-              </select>
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDButton variant="gradient" color="info" fullWidth onClick={() => peticionput()}>
-              Actualizar
-            </MDButton>
-          </Grid>
-          <Grid item xs={12} md={4} lg={3}>
-            <MDButton
-              variant="gradient"
-              color="light"
-              fullWidth
-              onClick={() => abrircerrarModalEditar()}
-            >
-              Cancelar
-            </MDButton>
-          </Grid>
-        </Grid>
+        <Formik
+          initialValues={{
+            dep_Nombre: departamentoseleccionado && departamentoseleccionado.dep_Nombre,
+            dep_Descripcion: departamentoseleccionado && departamentoseleccionado.dep_Descripcion,
+            dep_Jefe: departamentoseleccionado && departamentoseleccionado.dep_Jefe,
+            dep_Codigo: departamentoseleccionado && departamentoseleccionado.dep_Codigo,
+          }}
+          validationSchema={valSchema}
+          onSubmit={peticionput}
+        >
+          {({ handleSubmit }) => (
+            <form onSubmit={handleSubmit}>
+              <Grid container spacing={3} justifyContent="center">
+                <Grid item xs={12} md={4} lg={3}>
+                  <MDBox>
+                    <MDTypography variant="h6"> Nombre: </MDTypography>
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} md={6} lg={9}>
+                  <MDBox>
+                    <Field
+                      as={OutlinedInput}
+                      name="dep_Nombre"
+                      id="dep_Nombre"
+                      type="text"
+                      placeholder="Nombre departamento"
+                    />
+                  </MDBox>
+                  <ErrorMessage name="dep_Nombre" component="small" className="error" />
+                </Grid>
+              </Grid>
+              <Grid container spacing={3} justifyContent="center">
+                <Grid item xs={12} md={4} lg={3}>
+                  <MDBox mt={2}>
+                    <MDTypography variant="h6"> Nombre del jefe: </MDTypography>
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} md={6} lg={9}>
+                  <MDBox mt={2}>
+                    <Field
+                      as={OutlinedInput}
+                      name="dep_Jefe"
+                      id="dep_Jefe"
+                      type="text"
+                      placeholder="Nombre del jefe"
+                    />
+                  </MDBox>
+                  <ErrorMessage name="dep_Jefe" component="small" className="error" />
+                </Grid>
+              </Grid>
+              <Grid container spacing={3} justifyContent="center">
+                <Grid item xs={12} md={4} lg={3}>
+                  <MDBox mt={2}>
+                    <MDTypography variant="h6"> Descripcion </MDTypography>
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} md={6} lg={9}>
+                  <MDBox mt={2}>
+                    <Field
+                      as={TextField}
+                      name="dep_Descripcion"
+                      id="dep_Descripcion outlined-multiline-static"
+                      type="text"
+                      multiline
+                      fullWidth
+                      rows={2}
+                      placeholder="Descripcion"
+                    />
+                  </MDBox>
+                  <ErrorMessage name="dep_Descripcion" component="small" className="error" />
+                </Grid>
+              </Grid>
+              <Grid container spacing={3} justifyContent="center" mt={2}>
+                <Grid item xs={12} md={4} lg={3}>
+                  <Button className="aceptar" endIcon={<SaveIcon />} type="submit" fullWidth>
+                    Actualizar
+                  </Button>
+                </Grid>
+                <Grid item xs={12} md={4} lg={3}>
+                  <Button
+                    className="cancelar"
+                    endIcon={<ClearIcon />}
+                    type="submit"
+                    fullWidth
+                    onClick={() => abrircerrarModalInsertar()}
+                  >
+                    Cancelar
+                  </Button>
+                </Grid>
+              </Grid>
+            </form>
+          )}
+        </Formik>
       </MDBox>
     </div>
   );
@@ -581,7 +495,7 @@ function Departamentos() {
     <div className={styles.modal}>
       <p>
         Deseas Eliminar el Mantenimiento
-        <b> {mantenimientoseleccionado && mantenimientoseleccionado.man_Codigo}</b>?
+        <b> {departamentoseleccionado && departamentoseleccionado.man_Codigo}</b>?
       </p>
       <div align="right">
         <MDButton color="secondary" onClick={() => peticiondelete()}>
@@ -613,17 +527,17 @@ function Departamentos() {
                 <MaterialTable
                   columns={columns}
                   data={data}
-                  title="Mantenimientos"
+                  title="Departamentos"
                   actions={[
                     {
                       icon: "edit",
-                      tooltip: "Editar Mantenimientos",
-                      onClick: (event, rowData) => seleccionarMantenimiento(rowData, "Editar"),
+                      tooltip: "Editar Departamento",
+                      onClick: (event, rowData) => seleccionarDepartamento(rowData, "Editar"),
                     },
                     {
                       icon: "delete",
-                      tooltip: "Eliminar Mantenimientos",
-                      onClick: (event, rowData) => seleccionarMantenimiento(rowData, "Eliminar"),
+                      tooltip: "Eliminar Departamento",
+                      onClick: (event, rowData) => seleccionarDepartamento(rowData, "Eliminar"),
                     },
                   ]}
                   options={{

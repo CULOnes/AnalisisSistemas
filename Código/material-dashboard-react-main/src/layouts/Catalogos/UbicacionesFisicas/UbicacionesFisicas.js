@@ -3,14 +3,13 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
-// import axios from "axios";
+import axios from "axios";
 import MDBox from "components/MDBox";
 import "styles/styles.css";
 import MaterialTable from "material-table";
 import { Modal, OutlinedInput } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import Swal from "sweetalert2";
-import MDInput from "components/MDInput";
 import MDTypography from "components/MDTypography";
 import Divider from "@mui/material/Divider";
 import MDButton from "components/MDButton";
@@ -26,24 +25,24 @@ import TextField from "@mui/material/TextField";
 const columns = [
   {
     title: "ID",
-    field: "ubi_codigo",
+    field: "ubF_Codigo",
   },
   {
     title: "Nombre Ubicacion",
-    field: "ubi_nombreUbicacion",
+    field: "ubF_Ubicacion",
   },
   {
     title: "Descripcion Ubicacion",
-    field: "ubi_descripcion",
+    field: "ubF_Descripcion",
   },
 ];
 
 const valSchema = Yup.object().shape({
-  ubi_nombreUbicacion: Yup.string()
+  ubF_Ubicacion: Yup.string()
     .matches(/^[a-zA-Z0-9]+$/, "Solo se permiten números y letras")
     .required("El nombre de la Ubicación es requerido")
     .max(50, "El nombre no puede tener más de 50 caracteres"),
-  ubi_descripcion: Yup.string()
+  ubF_Descripcion: Yup.string()
     .required("La descripción es requerida")
     .max(250, "La descripción no puede tener más de 250 caracteres")
     .matches(/^[a-zA-ZñÑ0-9,. -]*$/, "Caracter no permitido"),
@@ -71,15 +70,15 @@ const useStyles = makeStyles((theme) => ({
 
 function UbicacionesFisicas() {
   const styles = useStyles();
-  const [data /* , setData */] = useState([]);
+  const [data, setData] = useState([]);
   const [modalinsertar, setModalInsertar] = useState(false);
   const [modaleditar, setModalEditar] = useState(false);
   const [modaleliminar, setModalEliminar] = useState(false);
   const [showComponent, setShowComponent] = useState(false);
   const [ubicacionSeleccionada, setUbicacionSeleccionada] = useState({
-    ubi_Codigo: 0,
-    ubi_nombreUbicacion: "",
-    ubi_descripcion: "",
+    ubF_Codigo: 0,
+    ubF_Ubicacion: "",
+    ubF_Descripcion: "",
   });
 
   const abrircerrarModalInsertar = () => {
@@ -119,166 +118,132 @@ function UbicacionesFisicas() {
     }
   };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setUbicacionSeleccionada((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
+  const peticionpost = async (values) => {
+    Swal.showLoading();
+    if (values.ubF_Ubicacion === "" || values.ubF_Descripcion === "") {
+      abrircerrarModalInsertar();
+      Swal.close();
+      Swal.fire({
+        icon: "info",
+        title: "",
+        html: "Debe de llenar <b>todos</b> los campos",
+      });
+    } else {
+      abrircerrarModalInsertar();
+      await axios
+        .post("https://localhost:7235/api/UbicacionesFisicas/registroubicacionesfisicas", values)
+        .then((response) => {
+          setData(data.concat(response.data));
+          Swal.close();
+          Swal.fire({
+            icon: "success",
+            title: "",
+            text: "Ubicacion Fisica creada exitosamente",
+            timer: 2500,
+          });
+        })
+        .catch((error) => {
+          Swal.close();
+          Swal.fire({
+            icon: "error",
+            title: "",
+            text: error.response.data,
+            timer: 2500,
+          });
+        });
+    }
   };
 
-  const onSubmit = (values, { resetForm }) => {
-    // eslint-disable-next-line no-console
-    console.log("Envío de Formulario:", values);
-    resetForm();
-
-    Swal.fire({
-      icon: "success",
-      title: "Formulario Enviado",
-      text: "El formulario se ha enviado con éxito",
-      timer: 2500, // Controla cuánto tiempo se muestra el mensaje (en milisegundos)
-      timerProgressBar: true, // Muestra una barra de progreso durante el tiempo de visualización
-    });
-  };
-
-  const peticionpost = async () => {
-    // Swal.showLoading();
-    // if (
-    //   usuarioseleccionado.usu_Apellido === "" ||
-    //   usuarioseleccionado.usu_Correo === "" ||
-    //   usuarioseleccionado.usu_Nombre === "" ||
-    //   usuarioseleccionado.usu_NombreUsuario === ""
-    // ) {
-    //   abrircerrarModalInsertar();
-    //   Swal.close();
-    //   Swal.fire({
-    //     icon: "info",
-    //     title: "",
-    //     html: "Debe de llenar <b>todos</b> los campos",
-    //   });
-    // } else {
-    //   abrircerrarModalInsertar();
-    //   await axios
-    //     .post("https://localhost:7235/api/Usuarios/registrousuarios", usuarioseleccionado)
-    //     .then((response) => {
-    //       setData(data.concat(response.data));
-    //       Swal.close();
-    //       Swal.fire({
-    //         icon: "success",
-    //         title: "",
-    //         text: "Usuario creado exitosamente",
-    //         timer: 2500,
-    //       });
-    //     })
-    //     .catch((error) => {
-    //       Swal.close();
-    //       Swal.fire({
-    //         icon: "error",
-    //         title: "",
-    //         text: error.response.data,
-    //         timer: 2500,
-    //       });
-    //     });
-    // }
-  };
-
-  const peticionput = async () => {
-    // if (
-    //   usuarioseleccionado.usu_Apellido === "" ||
-    //   usuarioseleccionado.usu_Correo === "" ||
-    //   usuarioseleccionado.usu_Nombre === "" ||
-    //   usuarioseleccionado.usu_NombreUsuario === ""
-    // ) {
-    //   abrircerrarModalEditar();
-    //   Swal.close();
-    //   Swal.fire({
-    //     icon: "info",
-    //     title: "",
-    //     html: "Debe de llenar <b>todos</b> los campos",
-    //   });
-    // } else {
-    //   abrircerrarModalEditar();
-    //   Swal.showLoading();
-    //   await axios
-    //     .put("https://localhost:7235/api/Usuarios/actualizar", usuarioseleccionado)
-    //     .then(() => {
-    //       const copiaArray = [...data];
-    //       const indice = copiaArray.findIndex(
-    //         (elemento) => elemento.usu_Codigo === usuarioseleccionado.usu_Codigo
-    //       );
-    //       if (indice !== -1) {
-    //         copiaArray[indice] = {
-    //           ...copiaArray[indice],
-    //           usu_Nombre: usuarioseleccionado.usu_Nombre,
-    //           usu_Apellido: usuarioseleccionado.usu_Apellido,
-    //           usu_Correo: usuarioseleccionado.usu_Correo,
-    //           usu_NombreUsuario: usuarioseleccionado.usu_NombreUsuario,
-    //         };
-    //       }
-    //       setData(copiaArray);
-    //       Swal.close();
-    //       Swal.fire({
-    //         icon: "success",
-    //         title: "",
-    //         text: "Usuario actualizado exitosamente",
-    //         timer: 2500,
-    //       });
-    //     })
-    //     .catch((error) => {
-    //       Swal.close();
-    //       Swal.fire({
-    //         icon: "error",
-    //         title: "",
-    //         text: error.response.data,
-    //         timer: 2500,
-    //       });
-    //     });
-    // }
+  const peticionput = async (values) => {
+    if (values.ubF_Ubicacion === "" || values.ubF_Descripcion === "") {
+      abrircerrarModalEditar();
+      Swal.close();
+      Swal.fire({
+        icon: "info",
+        title: "",
+        html: "Debe de llenar <b>todos</b> los campos",
+      });
+    } else {
+      abrircerrarModalEditar();
+      Swal.showLoading();
+      await axios
+        .put("https://localhost:7235/api/UbicacionesFisicas/actualizar", values)
+        .then(() => {
+          const copiaArray = [...data];
+          const indice = copiaArray.findIndex(
+            (elemento) => elemento.ubF_Codigo === values.ubF_Codigo
+          );
+          if (indice !== -1) {
+            copiaArray[indice] = {
+              ...copiaArray[indice],
+              ubF_Ubicacion: values.ubF_Ubicacion,
+              ubF_Descripcion: values.ubF_Descripcion,
+            };
+          }
+          setData(copiaArray);
+          Swal.close();
+          Swal.fire({
+            icon: "success",
+            title: "",
+            text: "Ubicacion Fisica actualizada exitosamente",
+            timer: 2500,
+          });
+        })
+        .catch((error) => {
+          Swal.close();
+          Swal.fire({
+            icon: "error",
+            title: "",
+            text: error.response.data,
+            timer: 2500,
+          });
+        });
+    }
   };
 
   const peticiondelete = async () => {
-    // abrircerrarModalEliminar();
-    // Swal.showLoading();
-    // await axios
-    //   .put("https://localhost:7235/api/Usuarios/eliminar", usuarioseleccionado)
-    //   .then(() => {
-    //     setData(data.filter((usuario) => usuario.usu_Codigo !== usuarioseleccionado.usu_Codigo));
-    //     Swal.close();
-    //     Swal.fire({
-    //       icon: "success",
-    //       title: "",
-    //       text: "Usuario eliminado exitosamente",
-    //       timer: 2500,
-    //     });
-    //   })
-    //   .catch((error) => {
-    //     Swal.close();
-    //     Swal.fire({
-    //       icon: "error",
-    //       title: "",
-    //       text: error.response.data,
-    //       timer: 2500,
-    //     });
-    //   });
+    abrircerrarModalEliminar();
+    Swal.showLoading();
+    await axios
+      .put("https://localhost:7235/api/UbicacionesFisicas/eliminar", ubicacionSeleccionada)
+      .then(() => {
+        setData(data.filter((usuario) => usuario.ubF_Codigo !== ubicacionSeleccionada.ubF_Codigo));
+        Swal.close();
+        Swal.fire({
+          icon: "success",
+          title: "",
+          text: "Usuario eliminado exitosamente",
+          timer: 2500,
+        });
+      })
+      .catch((error) => {
+        Swal.close();
+        Swal.fire({
+          icon: "error",
+          title: "",
+          text: error.response.data,
+          timer: 2500,
+        });
+      });
   };
 
   const peticionget = async () => {
-    // Swal.showLoading();
-    // await axios
-    //   .get("https://localhost:7235/api/Usuarios/usuarios")
-    //   .then((response) => {
-    //     setData(response.data);
-    //     Swal.close();
-    //   })
-    //   .catch((error) => {
-    //     Swal.close();
-    //     Swal.fire({
-    //       icon: "error",
-    //       title: "",
-    //       text: error.response.data,
-    //       timer: 2500,
-    //     });
-    //   });
+    Swal.showLoading();
+    await axios
+      .get("https://localhost:7235/api/UbicacionesFisicas/ubicacionesfisicas")
+      .then((response) => {
+        setData(response.data);
+        Swal.close();
+      })
+      .catch((error) => {
+        Swal.close();
+        Swal.fire({
+          icon: "error",
+          title: "",
+          text: error.response.data,
+          timer: 2500,
+        });
+      });
   };
 
   // const peticiongettp = async () => {
@@ -308,11 +273,11 @@ function UbicacionesFisicas() {
       <MDBox pb={3}>
         <Formik
           initialValues={{
-            ubi_nombreUbicacion: "",
-            ubi_descripcion: "",
+            ubF_Ubicacion: "",
+            ubF_Descripcion: "",
           }}
           validationSchema={valSchema}
-          onSubmit={onSubmit}
+          onSubmit={peticionpost}
         >
           {({ handleSubmit }) => (
             <form onSubmit={handleSubmit}>
@@ -326,13 +291,13 @@ function UbicacionesFisicas() {
                   <MDBox>
                     <Field
                       as={OutlinedInput}
-                      name="ubi_nombreUbicacion"
-                      id="ubi_nombreUbicacion"
+                      name="ubF_Ubicacion"
+                      id="ubF_Ubicacion"
                       type="text"
                       placeholder="Ubicacion"
                     />
                   </MDBox>
-                  <ErrorMessage name="ubi_nombreUbicacion" component="small" className="error" />
+                  <ErrorMessage name="ubF_Ubicacion" component="small" className="error" />
                 </Grid>
               </Grid>
               <Grid container spacing={3} justifyContent="center">
@@ -345,8 +310,8 @@ function UbicacionesFisicas() {
                   <MDBox mt={2}>
                     <Field
                       as={TextField}
-                      name="ubi_descripcion"
-                      id="ubi_descripcion outlined-multiline-static"
+                      name="ubF_Descripcion"
+                      id="ubF_Descripcion outlined-multiline-static"
                       type="text"
                       multiline
                       fullWidth
@@ -354,29 +319,14 @@ function UbicacionesFisicas() {
                       placeholder="Descripcion"
                     />
                   </MDBox>
-                  <ErrorMessage name="ubi_descripcion" component="small" className="error" />
+                  <ErrorMessage name="ubF_Descripcion" component="small" className="error" />
                 </Grid>
               </Grid>
               <Grid container spacing={3} justifyContent="center" mt={2}>
                 <Grid item xs={12} md={4} lg={3}>
-                  <Button
-                    className="aceptar"
-                    endIcon={<SaveIcon />}
-                    type="submit"
-                    fullWidth
-                    onClick={() => peticionpost()}
-                  >
+                  <Button className="aceptar" endIcon={<SaveIcon />} type="submit" fullWidth>
                     Insertar
                   </Button>
-                  {/* <MDButton
-                    variant="gradient"
-                    color="info"
-                    fullWidth
-                    type="submit"
-                    onClick={() => peticionpost()}
-                  >
-                    Insertar
-                  </MDButton> */}
                 </Grid>
                 <Grid item xs={12} md={4} lg={3}>
                   <Button
@@ -388,14 +338,6 @@ function UbicacionesFisicas() {
                   >
                     Cancelar
                   </Button>
-                  {/* <MDButton
-                    variant="gradient"
-                    color="light"
-                    fullWidth
-                    onClick={() => abrircerrarModalInsertar()}
-                  >
-                    Cancelar
-                  </MDButton> */}
                 </Grid>
               </Grid>
             </form>
@@ -407,62 +349,82 @@ function UbicacionesFisicas() {
 
   const bodyEditar = (
     <div className={styles.modal}>
-      <MDTypography variant="h3"> Editar Ubicación Física </MDTypography>
+      <h2> Editar Ubicación Física </h2>
       <Divider sx={{ marginTop: 1 }} light={false} />
       <MDBox pt={2} pb={3}>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={2}>
-              <MDTypography variant="h6"> Ubicación Física: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={2}>
-              <MDInput
-                type="text"
-                label="Nombre Ubicacion"
-                name="ubi_nombreUbicacion"
-                onChange={handleChange}
-                value={ubicacionSeleccionada && ubicacionSeleccionada.ubi_Nombre}
-              />
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={2}>
-              <MDTypography variant="h6"> Descripcion: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={2}>
-              <MDInput
-                type="text"
-                label="Descripcion"
-                name="ubi_descripcion"
-                onChange={handleChange}
-                value={ubicacionSeleccionada && ubicacionSeleccionada.ubi_descripcion}
-              />
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDButton variant="gradient" color="info" fullWidth onClick={() => peticionput()}>
-              Actualizar
-            </MDButton>
-          </Grid>
-          <Grid item xs={12} md={4} lg={3}>
-            <MDButton
-              variant="gradient"
-              color="light"
-              fullWidth
-              onClick={() => abrircerrarModalEditar()}
-            >
-              Cancelar
-            </MDButton>
-          </Grid>
-        </Grid>
+        <Formik
+          initialValues={{
+            ubF_Ubicacion: ubicacionSeleccionada && ubicacionSeleccionada.ubF_Ubicacion,
+            ubF_Descripcion: ubicacionSeleccionada && ubicacionSeleccionada.ubF_Descripcion,
+            ubF_Codigo: ubicacionSeleccionada && ubicacionSeleccionada.ubF_Codigo,
+          }}
+          validationSchema={valSchema}
+          onSubmit={peticionput}
+        >
+          {({ handleSubmit }) => (
+            <form onSubmit={handleSubmit}>
+              <Grid container spacing={3} justifyContent="center">
+                <Grid item xs={12} md={4} lg={4}>
+                  <MDBox mb={2}>
+                    <MDTypography variant="h6"> Ubicación: </MDTypography>
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} md={6} lg={8}>
+                  <MDBox>
+                    <Field
+                      as={OutlinedInput}
+                      name="ubF_Ubicacion"
+                      id="ubF_Ubicacion"
+                      type="text"
+                      placeholder="Ubicacion"
+                    />
+                  </MDBox>
+                  <ErrorMessage name="ubF_Ubicacion" component="small" className="error" />
+                </Grid>
+              </Grid>
+              <Grid container spacing={3} justifyContent="center">
+                <Grid item xs={12} md={4} lg={4}>
+                  <MDBox mt={2}>
+                    <MDTypography variant="h6"> Descripción: </MDTypography>
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} md={6} lg={8}>
+                  <MDBox mt={2}>
+                    <Field
+                      as={TextField}
+                      name="ubF_Descripcion"
+                      id="ubF_Descripcion outlined-multiline-static"
+                      type="text"
+                      multiline
+                      fullWidth
+                      rows={2}
+                      placeholder="Descripcion"
+                    />
+                  </MDBox>
+                  <ErrorMessage name="ubF_Descripcion" component="small" className="error" />
+                </Grid>
+              </Grid>
+              <Grid container spacing={3} justifyContent="center" mt={2}>
+                <Grid item xs={12} md={4} lg={3}>
+                  <Button className="aceptar" endIcon={<SaveIcon />} type="submit" fullWidth>
+                    Insertar
+                  </Button>
+                </Grid>
+                <Grid item xs={12} md={4} lg={3}>
+                  <Button
+                    className="cancelar"
+                    endIcon={<ClearIcon />}
+                    type="submit"
+                    fullWidth
+                    onClick={() => abrircerrarModalInsertar()}
+                  >
+                    Cancelar
+                  </Button>
+                </Grid>
+              </Grid>
+            </form>
+          )}
+        </Formik>
       </MDBox>
     </div>
   );
@@ -471,7 +433,7 @@ function UbicacionesFisicas() {
     <div className={styles.modal}>
       <p>
         ¿Deseas Eliminar la Ubicación
-        <b> {ubicacionSeleccionada && ubicacionSeleccionada.ubi_Nombre}</b>?
+        <b> {ubicacionSeleccionada && ubicacionSeleccionada.ubF_Ubicacion}</b>?
       </p>
       <div align="right">
         <MDButton color="secondary" onClick={() => peticiondelete()}>

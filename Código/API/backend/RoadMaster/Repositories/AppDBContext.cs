@@ -9,9 +9,13 @@ namespace RoadMaster.Repositories
         public AppDBContext(DbContextOptions<AppDBContext> options) : base(options) { }
 
         public DbSet<Usuarios> Usuarios { get; set; }
+        public DbSet<Marcas> Marcas { get; set; }
+        public DbSet<Estados> Estados { get; set; }
+        public DbSet<Sucursales> Sucursales { get; set; }
+        public DbSet<UbicacionesFisicas> UbicacionesFisicas { get; set; }
+        public DbSet<Departamentos> Departamentos { get; set; }
         public DbSet<Clientes> Clientes { get; set; }
         public DbSet<TiposVehiculos> TiposVehiculos { get; set; }
-        public DbSet<Vehiculos> Vehiculos { get; set; }
         public DbSet<Combustibles> Combustibles { get; set; }
         public DbSet<Inspecciones> Inspecciones { get; set; }
         public DbSet<TiposSeguros> TiposSeguros { get; set; }

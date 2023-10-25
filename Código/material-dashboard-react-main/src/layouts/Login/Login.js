@@ -44,8 +44,8 @@ import BasicLayout from "layouts/Autenticacion/BasicLayout/index";
 
 function Login() {
   const [usuarioseleccionado, setUsuarioSeleccionado] = useState({
-    usuario: "",
-    contraseña: "",
+    Usu_NombreUsuario: "",
+    Usu_Clave: "",
   });
   const Navigate = useNavigate();
 
@@ -62,6 +62,7 @@ function Login() {
   }, []);
 
   const peticionpost = async () => {
+    console.log(usuarioseleccionado);
     await axios
       .post("https://localhost:7235/api/Usuarios/login", usuarioseleccionado)
       .then((response) => {
@@ -97,7 +98,7 @@ function Login() {
               <MDInput
                 type="text"
                 label="Usuario"
-                name="usuario"
+                name="Usu_NombreUsuario"
                 fullWidth
                 onChange={handleChange}
               />
@@ -106,7 +107,7 @@ function Login() {
               <MDInput
                 type="password"
                 label="Contraseña"
-                name="contraseña"
+                name="Usu_Clave"
                 fullWidth
                 onChange={handleChange}
               />

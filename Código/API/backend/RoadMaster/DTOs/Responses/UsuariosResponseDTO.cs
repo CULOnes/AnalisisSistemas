@@ -10,8 +10,6 @@
 
         public string Usu_Apellido { get; set; }
 
-        public string Usu_Correo { get; set; }
-
-        public string Usu_Contrasena { get; set; }
+        public string Usu_Clave { get; set; }
     }
 }
