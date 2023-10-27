@@ -18,7 +18,7 @@ import PropTypes from "prop-types";
 
 // @mui material components
 import Container from "@mui/material/Container";
-import Link from "@mui/material/Link";
+// import Link from "@mui/material/Link";
 // import Icon from "@mui/material/Icon";
 
 // Material Dashboard 2 React components
@@ -57,12 +57,10 @@ function Footer({ light }) {
               </Icon> */}
             </MDBox>
             por
-            <Link href="https://www.google.com/" target="_blank">
-              <MDTypography variant="button" fontWeight="medium" color={light ? "white" : "dark"}>
-                &nbsp;Activos Fijos&nbsp;
-              </MDTypography>
-            </Link>
-            Flotilla de vehiculos.
+            <MDTypography variant="button" fontWeight="medium" color={light ? "white" : "dark"}>
+              &nbsp;Grupo 1&nbsp;
+            </MDTypography>
+            Activos Fijos
           </MDBox>
           <MDBox
             component="ul"
@@ -82,15 +80,9 @@ function Footer({ light }) {
             })}
           >
             <MDBox component="li" pr={2} lineHeight={1}>
-              <Link href="https://google.com/" target="_blank">
-                <MDTypography
-                  variant="button"
-                  fontWeight="regular"
-                  color={light ? "white" : "dark"}
-                >
-                  Activos Fijos
-                </MDTypography>
-              </Link>
+              <MDTypography variant="button" fontWeight="regular" color={light ? "white" : "dark"}>
+                Activos Fijos
+              </MDTypography>
             </MDBox>
             {/* <MDBox component="li" px={2} lineHeight={1}>
               <Link href="https://www.creative-tim.com/presentation" target="_blank">

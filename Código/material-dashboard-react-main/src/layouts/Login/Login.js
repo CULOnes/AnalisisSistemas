@@ -37,7 +37,7 @@ import axios from "axios";
 import { guardartoken, Logout } from "layouts/utils/Token";
 
 // Images
-import bgImage from "assets/images/Articulo4_mayo_Sitrack.png";
+import bgImage from "assets/images/activosfijos.jpg";
 
 // Authentication layout components
 import BasicLayout from "layouts/Autenticacion/BasicLayout/index";
