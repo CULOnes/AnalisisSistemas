@@ -21,6 +21,15 @@
     font-size: 12px !important;
 }
 
+.form-control{
+    width: 75%;
+    height: 35px !important;
+    border-radius: 10px !important;
+    border: solid #CACACA 1px !important;
+    outline: none !important;
+    font-size: 16px !important;
+}
+
 .cancelar{
     background-color: #E2E6EC !important;
     border-radius: 10px !important;

@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace RoadMaster.Repositories
 {
-    public class AppDBContext: DbContext
+    public class AppDBContext : DbContext
     {
         public AppDBContext(DbContextOptions<AppDBContext> options) : base(options) { }
 
@@ -14,6 +14,11 @@ namespace RoadMaster.Repositories
         public DbSet<Sucursales> Sucursales { get; set; }
         public DbSet<UbicacionesFisicas> UbicacionesFisicas { get; set; }
         public DbSet<Departamentos> Departamentos { get; set; }
+        public DbSet<Cuentas> Cuentas { get; set; }
+        public DbSet<Custodios> Custodios { get; set; }
+        public DbSet<CentrosCosto> CentrosCosto { get; set; }
+        public DbSet<Activos> Activos { get; set; }
+
         public DbSet<Clientes> Clientes { get; set; }
         public DbSet<TiposVehiculos> TiposVehiculos { get; set; }
         public DbSet<Combustibles> Combustibles { get; set; }

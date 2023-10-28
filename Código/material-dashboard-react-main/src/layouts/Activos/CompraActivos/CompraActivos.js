@@ -3,14 +3,13 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
-// import axios from "axios";
+import axios from "axios";
 import MDBox from "components/MDBox";
 import "styles/styles.css";
 import MaterialTable from "material-table";
 import { Modal, OutlinedInput } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import Swal from "sweetalert2";
-// import MDInput from "components/MDInput";
 import MDTypography from "components/MDTypography";
 import Divider from "@mui/material/Divider";
 import MDButton from "components/MDButton";
@@ -77,7 +76,7 @@ const FacturavalidationSchema = Yup.object().shape({
     .required("La factura es requerida")
     .positive("La factura no puede tener números negativos")
     .integer("La factura no puede contener números decimales"),
-  compra_fechaIngreso: Yup.date()
+  act_FechaIgreso: Yup.date()
     .max(new Date(), "La fecha no puede ser mayor que la fecha actual")
     .required("La fecha es requerida"),
   // .min(new Date(), "La fecha no puede ser menor a la actual"),
@@ -88,11 +87,11 @@ const FacturavalidationSchema = Yup.object().shape({
 });
 
 const ActivoValidationSchema = Yup.object().shape({
-  compra_nombreActivo: Yup.string()
+  act_Nombre: Yup.string()
     .required("El nombre es requerido")
     .max(100, "El nombre no puede tener más de 100 caracteres")
     .matches(/^[a-zA-ZñÑ0-9,. -]*$/, "Caracter no permitido"),
-  compra_precioAct: Yup.number()
+  act_ValorInicial: Yup.number()
     .required("El precio es requerido")
     .positive("El precio no puede tener números negativos")
     .test(
@@ -103,8 +102,8 @@ const ActivoValidationSchema = Yup.object().shape({
         return regex.test(value);
       }
     ),
-  compra_marcaAct: Yup.string().required("La marca es requerida"),
-  compra_estadoAct: Yup.string().required("El estado es requerido"),
+  mar_Codigo: Yup.string().required("La marca es requerida"),
+  est_Codigo: Yup.string().required("El estado es requerido"),
 });
 
 const ClasificacionValidationSchema = Yup.object().shape({
@@ -161,7 +160,10 @@ const MantenimientoValidationSchema = Yup.object().shape({
 function TransferenciaActivos() {
   const styles = useStyles();
   const [data /* , setData */] = useState([]);
-  // const [datatp /* , setDatatp */] = useState([]);
+  const [codigoactivo, setcodigo] = useState(0);
+  const [datapr, setDatapr] = useState([]);
+  const [datama, setDatama] = useState([]);
+  const [dataes, setDataes] = useState([]);
   const [modalFactura, setModalFactura] = useState(false);
   const [modalActivo, setModalActivo] = useState(false);
   const [modalClasificacion, setModalClasificacion] = useState(false);
@@ -170,18 +172,18 @@ function TransferenciaActivos() {
   // const [modaleditar, setModalEditar] = useState(false);
   const [showComponent, setShowComponent] = useState(false);
   const [modaleliminar, setModalEliminar] = useState(false);
-  const [compraSeleccionada /* setCompraSeleccionada */] = useState({
+  const [compraSeleccionada] = useState({
     compra_id: 0,
     compra_idActivo: 0,
     compra_Numfactura: 0,
-    compra_fechaIngreso: 0,
+    act_FechaIgreso: 0,
     compra_fechaFactura: 0,
     compra_proveedor: 0,
     compra_total: 0,
-    compra_nombreActivo: 0,
-    compra_marcaAct: 0,
-    compra_estadoAct: 0,
-    compra_precioAct: 0,
+    act_Nombre: 0,
+    mar_Codigo: 0,
+    est_Codigo: 0,
+    act_ValorInicial: 0,
     compra_custodioAct: 0,
     compra_centroCostoAct: 0,
     compra_cuentaAct: 0,
@@ -249,14 +251,6 @@ function TransferenciaActivos() {
   //   } else {
   //     abrircerrarModalEliminar();
   //   }
-  // };
-
-  // const handleChange = (e) => {
-  //   const { name, value } = e.target;
-  //   setCompraSeleccionada((prevState) => ({
-  //     ...prevState,
-  //     [name]: value,
-  //   }));
   // };
 
   // const peticionpost = async () => {
@@ -402,13 +396,31 @@ function TransferenciaActivos() {
     //   });
   };
 
-  const peticiongettp = async () => {
-    // await axios
-    //   .get("https://localhost:7235/api/Puestos/puestos")
-    //   .then((response) => {
-    //     setDatatp(response.data);
-    //   })
-    //   .catch();
+  const peticiongetpr = async () => {
+    await axios
+      .get("https://localhost:7235/api/Proveedores/proveedores")
+      .then((response) => {
+        setDatapr(response.data);
+      })
+      .catch();
+  };
+
+  const peticiongetma = async () => {
+    await axios
+      .get("https://localhost:7235/api/Marcas/marcas")
+      .then((response) => {
+        setDatama(response.data);
+      })
+      .catch();
+  };
+
+  const peticiongetes = async () => {
+    await axios
+      .get("https://localhost:7235/api/Estados/estados")
+      .then((response) => {
+        setDataes(response.data);
+      })
+      .catch();
   };
 
   // const onSubmit = (values, { resetForm }) => {
@@ -418,17 +430,35 @@ function TransferenciaActivos() {
   // };
 
   const validarFactura = (values, { resetForm }) => {
-    console.log("Envío de Formulario:", values);
-    resetForm();
+    axios
+      .post("https://localhost:7235/api/CompraActivos/validarFactura", values)
+      .then((response) => {
+        console.log(response.data.act_Codigo);
+        setcodigo([...codigoactivo, response.data]);
+      })
+      .catch();
 
+    resetForm();
     abrircerrarModalFactura();
     abrircerrarModalActivo();
   };
 
   const validarActivo = (values, { resetForm }) => {
-    console.log("Envío de Formulario:", values);
-    resetForm();
+    console.log(values);
+    axios
+      .post("https://localhost:7235/api/CompraActivos/validarActivo", values)
+      .then()
+      .catch((error) => {
+        Swal.close();
+        Swal.fire({
+          icon: "error",
+          title: "",
+          text: error.response.data,
+          timer: 2500,
+        });
+      });
 
+    resetForm();
     abrircerrarModalActivo();
     abrircerrarModalClasificacion();
   };
@@ -466,7 +496,9 @@ function TransferenciaActivos() {
 
   useEffect(() => {
     peticionget();
-    peticiongettp();
+    peticiongetpr();
+    peticiongetma();
+    peticiongetes();
     setTimeout(() => {
       setShowComponent(true);
     }, 100);
@@ -484,7 +516,7 @@ function TransferenciaActivos() {
         <Formik
           initialValues={{
             compra_Numfactura: "",
-            compra_fechaIngreso: "",
+            act_FechaIgreso: "",
             compra_fechaFactura: "",
             compra_proveedor: "",
           }}
@@ -508,7 +540,7 @@ function TransferenciaActivos() {
                       type="number"
                       placeholder="Factura"
                       className="form-control"
-                      // value={empleadoseleccionado && empleadoseleccionado.emp_Nacimiento}
+                      // value={compraSeleccionada && compraSeleccionada.compra_Numfactura}
                     />
                   </MDBox>
                   <ErrorMessage name="compra_Numfactura" component="small" className="error" />
@@ -524,17 +556,14 @@ function TransferenciaActivos() {
                   <MDBox mt={1}>
                     <Field
                       as={OutlinedInput}
-                      name="compra_fechaIngreso"
-                      id="compra_fechaIngreso"
+                      name="act_FechaIgreso"
+                      id="act_FechaIgreso"
                       type="date"
                       className="form-control"
-                      // value={
-                      //   TransferenciaSeleccionada &&
-                      //   TransferenciaSeleccionada.transfAct_observaciones
-                      // }
+                      // value={compraSeleccionada && compraSeleccionada.act_FechaIgreso}
                     />
                   </MDBox>
-                  <ErrorMessage name="compra_fechaIngreso" component="small" className="error" />
+                  <ErrorMessage name="act_FechaIgreso" component="small" className="error" />
                 </Grid>
               </Grid>
               <Grid container spacing={3} justifyContent="center">
@@ -551,10 +580,7 @@ function TransferenciaActivos() {
                       id="compra_fechaFactura"
                       type="date"
                       className="form-control"
-                      // value={
-                      //   TransferenciaSeleccionada &&
-                      //   TransferenciaSeleccionada.transfAct_observaciones
-                      // }
+                      // value={compraSeleccionada && compraSeleccionada.compra_fechaFactura}
                     />
                   </MDBox>
                   <ErrorMessage name="compra_fechaFactura" component="small" className="error" />
@@ -573,54 +599,18 @@ function TransferenciaActivos() {
                       id="compra_proveedor"
                       name="compra_proveedor"
                       className="form-control"
-                      // onChange={handleChange}
                     >
                       <option key="0" value="0">
                         Seleccione Proveedor
                       </option>
-                      <option key="1" value="opcion1">
-                        Proveedor 1
-                      </option>
-                      <option key="2" value="opcion2">
-                        Proveedor 2
-                      </option>
-                      <option key="3" value="opcion3">
-                        Proveedor 3
-                      </option>
-                      <option key="4" value="opcion4">
-                        Proveedor 4
-                      </option>
-                      {/* {datatp.map((element) => (
-                  <option key={element.pue_Codigo} value={element.pue_Codigo}>
-                    {element.pue_Nombre}
-                  </option>
-                ))} */}
+                      {datapr.map((element) => (
+                        <option key={element.pro_Codigo} value={element.pro_Codigo}>
+                          {element.pro_Nombre}
+                        </option>
+                      ))}
                     </Field>
                   </MDBox>
                   <ErrorMessage name="compra_proveedor" component="small" className="error" />
-                </Grid>
-              </Grid>
-              <Grid container spacing={3} justifyContent="center">
-                <Grid item xs={12} md={4} lg={4}>
-                  <MDBox mb={4} mt={2}>
-                    <MDTypography variant="h6"> Total de la Compra: </MDTypography>
-                  </MDBox>
-                </Grid>
-                <Grid item xs={12} md={6} lg={8}>
-                  <MDBox mt={2}>
-                    <Field
-                      as={OutlinedInput}
-                      name="compra_total"
-                      id="compra_total"
-                      type="number"
-                      className="form-control"
-                      readOnly
-                      // value={
-                      //   TransferenciaSeleccionada &&
-                      //   TransferenciaSeleccionada.transfAct_observaciones
-                      // }
-                    />
-                  </MDBox>
                 </Grid>
               </Grid>
               <Grid container spacing={3} justifyContent="center" mb={1}>
@@ -660,10 +650,11 @@ function TransferenciaActivos() {
       <MDBox pb={1}>
         <Formik
           initialValues={{
-            compra_nombreActivo: "",
-            compra_marcaAct: "",
-            compra_estadoAct: "",
-            compra_precioAct: "",
+            act_Nombre: "",
+            mar_Codigo: "",
+            est_Codigo: "",
+            act_ValorInicial: "",
+            act_Codigo: codigoactivo.act_Codigo,
           }}
           validationSchema={ActivoValidationSchema}
           onSubmit={validarActivo}
@@ -673,114 +664,90 @@ function TransferenciaActivos() {
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={4} lg={3}>
                   <MDBox mb={4}>
-                    <MDTypography variant="h6"> Nombre Activo: </MDTypography>
+                    <h4> Nombre Activo: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={9}>
                   <MDBox>
                     <Field
                       as={OutlinedInput}
-                      name="compra_nombreActivo"
-                      id="compra_nombreActivo"
+                      name="act_Nombre"
+                      id="act_Nombre"
                       type="text"
                       placeholder="Nombre"
                       className="form-control"
                       // value={empleadoseleccionado && empleadoseleccionado.emp_Nacimiento}
                     />
                   </MDBox>
-                  <ErrorMessage name="compra_nombreActivo" component="small" className="error" />
+                  <ErrorMessage name="act_Nombre" component="small" className="error" />
                 </Grid>
               </Grid>
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={4} lg={2}>
                   <MDBox mb={4} mt={2}>
-                    <MDTypography variant="h6"> Marca: </MDTypography>
+                    <h4> Marca: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={4}>
                   <MDBox mt={2}>
                     <Field
                       as="select"
-                      id="compra_marcaAct"
-                      name="compra_marcaAct"
+                      id="mar_Codigo"
+                      name="mar_Codigo"
                       className="form-control"
                       // onChange={handleChange}
                     >
                       <option key="0" value="0">
                         Seleccione Marca:
                       </option>
-                      <option key="1" value="opcion1">
-                        Marca 1
-                      </option>
-                      <option key="2" value="opcion2">
-                        Marca 2
-                      </option>
-                      <option key="3" value="opcion3">
-                        Marca 3
-                      </option>
-                      <option key="4" value="opcion4">
-                        Marca 4
-                      </option>
-                      {/* {datatp.map((element) => (
-                  <option key={element.pue_Codigo} value={element.pue_Codigo}>
-                    {element.pue_Nombre}
-                  </option>
-                ))} */}
+                      {datama.map((element) => (
+                        <option key={element.mar_Codigo} value={element.mar_Codigo}>
+                          {element.mar_Nombre}
+                        </option>
+                      ))}
                     </Field>
                   </MDBox>
-                  <ErrorMessage name="compra_marcaAct" component="small" className="error" />
+                  <ErrorMessage name="mar_Codigo" component="small" className="error" />
                 </Grid>
                 <Grid item xs={12} md={4} lg={2}>
                   <MDBox mb={4} mt={2}>
-                    <MDTypography variant="h6"> Estado: </MDTypography>
+                    <h4> Estado: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={4}>
                   <MDBox mt={2}>
                     <Field
                       as="select"
-                      id="compra_estadoAct"
-                      name="compra_estadoAct"
+                      id="est_Codigo"
+                      name="est_Codigo"
                       className="form-control"
                       // onChange={handleChange}
                     >
                       <option key="0" value="0">
                         Seleccione Estado:
                       </option>
-                      <option key="1" value="opcion1">
-                        Estado 1
-                      </option>
-                      <option key="2" value="opcion2">
-                        Estado 2
-                      </option>
-                      <option key="3" value="opcion3">
-                        Estado 3
-                      </option>
-                      <option key="4" value="opcion4">
-                        Estado 4
-                      </option>
-                      {/* {datatp.map((element) => (
-                  <option key={element.pue_Codigo} value={element.pue_Codigo}>
-                    {element.pue_Nombre}
-                  </option>
-                ))} */}
+                      {dataes.map((element) => (
+                        <option key={element.est_Codigo} value={element.est_Codigo}>
+                          {element.est_Nombre}
+                        </option>
+                      ))}
                     </Field>
                   </MDBox>
-                  <ErrorMessage name="compra_estadoAct" component="small" className="error" />
+                  <ErrorMessage name="est_Codigo" component="small" className="error" />
                 </Grid>
               </Grid>
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={4} lg={2}>
                   <MDBox mb={4} mt={2}>
-                    <MDTypography variant="h6"> Precio: </MDTypography>
+                    <h4> Precio: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={10}>
                   <MDBox mt={2}>
                     <Field
                       as={OutlinedInput}
-                      name="compra_precioAct"
-                      id="compra_precioAct"
+                      name="act_ValorInicial"
+                      id="act_ValorInicial"
                       type="number"
                       placeholder="Precio"
                       className="form-control"
@@ -790,7 +757,7 @@ function TransferenciaActivos() {
                       // }
                     />
                   </MDBox>
-                  <ErrorMessage name="compra_precioAct" component="small" className="error" />
+                  <ErrorMessage name="act_ValorInicial" component="small" className="error" />
                 </Grid>
               </Grid>
               <Grid container spacing={3} justifyContent="center" mb={1}>
@@ -844,7 +811,7 @@ function TransferenciaActivos() {
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={4} lg={4}>
                   <MDBox mb={4}>
-                    <MDTypography variant="h6"> Nombre Custodio: </MDTypography>
+                    <h4> Nombre Custodio: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={8}>
@@ -884,7 +851,7 @@ function TransferenciaActivos() {
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={4} lg={4}>
                   <MDBox mb={4} mt={1}>
-                    <MDTypography variant="h6"> Centro de Costo: </MDTypography>
+                    <h4> Centro de Costo: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={8}>
@@ -924,7 +891,7 @@ function TransferenciaActivos() {
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={4} lg={2}>
                   <MDBox mb={4} mt={1}>
-                    <MDTypography variant="h6"> Cuenta: </MDTypography>
+                    <h4> Cuenta: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={4}>
@@ -962,7 +929,7 @@ function TransferenciaActivos() {
                 </Grid>
                 <Grid item xs={12} md={4} lg={2}>
                   <MDBox mb={4} mt={1}>
-                    <MDTypography variant="h6"> Ubicación Activo: </MDTypography>
+                    <h4> Ubicación Activo: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={4}>
@@ -999,7 +966,7 @@ function TransferenciaActivos() {
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={4} lg={3}>
                   <MDBox mb={4}>
-                    <MDTypography variant="h6"> Clase Activo: </MDTypography>
+                    <h4> Clase Activo: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={9}>
@@ -1082,7 +1049,7 @@ function TransferenciaActivos() {
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={4} lg={4}>
                   <MDBox mb={4}>
-                    <MDTypography variant="h6"> Vida Útil (Meses): </MDTypography>
+                    <h4> Vida Útil (Meses): </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={8}>
@@ -1104,7 +1071,7 @@ function TransferenciaActivos() {
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={4} lg={5}>
                   <MDBox mb={4} mt={2}>
-                    <MDTypography variant="h6"> Fecha Inicio Depreciación: </MDTypography>
+                    <h4> Fecha Inicio Depreciación: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={7}>
@@ -1129,7 +1096,7 @@ function TransferenciaActivos() {
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={4} lg={5}>
                   <MDBox mb={4} mt={2}>
-                    <MDTypography variant="h6"> Valor a Depreciar Mensual: </MDTypography>
+                    <h4> Valor a Depreciar Mensual: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={7}>
@@ -1139,6 +1106,7 @@ function TransferenciaActivos() {
                       name="compra_valorDepreciar"
                       id="compra_valorDepreciar"
                       type="number"
+                      className="form-control"
                       readOnly
                       // value={empleadoseleccionado && empleadoseleccionado.emp_Nacimiento}
                     />
@@ -1197,7 +1165,7 @@ function TransferenciaActivos() {
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={4} lg={4}>
                   <MDBox mb={4}>
-                    <MDTypography variant="h6"> Próximo Mantenimiento: </MDTypography>
+                    <h4> Próximo Mantenimiento: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={8}>
@@ -1217,7 +1185,7 @@ function TransferenciaActivos() {
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={4} lg={2}>
                   <MDBox mb={4} mt={1}>
-                    <MDTypography variant="h6"> Fecha Inicio del Seguro: </MDTypography>
+                    <h4> Fecha Inicio del Seguro: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={4}>
@@ -1235,7 +1203,7 @@ function TransferenciaActivos() {
                 </Grid>
                 <Grid item xs={12} md={4} lg={2}>
                   <MDBox mb={4} mt={1}>
-                    <MDTypography variant="h6"> Fecha Fin del Seguro: </MDTypography>
+                    <h4> Fecha Fin del Seguro: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={4}>
@@ -1259,7 +1227,7 @@ function TransferenciaActivos() {
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={4} lg={3}>
                   <MDBox mb={4} mt={1}>
-                    <MDTypography variant="h6"> Monto Asegurado: </MDTypography>
+                    <h4> Monto Asegurado: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={9}>
@@ -1280,7 +1248,7 @@ function TransferenciaActivos() {
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={4} lg={2}>
                   <MDBox mb={4} mt={1}>
-                    <MDTypography variant="h6"> Fecha Inicio de Garantía: </MDTypography>
+                    <h4> Fecha Inicio de Garantía: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={4}>
@@ -1298,7 +1266,7 @@ function TransferenciaActivos() {
                 </Grid>
                 <Grid item xs={12} md={2} lg={2}>
                   <MDBox mb={4} mt={1}>
-                    <MDTypography variant="h6"> Fecha Fin de Garantía: </MDTypography>
+                    <h4> Fecha Fin de Garantía: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={4}>

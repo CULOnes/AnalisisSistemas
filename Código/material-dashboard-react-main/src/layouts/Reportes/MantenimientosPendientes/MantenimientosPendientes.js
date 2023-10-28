@@ -19,7 +19,7 @@ import * as Yup from "yup";
 import "./MantenimientoDependientes.css";
 import Button from "@mui/material/Button";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
-import SaveIcon from "@mui/icons-material/Save";
+import SearchIcon from "@mui/icons-material/Search";
 import ClearIcon from "@mui/icons-material/Clear";
 
 const columns = [
@@ -51,15 +51,13 @@ const columns = [
     title: "Próximo Mantenimiento",
     field: "emp_Fecha",
   },
-  {
-    title: "Retraso",
-    field: "emp_Fecha",
-  },
 ];
 
 const valSchema = Yup.object().shape({
-  depa_fecha: Yup.date()
-    .required("La Fecha es requerida")
+  tiempo_definido: Yup.string().required("El campo es obligtorio"),
+  ordenar_por: Yup.string().required("El campo es obligatorio"),
+  hasta: Yup.date()
+    .required("La fecha es requerida")
     .max(new Date(), "La fecha no puede ser mayor que la fecha actual"),
 });
 
@@ -93,7 +91,8 @@ function MantenimientosPendientes() {
   const [modaleliminar, setModalEliminar] = useState(false);
   const [empleadoseleccionado, setEmpleadoSeleccionado] = useState({
     tiempo_definido: 0,
-    Ordenar_por: 0,
+    ordenar_por: 0,
+    hasta: 0,
   });
 
   const abrircerrarModalInsertar = () => {
@@ -141,27 +140,23 @@ function MantenimientosPendientes() {
     }));
   };
 
-  const onSubmit = (values, { resetForm }) => {
-    // eslint-disable-next-line no-console
+  const onSubmit = async (values, { resetForm }) => {
     console.log("Envío de Formulario:", values);
     resetForm();
+
+    abrircerrarModalInsertar();
+
+    Swal.fire({
+      icon: "success",
+      title: "Formulario Enviado",
+      text: "El formulario se ha enviado con éxito",
+      timer: 2500, // Controla cuánto tiempo se muestra el mensaje (en milisegundos)
+      timerProgressBar: true, // Muestra una barra de progreso durante el tiempo de visualización
+    });
   };
 
   const peticionpost = async () => {
     // Swal.showLoading();
-    if (empleadoseleccionado.tiempo_definido === 0) {
-      Swal.fire({
-        icon: "info",
-        title: "",
-        text: "Debe seleccionar un tiempo definido",
-      });
-    } else if (empleadoseleccionado.Ordenar_por === 0) {
-      Swal.fire({
-        icon: "info",
-        title: "",
-        text: "Debe seleccionar un orden",
-      });
-    }
     // Swal.showLoading();
     // if (
     //   empleadoseleccionado.pue_Codigo === 0 ||
@@ -343,7 +338,9 @@ function MantenimientosPendientes() {
       <MDBox pb={1}>
         <Formik
           initialValues={{
-            depa_fecha: "",
+            tiempo_definido: "",
+            ordenar_por: "",
+            hasta: "",
           }}
           validationSchema={valSchema}
           onSubmit={onSubmit}
@@ -358,17 +355,22 @@ function MantenimientosPendientes() {
                 </Grid>
                 <Grid item xs={12} md={6} lg={5}>
                   <MDBox mb={1}>
-                    <select name="tiempo_definido" className="form-control" onChange={handleChange}>
+                    <Field
+                      as="select"
+                      id="tiempo_definido"
+                      name="tiempo_definido"
+                      className="form-control"
+                    >
                       <option key="0" value="0">
-                        Seleccione una Opcion
+                        Seleccione una Opción:
                       </option>
-                      <option key="0" value="0">
+                      <option key="0" value="opcion1">
                         Semana actual
                       </option>
-                      <option key="0" value="0">
+                      <option key="0" value="opcion2">
                         Mes actual
                       </option>
-                      <option key="0" value="0">
+                      <option key="0" value="opcion3">
                         Año actual
                       </option>
                       {/* {datatp.map((element) => (
@@ -376,8 +378,9 @@ function MantenimientosPendientes() {
                     {element.pue_Nombre}
                   </option>
                 ))} */}
-                    </select>
+                    </Field>
                   </MDBox>
+                  <ErrorMessage name="tiempo_definido" component="small" className="error" />
                 </Grid>
               </Grid>
               <Grid container spacing={3} justifyContent="center" mb={1}>
@@ -388,20 +391,20 @@ function MantenimientosPendientes() {
                 </Grid>
                 <Grid item xs={12} md={6} lg={8}>
                   <MDBox mb={1}>
-                    <select name="Ordenar_por" className="form-control" onChange={handleChange}>
+                    <Field as="select" id="ordenar_por" name="ordenar_por" className="form-control">
                       <option key="0" value="0">
-                        Seleccione una Opcion
+                        Seleccione una Opción:
                       </option>
-                      <option key="0" value="0">
+                      <option key="0" value="opcion1">
                         Fecha
                       </option>
-                      <option key="0" value="0">
+                      <option key="0" value="opcion2">
                         Activo
                       </option>
-                      <option key="0" value="0">
+                      <option key="0" value="opcion2">
                         Sucursal/Depart.
                       </option>
-                      <option key="0" value="0">
+                      <option key="0" value="opcion3">
                         Proveedor Mantenimiento
                       </option>
                       {/* {datatp.map((element) => (
@@ -409,34 +412,35 @@ function MantenimientosPendientes() {
                     {element.pue_Nombre}
                   </option>
                 ))} */}
-                    </select>
+                    </Field>
                   </MDBox>
+                  <ErrorMessage name="ordenar_por" component="small" className="error" />
                 </Grid>
               </Grid>
               <Grid container spacing={3} justifyContent="center" mb={2}>
                 <Grid item xs={12} md={4} lg={3}>
                   <MDBox mb={1}>
-                    <MDTypography variant="h6"> Hasta: </MDTypography>
+                    <h4> Hasta: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={9}>
                   <MDBox mb={1}>
                     <Field
                       as={OutlinedInput}
-                      name="depa_fecha"
-                      id="depa_fecha"
+                      name="hasta"
+                      id="hasta"
                       type="date"
-                      className="campos"
+                      className="form-control"
                     />
                   </MDBox>
-                  <ErrorMessage name="depa_fecha" component="small" className="error" />
+                  <ErrorMessage name="hasta" component="small" className="error" />
                 </Grid>
               </Grid>
               <Grid container spacing={3} justifyContent="center" mb={1}>
                 <Grid item xs={12} md={4} lg={3}>
                   <Button
                     className="aceptar"
-                    endIcon={<SaveIcon />}
+                    endIcon={<SearchIcon />}
                     type="submit"
                     fullWidth
                     onClick={() => peticionpost()}
@@ -717,7 +721,7 @@ function MantenimientosPendientes() {
                   endIcon={<AddCircleIcon />}
                   onClick={() => abrircerrarModalInsertar()}
                 >
-                  Consultar mantenimientos pendientes
+                  Mantenimientos Pendientes
                 </Button>
                 <br />
                 <br />

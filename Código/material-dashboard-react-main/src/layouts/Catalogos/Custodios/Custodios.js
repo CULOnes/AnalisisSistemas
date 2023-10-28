@@ -3,15 +3,13 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
-// import axios from "axios";
+import axios from "axios";
 import MDBox from "components/MDBox";
 import "styles/styles.css";
 import MaterialTable from "material-table";
 import { Modal, OutlinedInput } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import Swal from "sweetalert2";
-import MDInput from "components/MDInput";
-import MDTypography from "components/MDTypography";
 import Divider from "@mui/material/Divider";
 import MDButton from "components/MDButton";
 import { Formik, ErrorMessage, Field } from "formik";
@@ -25,54 +23,46 @@ import ClearIcon from "@mui/icons-material/Clear";
 const columns = [
   {
     title: "ID",
-    field: "emp_Codigo",
+    field: "cus_Codigo",
   },
   {
     title: "DPI",
-    field: "emp_Nombre",
+    field: "cus_DPI",
   },
   {
     title: "Nombre",
-    field: "emp_Apellido",
+    field: "cus_Nombre",
   },
   {
     title: "Apellido",
-    field: "emp_Telefono",
+    field: "cus_Apellido",
   },
   {
     title: "Cargo",
-    field: "emp_Edad",
-  },
-  {
-    title: "Sucursal",
-    field: "emp_Edad",
-  },
-  {
-    title: "Departamento",
-    field: "emp_Edad",
+    field: "cus_Cargo",
   },
 ];
 
 const valSchema = Yup.object().shape({
-  cc_dpi: Yup.string()
+  cus_DPI: Yup.string()
     .matches(/^[0-9]+$/, "Solo se permiten números")
     .required("El DPI es requerido")
     .max(13, "El DPI no puede tener más de 13 numeros")
     .min(13, "El DPI no puede tener menos de 13 numeros"),
-  cc_nombre: Yup.string()
+  cus_Nombre: Yup.string()
     .matches(/^[a-zA-Z0-9]+$/, "Solo se permiten números y letras")
     .required("El nombre del custodio es requerido")
     .max(50, "El nombre no puede tener más de 50 caracteres"),
-  cc_apellido: Yup.string()
+  cus_Apellido: Yup.string()
     .matches(/^[a-zA-Z0-9]+$/, "Solo se permiten números y letras")
     .required("El apellido del custodio es requerido")
     .max(50, "El apellido no puede tener más de 50 caracteres"),
-  cc_cargo: Yup.string()
+  cus_Cargo: Yup.string()
     .matches(/^[a-zA-Z0-9]+$/, "Solo se permiten números y letras")
     .required("El cargo es requerido")
     .max(50, "El nombre no puede tener más de 50 caracteres"),
-  Cus_sucursal: Yup.string().required("Este campo es obligatorio"),
-  Cus_departamento: Yup.string().required("Este campo es obligatorio"),
+  suc_Codigo: Yup.number().required("Este campo es requerido"),
+  dep_Codigo: Yup.number().required("Este campo es requerido"),
 });
 
 const useStyles = makeStyles((theme) => ({
@@ -97,19 +87,20 @@ const useStyles = makeStyles((theme) => ({
 
 function Custodios() {
   const styles = useStyles();
-  const [data /* ,setData */] = useState([]);
-  const [datatp /* ,setDatatp */] = useState([]);
+  const [data, setData] = useState([]);
+  const [datasuc, setDatasuc] = useState([]);
+  const [datadep, setDatadep] = useState([]);
   const [modalinsertar, setModalInsertar] = useState(false);
   const [modaleditar, setModalEditar] = useState(false);
   const [showComponent, setShowComponent] = useState(false);
   const [modaleliminar, setModalEliminar] = useState(false);
-  const [CustodioSeleccionado, setCustodioSeleccionado] = useState({
-    Cus_DPI: 0,
-    Cus_Nombre: "",
-    Cus_Apellido: "",
-    Cus_Cargo: "",
-    Cus_Sucursal: 0,
-    Cus_Departamento: 0,
+  const [custodioSeleccionado, setCustodioSeleccionado] = useState({
+    cus_DPI: 0,
+    cus_Nombre: "",
+    cus_Apellido: "",
+    cus_Cargo: "",
+    suc_Codigo: 0,
+    dep_Codigo: 0,
   });
 
   const abrircerrarModalInsertar = () => {
@@ -140,8 +131,8 @@ function Custodios() {
     setModalEliminar(!modaleliminar);
   };
 
-  const seleccionarEmpleado = (empleado, caso) => {
-    setCustodioSeleccionado(empleado);
+  const seleccionarCustodio = (custodio, caso) => {
+    setCustodioSeleccionado(custodio);
     if (caso === "Editar") {
       abrircerrarModalEditar();
     } else {
@@ -149,216 +140,174 @@ function Custodios() {
     }
   };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setCustodioSeleccionado((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-  };
-
-  const onSubmit = (values, { resetForm }) => {
-    // eslint-disable-next-line no-console
-    if (CustodioSeleccionado.Cus_Sucursal === 0) {
+  const peticionpost = async (values) => {
+    Swal.showLoading();
+    if (
+      values.cus_DPI === 0 ||
+      values.cus_Nombre === "" ||
+      values.cus_Apellido === "" ||
+      values.cus_Cargo === "" ||
+      values.suc_Codigo === 0 ||
+      values.dep_Codigo === 0
+    ) {
+      abrircerrarModalInsertar();
+      Swal.close();
       Swal.fire({
         icon: "info",
         title: "",
-        text: "Debe especificar una sucursal",
-      });
-    } else if (CustodioSeleccionado.Cus_Departamento === 0) {
-      Swal.fire({
-        icon: "info",
-        title: "",
-        text: "Debe especificar un departamento",
+        html: "Debe de llenar <b>todos</b> los campos",
       });
     } else {
-      // abrircerrarModalEditar();
+      abrircerrarModalInsertar();
+      await axios
+        .post("https://localhost:7235/api/Custodios/registrocustodios", values)
+        .then((response) => {
+          setData(data.concat(response.data));
+          Swal.close();
+          Swal.fire({
+            icon: "success",
+            title: "",
+            text: "Custodio creado exitosamente",
+            timer: 2500,
+          });
+        })
+        .catch((error) => {
+          Swal.close();
+          Swal.fire({
+            icon: "error",
+            title: "",
+            text: error.response.data,
+            timer: 2500,
+          });
+        });
     }
-    console.log("Envío de Formulario:", values);
-    resetForm();
   };
 
-  const peticionpost = async () => {
-    if (CustodioSeleccionado.Cus_Sucursal === 0) {
+  const peticionput = async (values) => {
+    if (
+      values.cus_DPI === 0 ||
+      values.cus_Nombre === "" ||
+      values.cus_Apellido === "" ||
+      values.cus_Cargo === "" ||
+      values.suc_Codigo === 0 ||
+      values.dep_Codigo === 0
+    ) {
+      abrircerrarModalEditar();
+      Swal.close();
       Swal.fire({
         icon: "info",
         title: "",
-        text: "Debe especificar una sucursal",
-      });
-    } else if (CustodioSeleccionado.Cus_Departamento === 0) {
-      Swal.fire({
-        icon: "info",
-        title: "",
-        text: "Debe especificar un departamento",
+        html: "Debe de llenar <b>todos</b> los campos",
       });
     } else {
-      // abrircerrarModalEditar();
+      abrircerrarModalEditar();
+      Swal.showLoading();
+      await axios
+        .put("https://localhost:7235/api/Custodios/actualizar", values)
+        .then(() => {
+          const copiaArray = [...data];
+          const indice = copiaArray.findIndex(
+            (elemento) => elemento.cus_Codigo === values.cus_Codigo
+          );
+          if (indice !== -1) {
+            copiaArray[indice] = {
+              ...copiaArray[indice],
+              cus_DPI: values.cus_DPI,
+              cus_Nombre: values.cus_Nombre,
+              cus_Apellido: values.cus_Apellido,
+              cus_Cargo: values.cus_Cargo,
+              suc_Codigo: values.suc_Codigo,
+              dep_Codigo: values.dep_Codigo,
+            };
+          }
+          setData(copiaArray);
+          Swal.close();
+          Swal.fire({
+            icon: "success",
+            title: "",
+            text: "Custodio actualizado exitosamente",
+            timer: 2500,
+          });
+        })
+        .catch((error) => {
+          Swal.close();
+          Swal.fire({
+            icon: "error",
+            title: "",
+            text: error.response.data,
+            timer: 2500,
+          });
+        });
     }
-    // Swal.showLoading();
-    // if (
-    //   empleadoseleccionado.pue_Codigo === 0 ||
-    //   empleadoseleccionado.emp_Nombre === "" ||
-    //   empleadoseleccionado.emp_Apellido === "" ||
-    //   empleadoseleccionado.emp_Direccion === "" ||
-    //   empleadoseleccionado.emp_Telefono === 0 ||
-    //   empleadoseleccionado.emp_Dpi === "" ||
-    //   empleadoseleccionado.emp_Edad === 0 ||
-    //   empleadoseleccionado.emp_Nacimiento === 0
-    // ) {
-    //   abrircerrarModalInsertar();
-    //   Swal.close();
-    //   Swal.fire({
-    //     icon: "info",
-    //     title: "",
-    //     html: "Debe de llenar <b>todos</b> los campos",
-    //   });
-    // } else {
-    //   abrircerrarModalInsertar();
-    //   await axios
-    //     .post("https://localhost:7235/api/Empleados/registroempleados", empleadoseleccionado)
-    //     .then((response) => {
-    //       setData(data.concat(response.data));
-    //       Swal.close();
-    //       Swal.fire({
-    //         icon: "success",
-    //         title: "",
-    //         text: "Empleado creado exitosamente",
-    //         timer: 2500,
-    //       });
-    //     })
-    //     .catch((error) => {
-    //       Swal.close();
-    //       Swal.fire({
-    //         icon: "error",
-    //         title: "",
-    //         text: error.response.data,
-    //         timer: 2500,
-    //       });
-    //     });
-    // }
-  };
-
-  const peticionput = async () => {
-    // if (
-    //   empleadoseleccionado.pue_Codigo === 0 ||
-    //   empleadoseleccionado.emp_Nombre === "" ||
-    //   empleadoseleccionado.emp_Apellido === "" ||
-    //   empleadoseleccionado.emp_Direccion === "" ||
-    //   empleadoseleccionado.emp_Telefono === 0 ||
-    //   empleadoseleccionado.emp_Dpi === "" ||
-    //   empleadoseleccionado.emp_Edad === 0 ||
-    //   empleadoseleccionado.emp_Nacimiento === 0
-    // ) {
-    //   abrircerrarModalEditar();
-    //   Swal.close();
-    //   Swal.fire({
-    //     icon: "info",
-    //     title: "",
-    //     html: "Debe de llenar <b>todos</b> los campos",
-    //   });
-    // } else {
-    //   abrircerrarModalEditar();
-    //   Swal.showLoading();
-    //   await axios
-    //     .put("https://localhost:7235/api/Empleados/actualizar", empleadoseleccionado)
-    //     .then(() => {
-    //       const copiaArray = [...data];
-    //       const indice = copiaArray.findIndex(
-    //         (elemento) => elemento.emp_Codigo === empleadoseleccionado.emp_Codigo
-    //       );
-    //       if (indice !== -1) {
-    //         copiaArray[indice] = {
-    //           ...copiaArray[indice],
-    //           pue_Codigo: empleadoseleccionado.pue_Codigo,
-    //           emp_Nombre: empleadoseleccionado.emp_Nombre,
-    //           emp_Apellido: empleadoseleccionado.emp_Apellido,
-    //           emp_Direccion: empleadoseleccionado.emp_Direccion,
-    //           emp_Telefono: empleadoseleccionado.emp_Telefono,
-    //           emp_Dpi: empleadoseleccionado.emp_Dpi,
-    //           emp_Edad: empleadoseleccionado.emp_Edad,
-    //           emp_Nacimiento: empleadoseleccionado.emp_Nacimiento,
-    //           emp_Nolicencia: empleadoseleccionado.emp_Nolicencia,
-    //           emp_Tipolicencia: empleadoseleccionado.emp_Tipolicencia,
-    //         };
-    //       }
-    //       setData(copiaArray);
-    //       Swal.close();
-    //       Swal.fire({
-    //         icon: "success",
-    //         title: "",
-    //         text: "Empleado actualizado exitosamente",
-    //         timer: 2500,
-    //       });
-    //     })
-    //     .catch((error) => {
-    //       Swal.close();
-    //       Swal.fire({
-    //         icon: "error",
-    //         title: "",
-    //         text: error.response.data,
-    //         timer: 2500,
-    //       });
-    //     });
-    // }
   };
 
   const peticiondelete = async () => {
-    // abrircerrarModalEliminar();
-    // Swal.showLoading();
-    // await axios
-    //   .put("https://localhost:7235/api/Empleados/eliminar", empleadoseleccionado)
-    //   .then(() => {
-    //     setData(data.filter((empleado) => empleado.emp_Codigo !== empleadoseleccionado.emp_Codigo));
-    //     Swal.close();
-    //     Swal.fire({
-    //       icon: "success",
-    //       title: "",
-    //       text: "Empleado eliminado exitosamente",
-    //       timer: 2500,
-    //     });
-    //   })
-    //   .catch((error) => {
-    //     Swal.close();
-    //     Swal.fire({
-    //       icon: "error",
-    //       title: "",
-    //       text: error.response.data,
-    //       timer: 2500,
-    //     });
-    //   });
+    abrircerrarModalEliminar();
+    Swal.showLoading();
+    await axios
+      .put("https://localhost:7235/api/Custodios/eliminar", custodioSeleccionado)
+      .then(() => {
+        setData(data.filter((custodio) => custodio.cus_Codigo !== custodioSeleccionado.cus_Codigo));
+        Swal.close();
+        Swal.fire({
+          icon: "success",
+          title: "",
+          text: "Custodio eliminado exitosamente",
+          timer: 2500,
+        });
+      })
+      .catch((error) => {
+        Swal.close();
+        Swal.fire({
+          icon: "error",
+          title: "",
+          text: error.response.data,
+          timer: 2500,
+        });
+      });
   };
 
   const peticionget = async () => {
-    // Swal.showLoading();
-    // await axios
-    //   .get("https://localhost:7235/api/Empleados/empleados")
-    //   .then((response) => {
-    //     setData(response.data);
-    //     Swal.close();
-    //   })
-    //   .catch((error) => {
-    //     Swal.close();
-    //     Swal.fire({
-    //       icon: "error",
-    //       title: "",
-    //       text: error.response.data,
-    //       timer: 2500,
-    //     });
-    //   });
+    Swal.showLoading();
+    await axios
+      .get("https://localhost:7235/api/Custodios/custodios")
+      .then((response) => {
+        setData(response.data);
+        Swal.close();
+      })
+      .catch((error) => {
+        Swal.close();
+        Swal.fire({
+          icon: "error",
+          title: "",
+          text: error.response.data,
+          timer: 2500,
+        });
+      });
   };
 
-  const peticiongettp = async () => {
-    // await axios
-    //   .get("https://localhost:7235/api/Puestos/puestos")
-    //   .then((response) => {
-    //     setDatatp(response.data);
-    //   })
-    //   .catch();
+  const peticiongetsuc = async () => {
+    await axios
+      .get("https://localhost:7235/api/Sucursales/sucursales")
+      .then((response) => {
+        setDatasuc(response.data);
+      })
+      .catch();
+  };
+
+  const peticiongetde = async () => {
+    await axios
+      .get("https://localhost:7235/api/Departamentos/departamentos")
+      .then((response) => {
+        setDatadep(response.data);
+      })
+      .catch();
   };
 
   useEffect(() => {
     peticionget();
-    peticiongettp();
+    peticiongetsuc();
+    peticiongetde();
     setTimeout(() => {
       setShowComponent(true);
     }, 100);
@@ -375,169 +324,145 @@ function Custodios() {
       <MDBox pb={1} mb={2} mt={2}>
         <Formik
           initialValues={{
-            cc_dpi: "",
-            cc_nombre: "",
-            cc_apellido: "",
-            cc_cargo: "",
-            Cus_sucursal: "",
-            Cus_departamento: "",
+            cus_DPI: 0,
+            cus_Nombre: "",
+            cus_Apellido: "",
+            cus_Cargo: "",
+            suc_Codigo: 0,
+            dep_Codigo: 0,
           }}
           validationSchema={valSchema}
-          onSubmit={onSubmit}
+          onSubmit={peticionpost}
         >
           {({ handleSubmit }) => (
             <form onSubmit={handleSubmit}>
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={4} lg={4}>
                   <MDBox mb={1} pb={4}>
-                    <MDTypography variant="h6"> DPI: </MDTypography>
+                    <h4> DPI: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={8}>
                   <MDBox>
                     <Field
                       as={OutlinedInput}
-                      name="cc_dpi"
-                      id="cc_dpi"
+                      name="cus_DPI"
+                      id="cus_DPI"
                       type="number"
+                      className="form-control"
                       placeholder="DPI"
                     />
                   </MDBox>
-                  <ErrorMessage name="cc_dpi" component="small" className="error" />
+                  <ErrorMessage name="cus_DPI" component="small" className="error" />
                 </Grid>
               </Grid>
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={4} lg={4}>
                   <MDBox mt={2} pb={4}>
-                    <MDTypography variant="h6"> Cargo </MDTypography>
+                    <h4> Cargo: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={8}>
                   <MDBox mt={2}>
                     <Field
                       as={OutlinedInput}
-                      name="cc_cargo"
-                      id="cc_cargo"
+                      name="cus_Cargo"
+                      id="cus_Cargo"
                       type="text"
+                      className="form-control"
                       placeholder="Cargo del custodio"
                     />
                   </MDBox>
-                  <ErrorMessage name="cc_cargo" component="small" className="error" />
+                  <ErrorMessage name="cus_Cargo" component="small" className="error" />
                 </Grid>
               </Grid>
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={4} lg={4}>
                   <MDBox mt={2} pb={4}>
-                    <MDTypography variant="h6"> Nombre: </MDTypography>
+                    <h4> Nombre: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={8}>
                   <MDBox mt={2}>
                     <Field
                       as={OutlinedInput}
-                      name="cc_nombre"
-                      id="cc_nombre"
+                      name="cus_Nombre"
+                      id="cus_Nombre"
                       type="text"
+                      className="form-control"
                       placeholder="Nombre del custodio"
                     />
                   </MDBox>
-                  <ErrorMessage name="cc_nombre" component="small" className="error" />
+                  <ErrorMessage name="cus_Nombre" component="small" className="error" />
                 </Grid>
               </Grid>
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={4} lg={4}>
                   <MDBox mt={2} pb={4}>
-                    <MDTypography variant="h6"> Apellido </MDTypography>
+                    <h4> Apellido: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={8}>
                   <MDBox mt={2}>
                     <Field
                       as={OutlinedInput}
-                      name="cc_apellido"
-                      id="cc_apellido"
+                      name="cus_Apellido"
+                      id="cus_Apellido"
                       type="text"
+                      className="form-control"
                       placeholder="Apellido del custodio"
                     />
                   </MDBox>
-                  <ErrorMessage name="cc_apellido" component="small" className="error" />
+                  <ErrorMessage name="cus_Apellido" component="small" className="error" />
                 </Grid>
               </Grid>
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={6} lg={4}>
                   <MDBox mt={2} pb={4}>
-                    <MDTypography variant="h6"> Sucursal </MDTypography>
+                    <h4> Sucursal: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={8}>
                   <MDBox mt={2}>
-                    <select
-                      id="Cus_Sucursal"
-                      name="Cus_Sucursal"
-                      className="form-control"
-                      onBlur={Formik.handleBlur}
-                      onChange={handleChange}
-                    >
+                    <Field as="select" id="suc_Codigo" name="suc_Codigo" className="form-control">
                       <option key="0" value="0">
-                        Seleccione una opcion
+                        Seleccione una Sucursal:
                       </option>
-                      <option key="1" value="0">
-                        sucursal
-                      </option>
-                      <option key="2" value="0">
-                        sucursal 2
-                      </option>
-                      {/* {datatp.map((element) => (
-                  <option key={element.pue_Codigo} value={element.pue_Codigo}>
-                    {element.pue_Nombre}
-                  </option>
-                ))} */}
-                    </select>
+                      {datasuc.map((element) => (
+                        <option key={element.suc_Codigo} value={element.suc_Codigo}>
+                          {element.suc_Nombre}
+                        </option>
+                      ))}
+                    </Field>
                   </MDBox>
+                  <ErrorMessage name="suc_Codigo" component="small" className="error" />
                 </Grid>
               </Grid>
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={6} lg={4}>
                   <MDBox mt={2} pb={4}>
-                    <MDTypography variant="h6"> Departamento </MDTypography>
+                    <h4> Departamento: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={8}>
                   <MDBox mt={2}>
-                    <select
-                      id="Cus_Departamento"
-                      name="Cus_Departamento"
-                      className="form-control"
-                      onBlur={Formik.handleBlur}
-                      onChange={handleChange}
-                    >
+                    <Field as="select" id="dep_Codigo" name="dep_Codigo" className="form-control">
                       <option key="0" value="0">
-                        Seleccione una opcion
+                        Seleccione un Departamento:
                       </option>
-                      <option key="1" value="0">
-                        departamento
-                      </option>
-                      <option key="2" value="0">
-                        departamento 2
-                      </option>
-                      {/* {datatp.map((element) => (
-                  <option key={element.pue_Codigo} value={element.pue_Codigo}>
-                    {element.pue_Nombre}
-                  </option>
-                ))} */}
-                    </select>
+                      {datadep.map((element) => (
+                        <option key={element.dep_Codigo} value={element.dep_Codigo}>
+                          {element.dep_Nombre}
+                        </option>
+                      ))}
+                    </Field>
                   </MDBox>
+                  <ErrorMessage name="dep_Codigo" component="small" className="error" />
                 </Grid>
               </Grid>
               <Grid container spacing={3} justifyContent="center" mb={1} mt={2}>
                 <Grid item xs={12} md={4} lg={3}>
-                  <Button
-                    className="aceptar"
-                    endIcon={<SaveIcon />}
-                    type="submit"
-                    fullWidth
-                    onClick={() => peticionpost()}
-                  >
+                  <Button className="aceptar" endIcon={<SaveIcon />} type="submit" fullWidth>
                     Insertar
                   </Button>
                 </Grid>
@@ -562,225 +487,169 @@ function Custodios() {
 
   const bodyEditar = (
     <div className={styles.modal}>
-      <MDTypography variant="h3"> Editar Empleado </MDTypography>
+      <h2> Editar Custodio </h2>
       <Divider sx={{ marginTop: 1 }} light={false} />
       <MDBox pb={1}>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={1}>
-              <MDTypography variant="h6"> Puesto: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={1}>
-              <select
-                name="pue_Codigo"
-                className="form-control"
-                onChange={handleChange}
-                value={CustodioSeleccionado && CustodioSeleccionado.pue_Codigo}
-              >
-                <option key="0" value="0">
-                  Seleccione el Puesto
-                </option>
-                {datatp.map((element) => (
-                  <option key={element.pue_Codigo} value={element.pue_Codigo}>
-                    {element.pue_Nombre}
-                  </option>
-                ))}
-              </select>
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={1}>
-              <MDTypography variant="h6"> Nombre: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={1}>
-              <MDInput
-                type="text"
-                label="Nombre"
-                name="emp_Nombre"
-                onChange={handleChange}
-                size="small"
-                value={CustodioSeleccionado && CustodioSeleccionado.emp_Nombre}
-              />
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={1}>
-              <MDTypography variant="h6"> Apellido: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={1}>
-              <MDInput
-                label="Apellido"
-                name="emp_Apellido"
-                type="text"
-                onChange={handleChange}
-                size="small"
-                value={CustodioSeleccionado && CustodioSeleccionado.emp_Apellido}
-              />
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={1}>
-              <MDTypography variant="h6"> Telefono: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={1}>
-              <MDInput
-                label="Telefono"
-                name="emp_Telefono"
-                type="number"
-                size="small"
-                onChange={handleChange}
-                value={CustodioSeleccionado && CustodioSeleccionado.emp_Telefono}
-              />
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={1}>
-              <MDTypography variant="h6"> DPI: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={1}>
-              <MDInput
-                label="DPI"
-                name="emp_Dpi"
-                type="text"
-                size="small"
-                onChange={handleChange}
-                value={CustodioSeleccionado && CustodioSeleccionado.emp_Dpi}
-              />
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={1}>
-              <MDTypography variant="h6"> Edad: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={1}>
-              <MDInput
-                label="Edad"
-                name="emp_Edad"
-                type="number"
-                size="small"
-                onChange={handleChange}
-                value={CustodioSeleccionado && CustodioSeleccionado.emp_Edad}
-              />
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={1}>
-              <MDTypography variant="h6"> Fecha Nacimiento: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={1}>
-              <MDInput
-                name="emp_Nacimiento"
-                type="date"
-                size="small"
-                onChange={handleChange}
-                disabled
-                // value={CustodioSeleccionado && CustodioSeleccionado.emp_Nacimiento}
-              />
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={1}>
-              <MDTypography variant="h6"> Numero Licencia: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={1}>
-              <MDInput
-                label="Numero Licencia"
-                name="emp_Nolicencia"
-                type="text"
-                size="small"
-                onChange={handleChange}
-                value={CustodioSeleccionado && CustodioSeleccionado.emp_Nolicencia}
-              />
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={1}>
-              <MDTypography variant="h6"> Tipo Licencia: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={1}>
-              <MDInput
-                label="Tipo Licencia"
-                name="emp_Tipolicencia"
-                type="text"
-                size="small"
-                onChange={handleChange}
-                value={CustodioSeleccionado && CustodioSeleccionado.emp_Tipolicencia}
-              />
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={1}>
-              <MDTypography variant="h6"> Direccion: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={1}>
-              <MDInput
-                label="Direccion"
-                name="emp_Direccion"
-                type="text"
-                size="small"
-                multiline
-                rows={2}
-                onChange={handleChange}
-                value={CustodioSeleccionado && CustodioSeleccionado.emp_Direccion}
-              />
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDButton variant="gradient" color="info" fullWidth onClick={() => peticionput()}>
-              Actualizar
-            </MDButton>
-          </Grid>
-          <Grid item xs={12} md={4} lg={3}>
-            <MDButton
-              variant="gradient"
-              color="light"
-              fullWidth
-              onClick={() => abrircerrarModalEditar()}
-            >
-              Cancelar
-            </MDButton>
-          </Grid>
-        </Grid>
+        <Formik
+          initialValues={{
+            cus_DPI: custodioSeleccionado && custodioSeleccionado.cus_DPI,
+            cus_Nombre: custodioSeleccionado && custodioSeleccionado.cus_Nombre,
+            cus_Apellido: custodioSeleccionado && custodioSeleccionado.cus_Apellido,
+            cus_Cargo: custodioSeleccionado && custodioSeleccionado.cus_Cargo,
+            suc_Codigo: custodioSeleccionado && custodioSeleccionado.suc_Codigo,
+            dep_Codigo: custodioSeleccionado && custodioSeleccionado.dep_Codigo,
+            cus_Codigo: custodioSeleccionado && custodioSeleccionado.cus_Codigo,
+          }}
+          validationSchema={valSchema}
+          onSubmit={peticionput}
+        >
+          {({ handleSubmit }) => (
+            <form onSubmit={handleSubmit}>
+              <Grid container spacing={3} justifyContent="center">
+                <Grid item xs={12} md={4} lg={4}>
+                  <MDBox mb={1} pb={4}>
+                    <h4> DPI: </h4>
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} md={6} lg={8}>
+                  <MDBox>
+                    <Field
+                      as={OutlinedInput}
+                      name="cus_DPI"
+                      id="cus_DPI"
+                      type="number"
+                      className="form-control"
+                      placeholder="DPI"
+                    />
+                  </MDBox>
+                  <ErrorMessage name="cus_DPI" component="small" className="error" />
+                </Grid>
+              </Grid>
+              <Grid container spacing={3} justifyContent="center">
+                <Grid item xs={12} md={4} lg={4}>
+                  <MDBox mt={2} pb={4}>
+                    <h4> Cargo: </h4>
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} md={6} lg={8}>
+                  <MDBox mt={2}>
+                    <Field
+                      as={OutlinedInput}
+                      name="cus_Cargo"
+                      id="cus_Cargo"
+                      type="text"
+                      className="form-control"
+                      placeholder="Cargo del custodio"
+                    />
+                  </MDBox>
+                  <ErrorMessage name="cus_Cargo" component="small" className="error" />
+                </Grid>
+              </Grid>
+              <Grid container spacing={3} justifyContent="center">
+                <Grid item xs={12} md={4} lg={4}>
+                  <MDBox mt={2} pb={4}>
+                    <h4> Nombre: </h4>
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} md={6} lg={8}>
+                  <MDBox mt={2}>
+                    <Field
+                      as={OutlinedInput}
+                      name="cus_Nombre"
+                      id="cus_Nombre"
+                      type="text"
+                      className="form-control"
+                      placeholder="Nombre del custodio"
+                    />
+                  </MDBox>
+                  <ErrorMessage name="cus_Nombre" component="small" className="error" />
+                </Grid>
+              </Grid>
+              <Grid container spacing={3} justifyContent="center">
+                <Grid item xs={12} md={4} lg={4}>
+                  <MDBox mt={2} pb={4}>
+                    <h4> Apellido: </h4>
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} md={6} lg={8}>
+                  <MDBox mt={2}>
+                    <Field
+                      as={OutlinedInput}
+                      name="cus_Apellido"
+                      id="cus_Apellido"
+                      type="text"
+                      className="form-control"
+                      placeholder="Apellido del custodio"
+                    />
+                  </MDBox>
+                  <ErrorMessage name="cus_Apellido" component="small" className="error" />
+                </Grid>
+              </Grid>
+              <Grid container spacing={3} justifyContent="center">
+                <Grid item xs={12} md={6} lg={4}>
+                  <MDBox mt={2} pb={4}>
+                    <h4> Sucursal: </h4>
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} md={6} lg={8}>
+                  <MDBox mt={2}>
+                    <Field as="select" id="suc_Codigo" name="suc_Codigo" className="form-control">
+                      <option key="0" value="0">
+                        Seleccione una Sucursal:
+                      </option>
+                      {datasuc.map((element) => (
+                        <option key={element.suc_Codigo} value={element.suc_Codigo}>
+                          {element.suc_Nombre}
+                        </option>
+                      ))}
+                    </Field>
+                  </MDBox>
+                  <ErrorMessage name="suc_Codigo" component="small" className="error" />
+                </Grid>
+              </Grid>
+              <Grid container spacing={3} justifyContent="center">
+                <Grid item xs={12} md={6} lg={4}>
+                  <MDBox mt={2} pb={4}>
+                    <h4> Departamento: </h4>
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} md={6} lg={8}>
+                  <MDBox mt={2}>
+                    <Field as="select" id="dep_Codigo" name="dep_Codigo" className="form-control">
+                      <option key="0" value="0">
+                        Seleccione un Departamento:
+                      </option>
+                      {datadep.map((element) => (
+                        <option key={element.dep_Codigo} value={element.dep_Codigo}>
+                          {element.dep_Nombre}
+                        </option>
+                      ))}
+                    </Field>
+                  </MDBox>
+                  <ErrorMessage name="dep_Codigo" component="small" className="error" />
+                </Grid>
+              </Grid>
+              <Grid container spacing={3} justifyContent="center" mb={1} mt={2}>
+                <Grid item xs={12} md={4} lg={3}>
+                  <Button className="aceptar" endIcon={<SaveIcon />} type="submit" fullWidth>
+                    Actualizar
+                  </Button>
+                </Grid>
+                <Grid item xs={12} md={4} lg={3}>
+                  <Button
+                    className="cancelar"
+                    endIcon={<ClearIcon />}
+                    type="submit"
+                    fullWidth
+                    onClick={() => abrircerrarModalEditar()}
+                  >
+                    Cancelar
+                  </Button>
+                </Grid>
+              </Grid>
+            </form>
+          )}
+        </Formik>
       </MDBox>
     </div>
   );
@@ -788,8 +657,8 @@ function Custodios() {
   const bodyEliminar = (
     <div className={styles.modal}>
       <p>
-        Deseas Eliminar el Empleado
-        <b> {CustodioSeleccionado && CustodioSeleccionado.emp_Nombre}</b>?
+        Deseas Eliminar el Custodio
+        <b> {custodioSeleccionado && custodioSeleccionado.cus_Nombre}</b>?
       </p>
       <div align="right">
         <MDButton color="secondary" onClick={() => peticiondelete()}>
@@ -821,17 +690,17 @@ function Custodios() {
                 <MaterialTable
                   columns={columns}
                   data={data}
-                  title="Empleados"
+                  title="Custodios"
                   actions={[
                     {
                       icon: "edit",
-                      tooltip: "Editar Empleado",
-                      onClick: (event, rowData) => seleccionarEmpleado(rowData, "Editar"),
+                      tooltip: "Editar Custodio",
+                      onClick: (event, rowData) => seleccionarCustodio(rowData, "Editar"),
                     },
                     {
                       icon: "delete",
-                      tooltip: "Eliminar Empleado",
-                      onClick: (event, rowData) => seleccionarEmpleado(rowData, "Eliminar"),
+                      tooltip: "Eliminar Custodio",
+                      onClick: (event, rowData) => seleccionarCustodio(rowData, "Eliminar"),
                     },
                   ]}
                   options={{

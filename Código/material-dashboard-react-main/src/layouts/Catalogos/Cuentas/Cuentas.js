@@ -3,15 +3,13 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
-// import axios from "axios";
+import axios from "axios";
 import MDBox from "components/MDBox";
 import "styles/styles.css";
 import MaterialTable from "material-table";
 import { Modal, OutlinedInput } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import Swal from "sweetalert2";
-import MDInput from "components/MDInput";
-import MDTypography from "components/MDTypography";
 import Divider from "@mui/material/Divider";
 import MDButton from "components/MDButton";
 import { Formik, ErrorMessage, Field } from "formik";
@@ -26,31 +24,27 @@ import TextField from "@mui/material/TextField";
 const columns = [
   {
     title: "ID",
-    field: "emp_Codigo",
+    field: "cue_Codigo",
   },
   {
     title: "Nombre",
-    field: "emp_Nombre",
-  },
-  {
-    title: "Descripcion",
-    field: "emp_Nombre",
+    field: "cue_Nombre",
   },
   {
     title: "Tipo de cuenta",
-    field: "emp_Apellido",
+    field: "cue_Tipo",
   },
 ];
 
 const valSchema = Yup.object().shape({
-  cc_nombre: Yup.string()
+  cue_Nombre: Yup.string()
     .matches(/^[a-zA-Z0-9]+$/, "Solo se permiten números y letras")
     .required("El nombre de la Cuenta es requerido")
     .max(50, "El nombre no puede tener más de 50 caracteres"),
-  cc_descripcion: Yup.string()
+  cue_Descripcion: Yup.string()
     .required("La descripción es requerida")
     .max(250, "La descripción no puede tener más de 250 caracteres"),
-  Cue_TipoC: Yup.string().required("Este campo es obligatorio"),
+  cue_Tipo: Yup.string().required("El Tipo de Cuenta es requerido"),
 });
 
 const useStyles = makeStyles((theme) => ({
@@ -75,16 +69,15 @@ const useStyles = makeStyles((theme) => ({
 
 function Cuentas() {
   const styles = useStyles();
-  const [data /* , setData */] = useState([]);
-  const [datatp /* , setDatatp */] = useState([]);
+  const [data, setData] = useState([]);
   const [modalinsertar, setModalInsertar] = useState(false);
   const [modaleditar, setModalEditar] = useState(false);
   const [showComponent, setShowComponent] = useState(false);
   const [modaleliminar, setModalEliminar] = useState(false);
-  const [CuentaSeleccionada, setCuentaSeleccionada] = useState({
-    Cue_Nombre: "",
-    Cue_Descripcion: "",
-    Cue_TipoC: 0,
+  const [cuentaSeleccionada, setCuentaSeleccionada] = useState({
+    cue_Nombre: "",
+    cue_Descripcion: "",
+    cue_Tipo: "",
   });
 
   const abrircerrarModalInsertar = () => {
@@ -115,8 +108,8 @@ function Cuentas() {
     setModalEliminar(!modaleliminar);
   };
 
-  const seleccionarEmpleado = (empleado, caso) => {
-    setCuentaSeleccionada(empleado);
+  const seleccionarCuenta = (cuenta, caso) => {
+    setCuentaSeleccionada(cuenta);
     if (caso === "Editar") {
       abrircerrarModalEditar();
     } else {
@@ -124,190 +117,134 @@ function Cuentas() {
     }
   };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setCuentaSeleccionada((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-  };
-
-  const onSubmit = (values, { resetForm }) => {
-    // eslint-disable-next-line no-console
-    if (CuentaSeleccionada.Cue_TipoC === 0) {
+  const peticionpost = async (values) => {
+    abrircerrarModalInsertar();
+    Swal.showLoading();
+    if (values.cue_Nombre === 0 || values.cue_Descripcion === "" || values.cue_Tipo === "") {
+      abrircerrarModalInsertar();
+      Swal.close();
       Swal.fire({
         icon: "info",
         title: "",
-        text: "Debe especificar el tipo de cuenta",
+        html: "Debe de llenar <b>todos</b> los campos",
       });
     } else {
-      // abrircerrarModalEditar();
+      abrircerrarModalInsertar();
+      await axios
+        .post("https://localhost:7235/api/Cuentas/registrocuentas", values)
+        .then((response) => {
+          setData(data.concat(response.data));
+          Swal.close();
+          Swal.fire({
+            icon: "success",
+            title: "",
+            text: "Cuenta creada exitosamente",
+            timer: 2500,
+          });
+        })
+        .catch((error) => {
+          Swal.close();
+          Swal.fire({
+            icon: "error",
+            title: "",
+            text: error.response.data,
+            timer: 2500,
+          });
+        });
     }
-    console.log("Envío de Formulario:", values);
-    resetForm();
   };
 
-  const peticionpost = async () => {
-    if (CuentaSeleccionada.Cue_TipoC === 0) {
+  const peticionput = async (values) => {
+    if (values.cue_Nombre === 0 || values.cue_Descripcion === "" || values.cue_Tipo === "") {
+      abrircerrarModalEditar();
+      Swal.close();
       Swal.fire({
         icon: "info",
         title: "",
-        text: "Debe especificar el tipo de cuenta",
+        html: "Debe de llenar <b>todos</b> los campos",
       });
     } else {
-      // abrircerrarModalEditar();
-      // Swal.showLoading();
-      // if (
-      //   empleadoseleccionado.pue_Codigo === 0 ||
-      //   empleadoseleccionado.emp_Nombre === "" ||
-      //   empleadoseleccionado.emp_Apellido === "" ||
-      //   empleadoseleccionado.emp_Direccion === "" ||
-      //   empleadoseleccionado.emp_Telefono === 0 ||
-      //   empleadoseleccionado.emp_Dpi === "" ||
-      //   empleadoseleccionado.emp_Edad === 0 ||
-      //   empleadoseleccionado.emp_Nacimiento === 0
-      // ) {
-      //   abrircerrarModalInsertar();
-      //   Swal.close();
-      //   Swal.fire({
-      //     icon: "info",
-      //     title: "",
-      //     html: "Debe de llenar <b>todos</b> los campos",
-      //   });
-      // } else {
-      //   abrircerrarModalInsertar();
-      //   await axios
-      //     .post("https://localhost:7235/api/Empleados/registroempleados", empleadoseleccionado)
-      //     .then((response) => {
-      //       setData(data.concat(response.data));
-      //       Swal.close();
-      //       Swal.fire({
-      //         icon: "success",
-      //         title: "",
-      //         text: "Empleado creado exitosamente",
-      //         timer: 2500,
-      //       });
-      //     })
-      //     .catch((error) => {
-      //       Swal.close();
-      //       Swal.fire({
-      //         icon: "error",
-      //         title: "",
-      //         text: error.response.data,
-      //         timer: 2500,
-      //       });
-      //     });
-      // }
+      abrircerrarModalEditar();
+      Swal.showLoading();
+      await axios
+        .put("https://localhost:7235/api/Cuentas/actualizar", values)
+        .then(() => {
+          const copiaArray = [...data];
+          const indice = copiaArray.findIndex(
+            (elemento) => elemento.cue_Codigo === values.cue_Codigo
+          );
+          if (indice !== -1) {
+            copiaArray[indice] = {
+              ...copiaArray[indice],
+              cue_Nombre: values.cue_Nombre,
+              cue_Descripcion: values.cue_Descripcion,
+              cue_Tipo: values.cue_Tipo,
+            };
+          }
+          setData(copiaArray);
+          Swal.close();
+          Swal.fire({
+            icon: "success",
+            title: "",
+            text: "Cuenta actualizada exitosamente",
+            timer: 2500,
+          });
+        })
+        .catch((error) => {
+          Swal.close();
+          Swal.fire({
+            icon: "error",
+            title: "",
+            text: error.response.data,
+            timer: 2500,
+          });
+        });
     }
-  };
-
-  const peticionput = async () => {
-    // if (
-    //   empleadoseleccionado.pue_Codigo === 0 ||
-    //   empleadoseleccionado.emp_Nombre === "" ||
-    //   empleadoseleccionado.emp_Apellido === "" ||
-    //   empleadoseleccionado.emp_Direccion === "" ||
-    //   empleadoseleccionado.emp_Telefono === 0 ||
-    //   empleadoseleccionado.emp_Dpi === "" ||
-    //   empleadoseleccionado.emp_Edad === 0 ||
-    //   empleadoseleccionado.emp_Nacimiento === 0
-    // ) {
-    //   abrircerrarModalEditar();
-    //   Swal.close();
-    //   Swal.fire({
-    //     icon: "info",
-    //     title: "",
-    //     html: "Debe de llenar <b>todos</b> los campos",
-    //   });
-    // } else {
-    //   abrircerrarModalEditar();
-    //   Swal.showLoading();
-    //   await axios
-    //     .put("https://localhost:7235/api/Empleados/actualizar", empleadoseleccionado)
-    //     .then(() => {
-    //       const copiaArray = [...data];
-    //       const indice = copiaArray.findIndex(
-    //         (elemento) => elemento.emp_Codigo === empleadoseleccionado.emp_Codigo
-    //       );
-    //       if (indice !== -1) {
-    //         copiaArray[indice] = {
-    //           ...copiaArray[indice],
-    //           pue_Codigo: empleadoseleccionado.pue_Codigo,
-    //           emp_Nombre: empleadoseleccionado.emp_Nombre,
-    //           emp_Apellido: empleadoseleccionado.emp_Apellido,
-    //           emp_Direccion: empleadoseleccionado.emp_Direccion,
-    //           emp_Telefono: empleadoseleccionado.emp_Telefono,
-    //           emp_Dpi: empleadoseleccionado.emp_Dpi,
-    //           emp_Edad: empleadoseleccionado.emp_Edad,
-    //           emp_Nacimiento: empleadoseleccionado.emp_Nacimiento,
-    //           emp_Nolicencia: empleadoseleccionado.emp_Nolicencia,
-    //           emp_Tipolicencia: empleadoseleccionado.emp_Tipolicencia,
-    //         };
-    //       }
-    //       setData(copiaArray);
-    //       Swal.close();
-    //       Swal.fire({
-    //         icon: "success",
-    //         title: "",
-    //         text: "Empleado actualizado exitosamente",
-    //         timer: 2500,
-    //       });
-    //     })
-    //     .catch((error) => {
-    //       Swal.close();
-    //       Swal.fire({
-    //         icon: "error",
-    //         title: "",
-    //         text: error.response.data,
-    //         timer: 2500,
-    //       });
-    //     });
-    // }
   };
 
   const peticiondelete = async () => {
-    // abrircerrarModalEliminar();
-    // Swal.showLoading();
-    // await axios
-    //   .put("https://localhost:7235/api/Empleados/eliminar", empleadoseleccionado)
-    //   .then(() => {
-    //     setData(data.filter((empleado) => empleado.emp_Codigo !== empleadoseleccionado.emp_Codigo));
-    //     Swal.close();
-    //     Swal.fire({
-    //       icon: "success",
-    //       title: "",
-    //       text: "Empleado eliminado exitosamente",
-    //       timer: 2500,
-    //     });
-    //   })
-    //   .catch((error) => {
-    //     Swal.close();
-    //     Swal.fire({
-    //       icon: "error",
-    //       title: "",
-    //       text: error.response.data,
-    //       timer: 2500,
-    //     });
-    //   });
+    abrircerrarModalEliminar();
+    Swal.showLoading();
+    await axios
+      .put("https://localhost:7235/api/Cuentas/eliminar", cuentaSeleccionada)
+      .then(() => {
+        setData(data.filter((cuenta) => cuenta.cue_Codigo !== cuentaSeleccionada.cue_Codigo));
+        Swal.close();
+        Swal.fire({
+          icon: "success",
+          title: "",
+          text: "Cuenta eliminada exitosamente",
+          timer: 2500,
+        });
+      })
+      .catch((error) => {
+        Swal.close();
+        Swal.fire({
+          icon: "error",
+          title: "",
+          text: error.response.data,
+          timer: 2500,
+        });
+      });
   };
 
   const peticionget = async () => {
-    // Swal.showLoading();
-    // await axios
-    //   .get("https://localhost:7235/api/Empleados/empleados")
-    //   .then((response) => {
-    //     setData(response.data);
-    //     Swal.close();
-    //   })
-    //   .catch((error) => {
-    //     Swal.close();
-    //     Swal.fire({
-    //       icon: "error",
-    //       title: "",
-    //       text: error.response.data,
-    //       timer: 2500,
-    //     });
-    //   });
+    Swal.showLoading();
+    await axios
+      .get("https://localhost:7235/api/Cuentas/cuentas")
+      .then((response) => {
+        setData(response.data);
+        Swal.close();
+      })
+      .catch((error) => {
+        Swal.close();
+        Swal.fire({
+          icon: "error",
+          title: "",
+          text: error.response.data,
+          timer: 2500,
+        });
+      });
   };
 
   const peticiongettp = async () => {
@@ -338,79 +275,94 @@ function Cuentas() {
       <MDBox pb={1}>
         <Formik
           initialValues={{
-            cc_nombre: "",
-            cc_descripcion: "",
-            Cue_TipoC: "",
+            cue_Nombre: "",
+            cue_Descripcion: "",
+            cue_Tipo: "",
           }}
           validationSchema={valSchema}
-          onSubmit={onSubmit}
+          onSubmit={peticionpost}
         >
           {({ handleSubmit }) => (
             <form onSubmit={handleSubmit}>
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={4} lg={4}>
                   <MDBox mb={1} pb={4} mt={2}>
-                    <MDTypography variant="h6"> Nombre: </MDTypography>
+                    <h4> Nombre: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={8}>
                   <MDBox mt={2}>
                     <Field
                       as={OutlinedInput}
-                      name="cc_nombre"
-                      id="cc_nombre"
+                      name="cue_Nombre"
+                      id="cue_Nombre"
                       type="text"
+                      className="form-control"
                       placeholder="Nombre Cuenta"
                     />
                   </MDBox>
-                  <ErrorMessage name="cc_nombre" component="small" className="error" />
+                  <ErrorMessage name="cue_Nombre" component="small" className="error" />
                 </Grid>
               </Grid>
               <Grid container spacing={3} justifyContent="center">
-                <Grid item xs={12} md={6} lg={4}>
-                  <MDBox pb={4} mt={2}>
-                    <MDTypography variant="h6"> Tipo de cuenta: </MDTypography>
+                <Grid item xs={12} md={4} lg={4}>
+                  <MDBox mb={4}>
+                    <h4> Tipo de cuenta: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={8}>
-                  <MDBox mt={2}>
-                    <select
-                      id="Cue_TipoC"
-                      name="Cue_TipoC"
+                  <MDBox mt={1}>
+                    <Field
+                      as="select"
+                      id="cue_Tipo"
+                      name="cue_Tipo"
                       className="form-control"
-                      onBlur={Formik.handleBlur}
-                      onChange={handleChange}
+                      placeholder="Seleccione una Opción"
                     >
                       <option key="0" value="0">
-                        Seleccione una opcion
+                        Seleccione un Tipo de Cuenta:
                       </option>
-                      <option key="0" value="0">
-                        activo de control
+                      <option key="1" value="Cuenta para Vehículos">
+                        Cuenta para Vehículos
                       </option>
-                      <option key="0" value="0">
-                        activo fijo
+                      <option key="2" value="Cuenta para Maquinaria">
+                        Cuenta para Maquinaria
                       </option>
-                      {/* {datatp.map((element) => (
-                  <option key={element.pue_Codigo} value={element.pue_Codigo}>
-                    {element.pue_Nombre}
-                  </option>
-                ))} */}
-                    </select>
+                      <option key="3" value="Cuenta para Mobiliario y Equipo">
+                        Cuenta para Mobiliario y Equipo
+                      </option>
+                      <option key="4" value="Cuenta para Equipo de Cómputo">
+                        Cuenta para Equipo de Cómputo
+                      </option>
+                      <option key="5" value="Cuenta para Herramientas">
+                        Cuenta para Herramientas
+                      </option>
+                      <option key="6" value="Cuenta para Amortizaciones">
+                        Cuenta para Amortizaciones
+                      </option>
+                      <option key="7" value="Cuenta para Edificios">
+                        Cuenta para Edificios
+                      </option>
+                      <option key="8" value="Cuenta para Terrenos">
+                        Cuenta para Terrenos
+                      </option>
+                    </Field>
                   </MDBox>
+                  <ErrorMessage name="cue_Tipo" component="small" className="error" />
                 </Grid>
               </Grid>
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={4} lg={4}>
                   <MDBox mt={1} pb={4}>
-                    <MDTypography variant="h6"> Descripción: </MDTypography>
+                    <h4> Descripción: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={8}>
                   <MDBox mt={1}>
                     <Field
                       as={TextField}
-                      name="cc_descripcion"
-                      id="cc_descripcion outlined-multiline-static"
+                      name="cue_Descripcion"
+                      id="cue_Descripcion outlined-multiline-static"
                       type="text"
                       multiline
                       fullWidth
@@ -418,54 +370,12 @@ function Cuentas() {
                       placeholder="Descripcion"
                     />
                   </MDBox>
-                  <ErrorMessage name="cc_descripcion" component="small" className="error" />
+                  <ErrorMessage name="cue_Descripcion" component="small" className="error" />
                 </Grid>
               </Grid>
-              {/* <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={1}>
-              <MDTypography variant="h6"> Meses de vida util: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={1}>
-              <MDInput
-                label="Meses"
-                name="emp_Edad"
-                type="number"
-                size="small"
-                onChange={handleChange}
-              />
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={1}>
-              <MDTypography variant="h6"> Valor Residual: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={1}>
-              <MDInput
-                label="valor residual"
-                name="emp_Apellido"
-                type="number"
-                onChange={handleChange}
-                size="small"
-              />
-            </MDBox>
-          </Grid>
-        </Grid> */}
               <Grid container spacing={3} justifyContent="center" mt={2} mb={3}>
                 <Grid item xs={12} md={4} lg={3}>
-                  <Button
-                    className="aceptar"
-                    endIcon={<SaveIcon />}
-                    type="submit"
-                    fullWidth
-                    onClick={() => peticionpost()}
-                  >
+                  <Button className="aceptar" endIcon={<SaveIcon />} type="submit" fullWidth>
                     Insertar
                   </Button>
                 </Grid>
@@ -490,225 +400,131 @@ function Cuentas() {
 
   const bodyEditar = (
     <div className={styles.modal}>
-      <MDTypography variant="h3"> Editar Empleado </MDTypography>
+      <h2> Editar Cuenta </h2>
       <Divider sx={{ marginTop: 1 }} light={false} />
       <MDBox pb={1}>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={1}>
-              <MDTypography variant="h6"> Puesto: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={1}>
-              <select
-                name="pue_Codigo"
-                className="form-control"
-                onChange={handleChange}
-                value={CuentaSeleccionada && CuentaSeleccionada.pue_Codigo}
-              >
-                <option key="0" value="0">
-                  Seleccione el Puesto
-                </option>
-                {datatp.map((element) => (
-                  <option key={element.pue_Codigo} value={element.pue_Codigo}>
-                    {element.pue_Nombre}
-                  </option>
-                ))}
-              </select>
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={1}>
-              <MDTypography variant="h6"> Nombre: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={1}>
-              <MDInput
-                type="text"
-                label="Nombre"
-                name="emp_Nombre"
-                onChange={handleChange}
-                size="small"
-                value={CuentaSeleccionada && CuentaSeleccionada.emp_Nombre}
-              />
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={1}>
-              <MDTypography variant="h6"> Apellido: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={1}>
-              <MDInput
-                label="Apellido"
-                name="emp_Apellido"
-                type="text"
-                onChange={handleChange}
-                size="small"
-                value={CuentaSeleccionada && CuentaSeleccionada.emp_Apellido}
-              />
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={1}>
-              <MDTypography variant="h6"> Telefono: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={1}>
-              <MDInput
-                label="Telefono"
-                name="emp_Telefono"
-                type="number"
-                size="small"
-                onChange={handleChange}
-                value={CuentaSeleccionada && CuentaSeleccionada.emp_Telefono}
-              />
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={1}>
-              <MDTypography variant="h6"> DPI: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={1}>
-              <MDInput
-                label="DPI"
-                name="emp_Dpi"
-                type="text"
-                size="small"
-                onChange={handleChange}
-                value={CuentaSeleccionada && CuentaSeleccionada.emp_Dpi}
-              />
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={1}>
-              <MDTypography variant="h6"> Edad: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={1}>
-              <MDInput
-                label="Edad"
-                name="emp_Edad"
-                type="number"
-                size="small"
-                onChange={handleChange}
-                value={CuentaSeleccionada && CuentaSeleccionada.emp_Edad}
-              />
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={1}>
-              <MDTypography variant="h6"> Fecha Nacimiento: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={1}>
-              <MDInput
-                name="emp_Nacimiento"
-                type="date"
-                size="small"
-                onChange={handleChange}
-                disabled
-                value={CuentaSeleccionada && CuentaSeleccionada.emp_Nacimiento}
-              />
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={1}>
-              <MDTypography variant="h6"> Numero Licencia: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={1}>
-              <MDInput
-                label="Numero Licencia"
-                name="emp_Nolicencia"
-                type="text"
-                size="small"
-                onChange={handleChange}
-                value={CuentaSeleccionada && CuentaSeleccionada.emp_Nolicencia}
-              />
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={1}>
-              <MDTypography variant="h6"> Tipo Licencia: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={1}>
-              <MDInput
-                label="Tipo Licencia"
-                name="emp_Tipolicencia"
-                type="text"
-                size="small"
-                onChange={handleChange}
-                value={CuentaSeleccionada && CuentaSeleccionada.emp_Tipolicencia}
-              />
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={1}>
-              <MDTypography variant="h6"> Direccion: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={1}>
-              <MDInput
-                label="Direccion"
-                name="emp_Direccion"
-                type="text"
-                size="small"
-                multiline
-                rows={2}
-                onChange={handleChange}
-                value={CuentaSeleccionada && CuentaSeleccionada.emp_Direccion}
-              />
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDButton variant="gradient" color="info" fullWidth onClick={() => peticionput()}>
-              Actualizar
-            </MDButton>
-          </Grid>
-          <Grid item xs={12} md={4} lg={3}>
-            <MDButton
-              variant="gradient"
-              color="light"
-              fullWidth
-              onClick={() => abrircerrarModalEditar()}
-            >
-              Cancelar
-            </MDButton>
-          </Grid>
-        </Grid>
+        <Formik
+          initialValues={{
+            cue_Nombre: cuentaSeleccionada && cuentaSeleccionada.cue_Nombre,
+            cue_Descripcion: cuentaSeleccionada && cuentaSeleccionada.cue_Descripcion,
+            cue_Tipo: cuentaSeleccionada && cuentaSeleccionada.cue_Tipo,
+            cue_Codigo: cuentaSeleccionada && cuentaSeleccionada.cue_Codigo,
+          }}
+          validationSchema={valSchema}
+          onSubmit={peticionput}
+        >
+          {({ handleSubmit }) => (
+            <form onSubmit={handleSubmit}>
+              <Grid container spacing={3} justifyContent="center">
+                <Grid item xs={12} md={4} lg={4}>
+                  <MDBox mb={1} pb={4} mt={2}>
+                    <h4> Nombre: </h4>
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} md={6} lg={8}>
+                  <MDBox mt={2}>
+                    <Field
+                      as={OutlinedInput}
+                      name="cue_Nombre"
+                      id="cue_Nombre"
+                      type="text"
+                      className="form-control"
+                      placeholder="Nombre Cuenta"
+                    />
+                  </MDBox>
+                  <ErrorMessage name="cue_Nombre" component="small" className="error" />
+                </Grid>
+              </Grid>
+              <Grid container spacing={3} justifyContent="center">
+                <Grid item xs={12} md={4} lg={4}>
+                  <MDBox mb={4}>
+                    <h4> Tipo de cuenta: </h4>
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} md={6} lg={8}>
+                  <MDBox mt={1}>
+                    <Field
+                      as="select"
+                      id="cue_Tipo"
+                      name="cue_Tipo"
+                      className="form-control"
+                      placeholder="Seleccione una Opción"
+                    >
+                      <option key="0" value="0">
+                        Seleccione un Tipo de Cuenta:
+                      </option>
+                      <option key="1" value="Cuenta para Vehículos">
+                        Cuenta para Vehículos
+                      </option>
+                      <option key="2" value="Cuenta para Maquinaria">
+                        Cuenta para Maquinaria
+                      </option>
+                      <option key="3" value="Cuenta para Mobiliario y Equipo">
+                        Cuenta para Mobiliario y Equipo
+                      </option>
+                      <option key="4" value="Cuenta para Equipo de Cómputo">
+                        Cuenta para Equipo de Cómputo
+                      </option>
+                      <option key="5" value="Cuenta para Herramientas">
+                        Cuenta para Herramientas
+                      </option>
+                      <option key="6" value="Cuenta para Amortizaciones">
+                        Cuenta para Amortizaciones
+                      </option>
+                      <option key="7" value="Cuenta para Edificios">
+                        Cuenta para Edificios
+                      </option>
+                      <option key="8" value="Cuenta para Terrenos">
+                        Cuenta para Terrenos
+                      </option>
+                    </Field>
+                  </MDBox>
+                  <ErrorMessage name="cue_Tipo" component="small" className="error" />
+                </Grid>
+              </Grid>
+              <Grid container spacing={3} justifyContent="center">
+                <Grid item xs={12} md={4} lg={4}>
+                  <MDBox mt={1} pb={4}>
+                    <h4> Descripción: </h4>
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} md={6} lg={8}>
+                  <MDBox mt={1}>
+                    <Field
+                      as={TextField}
+                      name="cue_Descripcion"
+                      id="cue_Descripcion outlined-multiline-static"
+                      type="text"
+                      multiline
+                      fullWidth
+                      rows={2}
+                      placeholder="Descripcion"
+                    />
+                  </MDBox>
+                  <ErrorMessage name="cue_Descripcion" component="small" className="error" />
+                </Grid>
+              </Grid>
+              <Grid container spacing={3} justifyContent="center" mt={2} mb={3}>
+                <Grid item xs={12} md={4} lg={3}>
+                  <Button className="aceptar" endIcon={<SaveIcon />} type="submit" fullWidth>
+                    Actualizar
+                  </Button>
+                </Grid>
+                <Grid item xs={12} md={4} lg={3}>
+                  <Button
+                    className="cancelar"
+                    endIcon={<ClearIcon />}
+                    type="submit"
+                    fullWidth
+                    onClick={() => abrircerrarModalInsertar()}
+                  >
+                    Cancelar
+                  </Button>
+                </Grid>
+              </Grid>
+            </form>
+          )}
+        </Formik>
       </MDBox>
     </div>
   );
@@ -717,7 +533,7 @@ function Cuentas() {
     <div className={styles.modal}>
       <p>
         Deseas Eliminar la cuenta
-        <b> {CuentaSeleccionada && CuentaSeleccionada.emp_Nombre}</b>?
+        <b> {cuentaSeleccionada && cuentaSeleccionada.cue_Nombre}</b>?
       </p>
       <div align="right">
         <MDButton color="secondary" onClick={() => peticiondelete()}>
@@ -753,13 +569,13 @@ function Cuentas() {
                   actions={[
                     {
                       icon: "edit",
-                      tooltip: "Editar Empleado",
-                      onClick: (event, rowData) => seleccionarEmpleado(rowData, "Editar"),
+                      tooltip: "Editar Cuenta",
+                      onClick: (event, rowData) => seleccionarCuenta(rowData, "Editar"),
                     },
                     {
                       icon: "delete",
-                      tooltip: "Eliminar Empleado",
-                      onClick: (event, rowData) => seleccionarEmpleado(rowData, "Eliminar"),
+                      tooltip: "Eliminar Cuenta",
+                      onClick: (event, rowData) => seleccionarCuenta(rowData, "Eliminar"),
                     },
                   ]}
                   options={{
@@ -794,150 +610,3 @@ function Cuentas() {
 }
 
 export default Cuentas;
-
-// // import PropTypes from 'prop-types'
-// import React from "react";
-// import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
-// import DashboardNavbar from "examples/Navbars/DashboardNavbar";
-
-// import Grid from "@mui/material/Grid";
-// import Card from "@mui/material/Card";
-
-// // Material Dashboard 2 React components
-// import MDBox from "components/MDBox";
-// import MDInput from "components/MDInput";
-// import MDTypography from "components/MDTypography";
-// import MDButton from "components/MDButton";
-
-// // Material Dashboard 2 React example components
-// import DataTable from "examples/Tables/DataTable";
-
-// // Data
-// import TablaEmpleados from "layouts/Catalogos/Empleados/TablaEmpleados";
-
-// function Empleados() {
-//   const { columns, rows } = TablaEmpleados();
-//   return (
-//     <DashboardLayout>
-//       <DashboardNavbar />
-//       <Card>
-//         <MDBox pt={6} pb={3}>
-//           <Grid container spacing={3} justifyContent="center">
-//             <Grid item xs={12} md={4} lg={2}>
-//               <MDBox mb={1}>
-//                 <MDTypography variant="h6">Nombre:</MDTypography>
-//               </MDBox>
-//             </Grid>
-//             <Grid item xs={12} md={6} lg={3}>
-//               <MDBox mb={1}>
-//                 <MDInput type="text" label="Nombre" fullWidth />
-//               </MDBox>
-//             </Grid>
-//             <Grid item xs={12} md={4} lg={2}>
-//               <MDBox mb={1}>
-//                 <MDTypography variant="h6">Apellido:</MDTypography>
-//               </MDBox>
-//             </Grid>
-//             <Grid item xs={12} md={6} lg={3}>
-//               <MDBox mb={1}>
-//                 <MDInput type="text" label="Apellido" fullWidth />
-//               </MDBox>
-//             </Grid>
-//           </Grid>
-//           <Grid container spacing={3} justifyContent="center">
-//             <Grid item xs={12} md={4} lg={2}>
-//               <MDBox mb={1}>
-//                 <MDTypography variant="h6">Direccion:</MDTypography>
-//               </MDBox>
-//             </Grid>
-//             <Grid item xs={12} md={6} lg={3}>
-//               <MDBox mb={1}>
-//                 <MDInput type="text" label="Direccion" fullWidth />
-//               </MDBox>
-//             </Grid>
-//             <Grid item xs={12} md={4} lg={2}>
-//               <MDBox mb={1}>
-//                 <MDTypography variant="h6">Telefono/Celular:</MDTypography>
-//               </MDBox>
-//             </Grid>
-//             <Grid item xs={12} md={6} lg={3}>
-//               <MDBox mb={1}>
-//                 <MDInput type="number" label="Telefono/Celular" fullWidth />
-//               </MDBox>
-//             </Grid>
-//           </Grid>
-//           <Grid container spacing={3} justifyContent="center">
-//             <Grid item xs={12} md={4} lg={2}>
-//               <MDBox mb={1}>
-//                 <MDTypography variant="h6">DPI:</MDTypography>
-//               </MDBox>
-//             </Grid>
-//             <Grid item xs={12} md={6} lg={3}>
-//               <MDBox mb={1}>
-//                 <MDInput type="number" label="DPI" fullWidth />
-//               </MDBox>
-//             </Grid>
-//             <Grid item xs={12} md={4} lg={2}>
-//               <MDBox mb={1}>
-//                 <MDTypography variant="h6">Edad:</MDTypography>
-//               </MDBox>
-//             </Grid>
-//             <Grid item xs={12} md={6} lg={3}>
-//               <MDBox mb={1}>
-//                 <MDInput type="number" label="Edad" fullWidth />
-//               </MDBox>
-//             </Grid>
-//           </Grid>
-//           <Grid container spacing={3} justifyContent="center">
-//             <Grid item xs={12} md={4} lg={2}>
-//               <MDBox mb={1}>
-//                 <MDTypography variant="h6">Fecha de Nacimiento:</MDTypography>
-//               </MDBox>
-//             </Grid>
-//             <Grid item xs={12} md={6} lg={3}>
-//               <MDBox mb={1}>
-//                 <MDInput type="date" fullWidth />
-//               </MDBox>
-//             </Grid>
-//             <Grid item xs={12} md={4} lg={2}>
-//               <MDBox mb={1}>
-//                 <MDTypography variant="h6">Puesto:</MDTypography>
-//               </MDBox>
-//             </Grid>
-//             <Grid item xs={12} md={6} lg={3}>
-//               <MDBox mb={1}>
-//                 <MDInput type="text" label="Puesto" fullWidth />
-//               </MDBox>
-//             </Grid>
-//           </Grid>
-//           <Grid container spacing={3} justifyContent="center">
-//             <Grid item xs={12} md={4} lg={2}>
-//               <MDButton variant="gradient" color="info" fullWidth>
-//                 Crear
-//               </MDButton>
-//             </Grid>
-//           </Grid>
-//         </MDBox>
-//       </Card>
-//       <MDBox pt={6} pb={3}>
-//         <Grid container spacing={6}>
-//           <Grid item xs={12}>
-//             <Card>
-//               <MDBox pt={3}>
-//                 <DataTable
-//                   table={{ columns, rows }}
-//                   isSorted={false}
-//                   entriesPerPage={false}
-//                   showTotalEntries={false}
-//                   noEndBorder
-//                 />
-//               </MDBox>
-//             </Card>
-//           </Grid>
-//         </Grid>
-//       </MDBox>
-//     </DashboardLayout>
-//   );
-// }
-
-// export default Empleados;

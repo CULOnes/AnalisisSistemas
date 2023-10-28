@@ -9,7 +9,7 @@ import "styles/styles.css";
 import MaterialTable from "material-table";
 import { Modal, OutlinedInput } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-// import Swal from "sweetalert2";
+import Swal from "sweetalert2";
 import MDInput from "components/MDInput";
 import MDTypography from "components/MDTypography";
 import Divider from "@mui/material/Divider";
@@ -28,15 +28,15 @@ const columns = [
     field: "cli_Codigo",
   },
   {
-    title: "Nombre del Activo",
+    title: "Nombre",
     field: "cli_Nombre",
   },
   {
-    title: "Fecha Depreciacion",
+    title: "Fecha Depreciación",
     field: "cli_Apellido",
   },
   {
-    title: "Valor de la depreciacion",
+    title: "Valor de la Depreciación",
     field: "cli_Correo",
   },
 ];
@@ -44,10 +44,10 @@ const columns = [
 const valSchema = Yup.object().shape({
   dep_nombre: Yup.string()
     .matches(/^[a-zA-Z0-9]+$/, "Solo se permiten números y letras")
-    .required("El nombre del activo es requerido")
+    .required("El nombre del activo es obligatorio")
     .max(50, "El nombre no puede tener más de 50 caracteres"),
   dep_fecha: Yup.date()
-    .required("La Fecha es requerida")
+    .required("La fecha es requerida")
     .max(new Date(), "La fecha no puede ser mayor que la fecha actual"),
 });
 
@@ -79,13 +79,9 @@ function Depreciacion() {
   const [showComponent, setShowComponent] = useState(false);
   const [modaleliminar, setModalEliminar] = useState(false);
   const [clienteseleccionado, setClienteSeleccionado] = useState({
-    cli_Codigo: 0,
-    cli_Nombre: "",
-    cli_Apellido: "",
-    cli_Correo: "",
-    cli_TelefonoCelular: 0,
-    cli_TelefonoSecundario: 0,
-    Cli_Direccion: "",
+    dep_codigo: 0,
+    dep_nombre: 0,
+    dep_fecha: 0,
   });
 
   const abrircerrarModalInsertar = () => {
@@ -134,9 +130,18 @@ function Depreciacion() {
   };
 
   const onSubmit = (values, { resetForm }) => {
-    // eslint-disable-next-line no-console
     console.log("Envío de Formulario:", values);
     resetForm();
+
+    abrircerrarModalInsertar();
+
+    Swal.fire({
+      icon: "success",
+      title: "Formulario Enviado",
+      text: "El formulario se ha enviado con éxito",
+      timer: 2500, // Controla cuánto tiempo se muestra el mensaje (en milisegundos)
+      timerProgressBar: true, // Muestra una barra de progreso durante el tiempo de visualización
+    });
   };
 
   const peticionpost = async () => {
@@ -297,7 +302,7 @@ function Depreciacion() {
 
   const bodyInsertar = (
     <div className={styles.modal}>
-      <h2> Calculo de Depreciacion </h2>
+      <h2> Cálculo de Depreciación </h2>
       <Divider sx={{ marginTop: 1 }} light={false} />
       <MDBox pt={2} pb={3}>
         <Formik
@@ -313,7 +318,7 @@ function Depreciacion() {
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={4} lg={6}>
                   <MDBox>
-                    <h4> Calcular depreciacion hasta Año-Mes: </h4>
+                    <h4> Calcular depreciación hasta Año-Mes: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={6}>
@@ -323,7 +328,7 @@ function Depreciacion() {
                       name="dep_fecha"
                       id="dep_fecha"
                       type="date"
-                      className="campos"
+                      className="form-control"
                     />
                   </MDBox>
                   <ErrorMessage name="dep_fecha" component="small" className="error" />
@@ -336,14 +341,14 @@ function Depreciacion() {
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={7}>
-                  <MDBox mt={2}>
+                  <MDBox>
                     <Field
                       as={OutlinedInput}
                       name="dep_nombre"
                       id="dep_nombre"
                       type="text"
-                      placeholder="Nombre del activo"
-                      className="campos"
+                      placeholder="Nombre del Activo"
+                      className="form-control"
                     />
                   </MDBox>
                   <ErrorMessage name="dep_nombre" component="small" className="error" />
@@ -358,7 +363,7 @@ function Depreciacion() {
                     fullWidth
                     onClick={() => peticionpost()}
                   >
-                    Insertar
+                    Calcular
                   </Button>
                 </Grid>
                 <Grid item xs={12} md={4} lg={3}>
@@ -545,14 +550,14 @@ function Depreciacion() {
                   endIcon={<AddCircleIcon />}
                   onClick={() => abrircerrarModalInsertar()}
                 >
-                  Calcular depreciacion
+                  Calcular Depreciación
                 </Button>
                 <br />
                 <br />
                 <MaterialTable
                   columns={columns}
                   data={data}
-                  title="Clientes"
+                  title="Depreciaciones"
                   actions={[
                     {
                       icon: "edit",

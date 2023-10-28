@@ -284,7 +284,7 @@ function Sucursales() {
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={4} lg={4}>
                   <MDBox>
-                    <MDTypography variant="h6"> Nombre Sucursal: </MDTypography>
+                    <h4> Nombre Sucursal: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={8}>
@@ -294,6 +294,7 @@ function Sucursales() {
                       name="suc_Nombre"
                       id="suc_Nombre"
                       type="text"
+                      className="form-control"
                       placeholder="Nombre Sucursal"
                     />
                   </MDBox>

@@ -3,7 +3,7 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
-// import axios from "axios";
+import axios from "axios";
 import MDBox from "components/MDBox";
 import "styles/styles.css";
 import MaterialTable from "material-table";
@@ -19,42 +19,31 @@ import * as Yup from "yup";
 import "./DepreciacionAnual.css";
 import Button from "@mui/material/Button";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
-import SaveIcon from "@mui/icons-material/Save";
+import SearchIcon from "@mui/icons-material/Search";
 import ClearIcon from "@mui/icons-material/Clear";
 
 const columns = [
   {
-    title: "ID",
-    field: "emp_Codigo",
+    title: "Clase",
+    field: "clase",
   },
   {
-    title: "Descripción",
-    field: "emp_tipo_bien",
+    title: "Fecha",
+    field: "fecha",
   },
   {
-    title: "Centro de Costo",
-    field: "emp_Clase",
+    title: "Depreciacion",
+    field: "depreciacion",
   },
   {
-    title: "Fecha de Compra",
-    field: "emp_Sub_clase",
-  },
-  {
-    title: "Deprecia Desde",
-    field: "emp_Sub_clase",
-  },
-  {
-    title: "Valor de Compra",
-    field: "emp_Sub_clase",
-  },
-  {
-    title: "Valor Residual",
-    field: "emp_Sub_clase",
+    title: "Valor Activo",
+    field: "precioactual",
   },
 ];
 
 const valSchema = Yup.object().shape({
-  depa_fecha: Yup.date()
+  clase: Yup.string().required("La clase es requerida"),
+  hasta_fecha: Yup.date()
     .required("La Fecha es requerida")
     .max(new Date(), "La fecha no puede ser mayor que la fecha actual"),
 });
@@ -81,16 +70,15 @@ const useStyles = makeStyles((theme) => ({
 
 function DepreciacionAnual() {
   const styles = useStyles();
-  const [data /* , setData */] = useState([]);
+  const [data, setData] = useState([]);
   const [datatp /* , setDatatp */] = useState([]);
   const [modalinsertar, setModalInsertar] = useState(false);
   const [modaleditar, setModalEditar] = useState(false);
   const [showComponent, setShowComponent] = useState(false);
   const [modaleliminar, setModalEliminar] = useState(false);
   const [empleadoseleccionado, setEmpleadoSeleccionado] = useState({
-    tipobien: 0,
-    clase: 0,
-    subclase: 0,
+    clase: "",
+    hasta_fecha: "",
   });
 
   const abrircerrarModalInsertar = () => {
@@ -138,73 +126,56 @@ function DepreciacionAnual() {
     }));
   };
 
-  const onSubmit = (values, { resetForm }) => {
-    // eslint-disable-next-line no-console
-    console.log("Envío de Formulario:", values);
-    resetForm();
-  };
+  // const onSubmit = (values, { resetForm }) => {
+  //   // eslint-disable-next-line no-console
+  //   console.log("Envío de Formulario:", values);
+  //   resetForm();
 
-  const peticionpost = async () => {
-    // Swal.showLoading();
-    if (empleadoseleccionado.tipobien === 0) {
+  //   abrircerrarModalInsertar();
+
+  //   Swal.fire({
+  //     icon: "success",
+  //     title: "Formulario Enviado",
+  //     text: "El formulario se ha enviado con éxito",
+  //     timer: 2500, // Controla cuánto tiempo se muestra el mensaje (en milisegundos)
+  //     timerProgressBar: true, // Muestra una barra de progreso durante el tiempo de visualización
+  //   });
+  // };
+
+  const peticionpost = async (values) => {
+    Swal.showLoading();
+    if (values.clase === "" || values.hasta_fecha === "") {
+      abrircerrarModalInsertar();
+      Swal.close();
       Swal.fire({
         icon: "info",
         title: "",
-        text: "Debe seleccionar un Tipo de bien",
+        html: "Debe de llenar <b>todos</b> los campos",
       });
-    } else if (empleadoseleccionado.clase === 0) {
-      Swal.fire({
-        icon: "info",
-        title: "",
-        text: "Debe seleccionar un tipo de Clase",
-      });
-    } else if (empleadoseleccionado.subclase === 0) {
-      Swal.fire({
-        icon: "info",
-        title: "",
-        text: "Debe seleccionar un Tipo de Subclase",
-      });
+    } else {
+      abrircerrarModalInsertar();
+      await axios
+        .post("https://localhost:7235/api/CompraActivos/depreciaciones", values)
+        .then((response) => {
+          setData(response.data);
+          Swal.close();
+          Swal.fire({
+            icon: "success",
+            title: "",
+            text: "Depreciacion calculada exitosamente",
+            timer: 2500,
+          });
+        })
+        .catch((error) => {
+          Swal.close();
+          Swal.fire({
+            icon: "error",
+            title: "",
+            text: error.response.data,
+            timer: 2500,
+          });
+        });
     }
-    //   empleadoseleccionado.pue_Codigo === 0 ||
-    //   empleadoseleccionado.emp_Nombre === "" ||
-    //   empleadoseleccionado.emp_Apellido === "" ||
-    //   empleadoseleccionado.emp_Direccion === "" ||
-    //   empleadoseleccionado.emp_Telefono === 0 ||
-    //   empleadoseleccionado.emp_Dpi === "" ||
-    //   empleadoseleccionado.emp_Edad === 0 ||
-    //   empleadoseleccionado.emp_Nacimiento === 0
-    // ) {
-    //   abrircerrarModalInsertar();
-    //   Swal.close();
-    //   Swal.fire({
-    //     icon: "info",
-    //     title: "",
-    //     html: "Debe de llenar <b>todos</b> los campos",
-    //   });
-    // } else {
-    //   abrircerrarModalInsertar();
-    //   await axios
-    //     .post("https://localhost:7235/api/Empleados/registroempleados", empleadoseleccionado)
-    //     .then((response) => {
-    //       setData(data.concat(response.data));
-    //       Swal.close();
-    //       Swal.fire({
-    //         icon: "success",
-    //         title: "",
-    //         text: "Empleado creado exitosamente",
-    //         timer: 2500,
-    //       });
-    //     })
-    //     .catch((error) => {
-    //       Swal.close();
-    //       Swal.fire({
-    //         icon: "error",
-    //         title: "",
-    //         text: error.response.data,
-    //         timer: 2500,
-    //       });
-    //     });
-    // }
   };
 
   const peticionput = async () => {
@@ -344,43 +315,14 @@ function DepreciacionAnual() {
       <MDBox pb={1}>
         <Formik
           initialValues={{
-            depa_fecha: "",
+            clase: "",
+            hasta_fecha: "",
           }}
           validationSchema={valSchema}
-          onSubmit={onSubmit}
+          onSubmit={peticionpost}
         >
           {({ handleSubmit }) => (
             <form onSubmit={handleSubmit}>
-              <Grid container spacing={3} justifyContent="center">
-                <Grid item xs={12} md={4} lg={4}>
-                  <MDBox mb={2}>
-                    <h4> Tipo de Bien: </h4>
-                  </MDBox>
-                </Grid>
-                <Grid item xs={12} md={6} lg={8}>
-                  <MDBox mb={2}>
-                    <select name="tipobien" className="form-control" onChange={handleChange}>
-                      <option key="0" value="0">
-                        Seleccione Tipo de Bien
-                      </option>
-                      <option key="1" value="1">
-                        Bien 1
-                      </option>
-                      <option key="2" value="2">
-                        Bien 2
-                      </option>
-                      <option key="3" value="3">
-                        Bien 3
-                      </option>
-                      {/* {datatp.map((element) => (
-                  <option key={element.pue_Codigo} value={element.pue_Codigo}>
-                    {element.pue_Nombre}
-                  </option>
-                ))} */}
-                    </select>
-                  </MDBox>
-                </Grid>
-              </Grid>
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={4} lg={2}>
                   <MDBox mb={2}>
@@ -388,87 +330,68 @@ function DepreciacionAnual() {
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={10}>
-                  <MDBox mb={2}>
-                    <select name="clase" className="form-control" onChange={handleChange}>
+                  <MDBox>
+                    <Field as="select" id="clase" name="clase" className="form-control">
                       <option key="0" value="0">
-                        Seleccione clase
+                        Seleccione clase:
                       </option>
                       <option key="1" value="1">
-                        Clase 1
+                        Mobiliario y Equipo
                       </option>
                       <option key="2" value="2">
-                        Clase 2
+                        Vehiculos
                       </option>
                       <option key="3" value="3">
-                        Clase 3
+                        Equipo de Computo
                       </option>
-                      {/* {datatp.map((element) => (
-                  <option key={element.pue_Codigo} value={element.pue_Codigo}>
-                    {element.pue_Nombre}
-                  </option>
-                ))} */}
-                    </select>
+                      <option key="4" value="4">
+                        Herramientas
+                      </option>
+                      <option key="5" value="5">
+                        Maquinaria
+                      </option>
+                      <option key="6" value="6">
+                        Edificios
+                      </option>
+                      <option key="7" value="7">
+                        Gastos de Organización
+                      </option>
+                      <option key="8" value="8">
+                        Derecho de Llave
+                      </option>
+                      <option key="9" value="9">
+                        Gastos de Instalacion
+                      </option>
+                      <option key="10" value="10">
+                        Marcas y Patentes
+                      </option>
+                    </Field>
                   </MDBox>
-                </Grid>
-              </Grid>
-              <Grid container spacing={3} justifyContent="center">
-                <Grid item xs={12} md={4} lg={3}>
-                  <MDBox mb={2}>
-                    <h4> Subclase: </h4>
-                  </MDBox>
-                </Grid>
-                <Grid item xs={12} md={6} lg={9}>
-                  <MDBox mb={2}>
-                    <select name="subclase" className="form-control" onChange={handleChange}>
-                      <option key="0" value="0">
-                        Seleccione Subclase
-                      </option>
-                      <option key="1" value="1">
-                        Subclase 1
-                      </option>
-                      <option key="2" value="2">
-                        Subclase 2
-                      </option>
-                      <option key="3" value="3">
-                        Subclase 3
-                      </option>
-                      {/* {datatp.map((element) => (
-                  <option key={element.pue_Codigo} value={element.pue_Codigo}>
-                    {element.pue_Nombre}
-                  </option>
-                ))} */}
-                    </select>
-                  </MDBox>
+                  <ErrorMessage name="clase" component="small" className="error" />
                 </Grid>
               </Grid>
               <Grid container spacing={3} justifyContent="center" mb={2}>
-                <Grid item xs={12} md={4} lg={3}>
+                <Grid item xs={12} md={4} lg={4}>
                   <MDBox mb={1}>
-                    <h4> Hasta año: </h4>
+                    <h4> Hasta Fecha: </h4>
                   </MDBox>
                 </Grid>
-                <Grid item xs={12} md={6} lg={9}>
-                  <MDBox mb={1}>
+                <Grid item xs={12} md={6} lg={8}>
+                  <MDBox>
                     <Field
                       as={OutlinedInput}
-                      name="depa_fecha"
-                      id="depa_fecha"
+                      name="hasta_fecha"
+                      id="hasta_fecha"
                       type="date"
-                      className="campos"
+                      className="form-control"
                     />
                   </MDBox>
-                  <ErrorMessage name="depa_fecha" component="small" className="error" />
+                  <ErrorMessage name="hasta_fecha" component="small" className="error" />
                 </Grid>
               </Grid>
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={4} lg={3}>
-                  <Button
-                    className="aceptar"
-                    endIcon={<SaveIcon />}
-                    type="submit"
-                    fullWidth
-                    onClick={() => peticionpost()}
-                  >
+                  <Button className="aceptar" endIcon={<SearchIcon />} type="submit" fullWidth>
                     Consultar
                   </Button>
                 </Grid>
@@ -631,7 +554,6 @@ function DepreciacionAnual() {
                 size="small"
                 onChange={handleChange}
                 disabled
-                // value={empleadoseleccionado && empleadoseleccionado.emp_Nacimiento}
               />
             </MDBox>
           </Grid>
@@ -745,7 +667,7 @@ function DepreciacionAnual() {
                   endIcon={<AddCircleIcon />}
                   onClick={() => abrircerrarModalInsertar()}
                 >
-                  Consultar depreciacion anual
+                  Depreciación Anual
                 </Button>
                 <br />
                 <br />

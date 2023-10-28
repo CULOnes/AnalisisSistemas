@@ -4,16 +4,14 @@ using System.Security.Principal;
 
 namespace RoadMaster.Repositories.Entities
 {
-    public class Usuarios
+    public class CentrosCosto
     {
-        public int Usu_Codigo { get; set; }
+        public int CeC_Codigo { get; set; }
 
-        public string Usu_NombreUsuario { get; set; }
+        public int Cue_Codigo { get; set; }
 
-        public string Usu_Nombre { get; set; }
+        public string CeC_Nombre { get; set; }
 
-        public string Usu_Apellido { get; set; }
-
-        public string Usu_Clave { get; set; }
+        public string CeC_Descripcion { get; set; }
     }
 }

@@ -308,7 +308,7 @@ function Marcas() {
                     endIcon={<ClearIcon />}
                     type="submit"
                     fullWidth
-                    onClick={() => abrircerrarModalInsertar()}
+                    onClick={() => abrircerrarModalEditar()}
                   >
                     Cancelar
                   </Button>

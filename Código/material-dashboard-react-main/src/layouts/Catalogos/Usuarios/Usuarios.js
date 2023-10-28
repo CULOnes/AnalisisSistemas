@@ -309,7 +309,7 @@ function Usuarios() {
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={4} lg={3}>
                   <MDBox mb={2}>
-                    <MDTypography variant="h6"> Usuario: </MDTypography>
+                    <h4> Usuario: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={9}>
@@ -319,6 +319,7 @@ function Usuarios() {
                       name="usu_NombreUsuario"
                       id="usu_NombreUsuario"
                       type="text"
+                      className="form-control"
                       placeholder="Nombre usuario"
                     />
                   </MDBox>
@@ -328,7 +329,7 @@ function Usuarios() {
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={4} lg={3}>
                   <MDBox mt={2}>
-                    <MDTypography variant="h6"> Nombre: </MDTypography>
+                    <h4> Nombre: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={9}>
@@ -339,6 +340,7 @@ function Usuarios() {
                       id="usu_Nombre"
                       type="text"
                       placeholder="Nombre del usuario"
+                      className="form-control"
                     />
                   </MDBox>
                   <ErrorMessage name="usu_Nombre" component="small" className="error" />
@@ -347,7 +349,7 @@ function Usuarios() {
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={4} lg={3}>
                   <MDBox mt={2}>
-                    <MDTypography variant="h6"> Apellido: </MDTypography>
+                    <h4> Apellido: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={9}>
@@ -358,6 +360,7 @@ function Usuarios() {
                       id="usu_Apellido"
                       type="text"
                       placeholder="Apellido del usuario"
+                      className="form-control"
                     />
                   </MDBox>
                   <ErrorMessage name="usu_Apellido" component="small" className="error" />
@@ -366,7 +369,7 @@ function Usuarios() {
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={4} lg={3}>
                   <MDBox mt={2}>
-                    <MDTypography variant="h6"> Contraseña: </MDTypography>
+                    <h4> Contraseña: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={9}>
@@ -377,6 +380,7 @@ function Usuarios() {
                       id="usu_Clave"
                       type="password"
                       placeholder="Contraseña"
+                      className="form-control"
                     />
                   </MDBox>
                   <ErrorMessage name="usu_Clave" component="small" className="error" />
@@ -385,16 +389,17 @@ function Usuarios() {
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={4} lg={3}>
                   <MDBox mt={2}>
-                    <MDTypography variant="h6"> Confirmar Contraseña: </MDTypography>
+                    <h4> Confirmar Contraseña: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={9}>
-                  <MDBox mt={2}>
+                  <MDBox mt={3}>
                     <Field
                       as={OutlinedInput}
                       name="usu_Clave2"
                       id="usu_Clave2"
                       type="password"
+                      className="form-control"
                       placeholder="Confirmar contraseña"
                     />
                   </MDBox>

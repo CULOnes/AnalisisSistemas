@@ -17,9 +17,10 @@ import MDButton from "components/MDButton";
 import "./GarantiasVencer.css";
 import Button from "@mui/material/Button";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
-import { Formik, Field } from "formik";
-import SaveIcon from "@mui/icons-material/Save";
+import SearchIcon from "@mui/icons-material/Search";
 import ClearIcon from "@mui/icons-material/Clear";
+import { Formik, ErrorMessage, Field } from "formik";
+import * as Yup from "yup";
 
 const columns = [
   {
@@ -28,10 +29,6 @@ const columns = [
   },
   {
     title: "Descripción",
-    field: "emp_Apellido",
-  },
-  {
-    title: "Serie",
     field: "emp_Apellido",
   },
   {
@@ -55,6 +52,11 @@ const columns = [
     field: "emp_Apellido",
   },
 ];
+
+const valSchema = Yup.object().shape({
+  tiempo_definido: Yup.string().required("El campo es obligatorio"),
+  orden: Yup.string().required("El campo es obligatorio"),
+});
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -85,7 +87,7 @@ function GarantíasVencer() {
   const [showComponent, setShowComponent] = useState(false);
   const [modaleliminar, setModalEliminar] = useState(false);
   const [empleadoseleccionado, setEmpleadoSeleccionado] = useState({
-    Garantias_vencidas: 0,
+    garantias_vencidas: 0,
     tiempo_definido: 0,
     orden: 0,
   });
@@ -137,19 +139,6 @@ function GarantíasVencer() {
 
   const peticionpost = async () => {
     // Swal.showLoading();
-    if (empleadoseleccionado.tiempo_definido === 0) {
-      Swal.fire({
-        icon: "info",
-        title: "",
-        text: "Debe seleccionar un tiempo definido",
-      });
-    } else if (empleadoseleccionado.orden === 0) {
-      Swal.fire({
-        icon: "info",
-        title: "",
-        text: "Debe seleccionar un Tipo de orden",
-      });
-    }
     // Swal.showLoading();
     // if (
     //   empleadoseleccionado.pue_Codigo === 0 ||
@@ -315,6 +304,16 @@ function GarantíasVencer() {
   const validarinfo = (values, { resetForm }) => {
     console.log("Envío de Formulario:", values);
     resetForm();
+
+    abrircerrarModalInsertar();
+
+    Swal.fire({
+      icon: "success",
+      title: "Formulario Enviado",
+      text: "El formulario se ha enviado con éxito",
+      timer: 2500, // Controla cuánto tiempo se muestra el mensaje (en milisegundos)
+      timerProgressBar: true, // Muestra una barra de progreso durante el tiempo de visualización
+    });
   };
 
   useEffect(() => {
@@ -334,7 +333,14 @@ function GarantíasVencer() {
       <h2> Garantías por Vencer </h2>
       <Divider sx={{ marginTop: 1 }} light={false} />
       <MDBox pb={1}>
-        <Formik initialValues={{}} onSubmit={validarinfo}>
+        <Formik
+          initialValues={{
+            tiempo_definido: "",
+            orden: "",
+          }}
+          validationSchema={valSchema}
+          onSubmit={validarinfo}
+        >
           {({ handleSubmit }) => (
             <form onSubmit={handleSubmit}>
               <Grid container spacing={3} justifyContent="center" mb={1}>
@@ -357,22 +363,27 @@ function GarantíasVencer() {
               <Grid container spacing={3} justifyContent="center" mb={1}>
                 <Grid item xs={12} md={4} lg={7}>
                   <MDBox mb={2}>
-                    <MDTypography variant="h6"> Mostrar por tiempo definido: </MDTypography>
+                    <h4> Mostrar por tiempo definido: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={5}>
-                  <MDBox mb={2}>
-                    <select name="tiempo_definido" className="form-control" onChange={handleChange}>
+                  <MDBox>
+                    <Field
+                      as="select"
+                      id="tiempo_definido"
+                      name="tiempo_definido"
+                      className="form-control"
+                    >
                       <option key="0" value="0">
-                        Seleccione una Opcion
+                        Seleccione una Opción:
                       </option>
-                      <option key="0" value="0">
+                      <option key="0" value="opcion1">
                         Semana actual
                       </option>
-                      <option key="0" value="0">
+                      <option key="0" value="opcion2">
                         Mes actual
                       </option>
-                      <option key="0" value="0">
+                      <option key="0" value="opcion3">
                         Año actual
                       </option>
                       {/* {datatp.map((element) => (
@@ -380,32 +391,33 @@ function GarantíasVencer() {
                     {element.pue_Nombre}
                   </option>
                 ))} */}
-                    </select>
+                    </Field>
                   </MDBox>
+                  <ErrorMessage name="tiempo_definido" component="small" className="error" />
                 </Grid>
               </Grid>
               <Grid container spacing={3} justifyContent="center" mb={2}>
                 <Grid item xs={12} md={4} lg={3}>
                   <MDBox mb={2}>
-                    <MDTypography variant="h6"> Ordenar por: </MDTypography>
+                    <h4> Ordenar por: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={9}>
-                  <MDBox mb={2}>
-                    <select name="orden" className="form-control" onChange={handleChange}>
+                  <MDBox>
+                    <Field as="select" id="orden" name="orden" className="form-control">
                       <option key="0" value="0">
-                        Seleccione Orden
+                        Seleccione Orden:
                       </option>
-                      <option key="0" value="0">
+                      <option key="1" value="opcion1">
                         Fecha
                       </option>
-                      <option key="0" value="0">
+                      <option key="2" value="opcion2">
                         Activo
                       </option>
-                      <option key="0" value="0">
+                      <option key="3" value="opcion3">
                         Ubicacion Fisica
                       </option>
-                      <option key="0" value="0">
+                      <option key="4" value="opcion4">
                         Proveedor
                       </option>
                       {/* {datatp.map((element) => (
@@ -413,15 +425,16 @@ function GarantíasVencer() {
                     {element.pue_Nombre}
                   </option>
                 ))} */}
-                    </select>
+                    </Field>
                   </MDBox>
+                  <ErrorMessage name="orden" component="small" className="error" />
                 </Grid>
               </Grid>
               <Grid container spacing={3} justifyContent="center" mb={1}>
                 <Grid item xs={12} md={4} lg={3}>
                   <Button
                     className="aceptar"
-                    endIcon={<SaveIcon />}
+                    endIcon={<SearchIcon />}
                     type="submit"
                     fullWidth
                     onClick={() => peticionpost()}
@@ -701,7 +714,7 @@ function GarantíasVencer() {
                   endIcon={<AddCircleIcon />}
                   onClick={() => abrircerrarModalInsertar()}
                 >
-                  Consultar garantias por vencer
+                  Garantías por Vencer
                 </Button>
                 <br />
                 <br />

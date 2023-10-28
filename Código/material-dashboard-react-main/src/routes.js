@@ -44,14 +44,12 @@ import Menureportes from "layouts/Reportes/menureportes/menureportes";
 import Usuarios from "layouts/Catalogos/Usuarios/Usuarios";
 import Menuactivos from "layouts/Activos/menuactivos/menuactivos";
 import Menuconstatacion from "layouts/ConstatacionFisica/menuconstatacion/menuconstatacion";
-import Depreciacion from "layouts/Depreciacion/Depreciacion";
 import Marcas from "layouts/Catalogos/Marcas/Marcas";
 import Estados from "layouts/Catalogos/Estados/Estados";
 import Cuentas from "layouts/Catalogos/Cuentas/Cuentas";
 import Sucursales from "layouts/Catalogos/Sucursales/Sucursales";
 import Departamentos from "layouts/Catalogos/Departamentos/Departamentos";
 import Custodios from "layouts/Catalogos/Custodios/Custodios";
-import Proveedores from "layouts/Catalogos/Proveedores/Proveedores";
 import CentrosCosto from "layouts/Catalogos/CentrosCosto/CentrosCosto";
 import ConsultaActivos from "layouts/Activos/ConsultaActivos/ConsultaActivos";
 import CompraActivos from "layouts/Activos/CompraActivos/CompraActivos";
@@ -115,14 +113,6 @@ const routes = [
     icon: <Icon fontSize="small">receipt_long</Icon>,
     route: "/reportes",
     component: <Menureportes />,
-  },
-  {
-    type: "collapse",
-    name: "Depreciacion",
-    key: "depreciacion",
-    icon: <Icon fontSize="small">receipt_long</Icon>,
-    route: "/depreciacion",
-    component: <Depreciacion />,
   },
   /* CATALOGOS */
   {
@@ -188,14 +178,6 @@ const routes = [
     icon: <Icon fontSize="small">format_textdirection_r_to_l</Icon>,
     route: "/catalogos/ubicacionesfisicas",
     component: <UbicacionesFisicas />,
-  },
-  {
-    type: "title",
-    name: "Proveedores",
-    key: "proveedores",
-    icon: <Icon fontSize="small">format_textdirection_r_to_l</Icon>,
-    route: "/catalogos/proveedores",
-    component: <Proveedores />,
   },
   {
     type: "title",

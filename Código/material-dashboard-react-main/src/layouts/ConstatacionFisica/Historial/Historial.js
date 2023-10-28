@@ -9,7 +9,7 @@ import "styles/styles.css";
 import MaterialTable from "material-table";
 import { Modal, OutlinedInput } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-// import Swal from "sweetalert2";
+import Swal from "sweetalert2";
 import MDInput from "components/MDInput";
 import MDTypography from "components/MDTypography";
 import Divider from "@mui/material/Divider";
@@ -27,19 +27,23 @@ const columns = [
     field: "emp_Codigo",
   },
   {
-    title: "Nombre",
+    title: "Activo",
     field: "emp_Nombre",
   },
   {
-    title: "Apellido",
+    title: "Ubicación Física",
+    field: "emp_Nombre",
+  },
+  {
+    title: "Especificaciones",
     field: "emp_Apellido",
   },
   {
-    title: "Telefono",
+    title: "Descripción",
     field: "emp_Telefono",
   },
   {
-    title: "Edad",
+    title: "Observaciones",
     field: "emp_Edad",
   },
 ];
@@ -306,6 +310,14 @@ function Historial() {
   const validaractivo = (values, { resetForm }) => {
     console.log("Envío de Formulario:", values);
     resetForm();
+
+    Swal.fire({
+      icon: "success",
+      title: "Formulario Enviado",
+      text: "El formulario se ha enviado con éxito",
+      timer: 2500, // Controla cuánto tiempo se muestra el mensaje (en milisegundos)
+      timerProgressBar: true, // Muestra una barra de progreso durante el tiempo de visualización
+    });
   };
 
   useEffect(() => {
@@ -338,41 +350,41 @@ function Historial() {
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={4} lg={3}>
                   <MDBox mb={2}>
-                    <MDTypography variant="h6"> Fecha Inicio: </MDTypography>
+                    <h4> Fecha Inicio: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={9}>
-                  <MDBox mb={2}>
+                  <MDBox>
                     <Field
                       as={OutlinedInput}
                       name="fecha_inicio"
                       id="fecha_inicio"
                       type="date"
-                      className="campos"
+                      className="form-control"
                     />
                     <br />
-                    <ErrorMessage name="fecha_inicio" component="small" className="error" />
                   </MDBox>
+                  <ErrorMessage name="fecha_inicio" component="small" className="error" />
                 </Grid>
               </Grid>
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={4} lg={3}>
                   <MDBox mb={2}>
-                    <MDTypography variant="h6"> Fecha Fin: </MDTypography>
+                    <h4> Fecha Fin: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={9}>
-                  <MDBox mb={2}>
+                  <MDBox>
                     <Field
                       as={OutlinedInput}
                       name="fecha_fin"
                       id="fecha_fin"
                       type="date"
-                      className="campos"
+                      className="form-control"
                     />
                     <br />
-                    <ErrorMessage name="fecha_fin" component="small" className="error" />
                   </MDBox>
+                  <ErrorMessage name="fecha_fin" component="small" className="error" />
                 </Grid>
               </Grid>
               <Grid container spacing={3} justifyContent="center" mb={1}>
@@ -660,7 +672,7 @@ function Historial() {
                 <MaterialTable
                   columns={columns}
                   data={data}
-                  title="Empleados"
+                  title="Historial"
                   // actions={[
                   //   {
                   //     icon: "edit",

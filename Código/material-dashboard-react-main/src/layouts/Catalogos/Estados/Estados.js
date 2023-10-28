@@ -276,9 +276,7 @@ function Estados() {
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={4} lg={8}>
                   <MDBox mb={2} pb={3}>
-                    <MDTypography variant="h6">
-                      En este estado, ¿El activo se considera como dado de baja?
-                    </MDTypography>
+                    <h4>En este estado, ¿El activo se considera como dado de baja?</h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={4}>
@@ -290,7 +288,7 @@ function Estados() {
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={4} lg={3}>
                   <MDBox mt={2}>
-                    <MDTypography variant="h6"> Nombre: </MDTypography>
+                    <h4> Nombre: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={9}>
@@ -300,6 +298,7 @@ function Estados() {
                       name="est_Nombre"
                       id="est_Nombre"
                       type="text"
+                      className="form-control"
                       placeholder="Nombre del estado"
                     />
                   </MDBox>
@@ -309,7 +308,7 @@ function Estados() {
               <Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12} md={4} lg={3}>
                   <MDBox mt={2} pb={3}>
-                    <MDTypography variant="h6"> Descripción: </MDTypography>
+                    <h4> Descripción: </h4>
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={9}>

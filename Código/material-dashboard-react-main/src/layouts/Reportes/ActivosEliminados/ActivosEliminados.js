@@ -9,7 +9,7 @@ import "styles/styles.css";
 import MaterialTable from "material-table";
 import { Modal, OutlinedInput } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-// import Swal from "sweetalert2";
+import Swal from "sweetalert2";
 import MDInput from "components/MDInput";
 import MDTypography from "components/MDTypography";
 import Divider from "@mui/material/Divider";
@@ -19,7 +19,7 @@ import * as Yup from "yup";
 import "./activoseliminados.css";
 import Button from "@mui/material/Button";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
-import SaveIcon from "@mui/icons-material/Save";
+import SearchIcon from "@mui/icons-material/Search";
 import ClearIcon from "@mui/icons-material/Clear";
 
 const columns = [
@@ -37,12 +37,8 @@ const columns = [
     field: "emp_Usuario",
   },
   {
-    title: "Descripcion",
+    title: "Nombre",
     field: "emp_Descripcion",
-  },
-  {
-    title: "Serie",
-    field: "emp_Serie",
   },
   {
     title: "Modelo",
@@ -87,8 +83,8 @@ function ActivosEliminados() {
   const [showComponent, setShowComponent] = useState(false);
   const [modaleliminar, setModalEliminar] = useState(false);
   const [empleadoseleccionado, setEmpleadoSeleccionado] = useState({
-    fechainicio: 0,
-    fechafin: 0,
+    fechai: 0,
+    fechaf: 0,
   });
 
   const abrircerrarModalInsertar = () => {
@@ -138,10 +134,10 @@ function ActivosEliminados() {
 
   const valSchema = Yup.object().shape({
     dep_fechai: Yup.date()
-      .required("La Fecha es requerida")
+      .required("La fecha es requerida")
       .max(new Date(), "La fecha no puede ser mayor que la fecha actual"),
     dep_fechaf: Yup.date()
-      .required("La Fecha es requerida")
+      .required("La fecha es requerida")
       .max(new Date(), "La fecha no puede ser mayor que la fecha actual"),
   });
 
@@ -320,9 +316,18 @@ function ActivosEliminados() {
   }
 
   const onSubmit = (values, { resetForm }) => {
-    // eslint-disable-next-line no-console
     console.log("Envío de Formulario:", values);
     resetForm();
+
+    abrircerrarModalInsertar();
+
+    Swal.fire({
+      icon: "success",
+      title: "Formulario Enviado",
+      text: "El formulario se ha enviado con éxito",
+      timer: 2500, // Controla cuánto tiempo se muestra el mensaje (en milisegundos)
+      timerProgressBar: true, // Muestra una barra de progreso durante el tiempo de visualización
+    });
   };
 
   const bodyInsertar = (
@@ -347,13 +352,13 @@ function ActivosEliminados() {
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={8}>
-                  <MDBox mb={2}>
+                  <MDBox>
                     <Field
                       as={OutlinedInput}
                       name="dep_fechai"
                       id="dep_fechai"
                       type="date"
-                      className="campos"
+                      className="form-control"
                     />
                   </MDBox>
                   <ErrorMessage name="dep_fechai" component="small" className="error" />
@@ -366,13 +371,13 @@ function ActivosEliminados() {
                   </MDBox>
                 </Grid>
                 <Grid item xs={12} md={6} lg={9}>
-                  <MDBox mb={2}>
+                  <MDBox>
                     <Field
                       as={OutlinedInput}
                       name="dep_fechaf"
                       id="dep_fechaf"
                       type="date"
-                      className="campos"
+                      className="form-control"
                     />
                   </MDBox>
                   <ErrorMessage name="dep_fechaf" component="small" className="error" />
@@ -382,7 +387,7 @@ function ActivosEliminados() {
                 <Grid item xs={12} md={4} lg={3} mb={2}>
                   <Button
                     className="aceptar"
-                    endIcon={<SaveIcon />}
+                    endIcon={<SearchIcon />}
                     type="submit"
                     fullWidth
                     onClick={() => peticionpost()}
@@ -663,7 +668,7 @@ function ActivosEliminados() {
                   endIcon={<AddCircleIcon />}
                   onClick={() => abrircerrarModalInsertar()}
                 >
-                  Consultar activos eliminados
+                  Activos Eliminados
                 </Button>
                 <br />
                 <br />

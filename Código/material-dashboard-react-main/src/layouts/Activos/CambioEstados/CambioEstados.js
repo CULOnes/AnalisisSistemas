@@ -24,27 +24,38 @@ import SaveIcon from "@mui/icons-material/Save";
 const columns = [
   {
     title: "ID",
-    field: "emp_Codigo",
+    field: "cambio_id",
+  },
+  {
+    title: "Activo",
+    field: "cambio_activo",
+  },
+  {
+    title: "Estado",
+    field: "cambio_estado",
   },
   {
     title: "Fecha",
-    field: "emp_Nombre",
+    field: "cambio_fecha",
   },
   {
-    title: "Usuario",
-    field: "emp_Apellido",
-  },
-  {
-    title: "Observaciones",
-    field: "emp_Telefono",
+    title: "Descripción",
+    field: "cambio_descripcion",
   },
 ];
 
+const validationSchema = Yup.object().shape({
+  cambio_activo: Yup.array()
+    .required("Debe seleccionar un Activo")
+    .min(1, "Seleccione al menos un activo"),
+  cambio_estado: Yup.string().required("Debe seleccionar un Estado"),
+});
+
 const valSchema = Yup.object().shape({
-  fecha: Yup.date()
+  cambio_fecha: Yup.date()
     .required("Debe seleccionar una fecha")
     .max(new Date(), "La fecha no puede ser mayor al dia de hoy"),
-  descripcion: Yup.string()
+  cambio_descripcion: Yup.string()
     .matches(/^[a-zA-Z0-9]*$/, "Solo se permiten números y letras")
     .required("La descripcion es requerida")
     .max(250, "La descripcion no puede tener más de 250 caracteres"),
@@ -78,9 +89,12 @@ function CambioEstados() {
   const [modaleditar, setModalEditar] = useState(false);
   const [showComponent, setShowComponent] = useState(false);
   const [modaleliminar, setModalEliminar] = useState(false);
-  const [empleadoseleccionado, setEmpleadoSeleccionado] = useState({
-    activos: 0,
-    estados: 0,
+  const [empleadoseleccionado /* setEmpleadoSeleccionado */] = useState({
+    cambio_id: 0,
+    cambio_activo: 0,
+    cambio_estado: 0,
+    cambio_fecha: 0,
+    cambio_descripcion: 0,
   });
 
   const abrircerrarModalInsertar = () => {
@@ -88,7 +102,11 @@ function CambioEstados() {
   };
 
   const abrircerrarModalEditar = () => {
+    setModalEditar(!modaleditar);
     abrircerrarModalInsertar();
+  };
+
+  const abrircerrarModalFormulario = () => {
     setModalEditar(!modaleditar);
   };
 
@@ -121,77 +139,94 @@ function CambioEstados() {
   //   }
   // };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setEmpleadoSeleccionado((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-  };
+  // const handleChange = (e) => {
+  //   const { name, value } = e.target;
+  //   setEmpleadoSeleccionado((prevState) => ({
+  //     ...prevState,
+  //     [name]: value,
+  //   }));
+  // };
 
   const validaractivo = (values, { resetForm }) => {
     console.log("Envío de Formulario:", values);
     resetForm();
+
+    abrircerrarModalEditar();
   };
 
-  const peticionpost = async () => {
-    // Swal.showLoading();
-    if (empleadoseleccionado.activos === 0) {
-      Swal.fire({
-        icon: "info",
-        title: "",
-        text: "Debe seleccionar al menos un activo",
-      });
-    } else if (empleadoseleccionado.estados === 0) {
-      Swal.fire({
-        icon: "info",
-        title: "",
-        text: "Debe seleccionar un estado",
-      });
-    } else {
-      abrircerrarModalEditar();
-      // if (
-      //   empleadoseleccionado.pue_Codigo === 0 ||
-      //   empleadoseleccionado.emp_Nombre === "" ||
-      //   empleadoseleccionado.emp_Apellido === "" ||
-      //   empleadoseleccionado.emp_Direccion === "" ||
-      //   empleadoseleccionado.emp_Telefono === 0 ||
-      //   empleadoseleccionado.emp_Dpi === "" ||
-      //   empleadoseleccionado.emp_Edad === 0 ||
-      //   empleadoseleccionado.emp_Nacimiento === 0
-      // ) {
-      //   abrircerrarModalInsertar();
-      //   Swal.close();
-      //   Swal.fire({
-      //     icon: "info",
-      //     title: "",
-      //     html: "Debe de llenar <b>todos</b> los campos",
-      //   });
-      // } else {
-      //   abrircerrarModalInsertar();
-      //   await axios
-      //     .post("https://localhost:7235/api/Empleados/registroempleados", empleadoseleccionado)
-      //     .then((response) => {
-      //       setData(data.concat(response.data));
-      //       Swal.close();
-      //       Swal.fire({
-      //         icon: "success",
-      //         title: "",
-      //         text: "Empleado creado exitosamente",
-      //         timer: 2500,
-      //       });
-      //     })
-      //     .catch((error) => {
-      //       Swal.close();
-      //       Swal.fire({
-      //         icon: "error",
-      //         title: "",
-      //         text: error.response.data,
-      //         timer: 2500,
-      //       });
-      //     });
-    }
+  const validaractivo2 = (values, { resetForm }) => {
+    console.log("Envío de Formulario:", values);
+    resetForm();
+
+    abrircerrarModalFormulario();
+
+    Swal.fire({
+      icon: "success",
+      title: "Formulario Enviado",
+      text: "El formulario se ha enviado con éxito",
+      timer: 2500, // Controla cuánto tiempo se muestra el mensaje (en milisegundos)
+      timerProgressBar: true, // Muestra una barra de progreso durante el tiempo de visualización
+    });
   };
+
+  // const peticionpost = async () => {
+  //   // Swal.showLoading();
+  //   // if (empleadoseleccionado.activos === 0) {
+  //   //   Swal.fire({
+  //   //     icon: "info",
+  //   //     title: "",
+  //   //     text: "Debe seleccionar al menos un activo",
+  //   //   });
+  //   // } else if (empleadoseleccionado.estados === 0) {
+  //   //   Swal.fire({
+  //   //     icon: "info",
+  //   //     title: "",
+  //   //     text: "Debe seleccionar un estado",
+  //   //   });
+  //   // } else {
+  //   //   abrircerrarModalEditar();
+  //   // if (
+  //   //   empleadoseleccionado.pue_Codigo === 0 ||
+  //   //   empleadoseleccionado.emp_Nombre === "" ||
+  //   //   empleadoseleccionado.emp_Apellido === "" ||
+  //   //   empleadoseleccionado.emp_Direccion === "" ||
+  //   //   empleadoseleccionado.emp_Telefono === 0 ||
+  //   //   empleadoseleccionado.emp_Dpi === "" ||
+  //   //   empleadoseleccionado.emp_Edad === 0 ||
+  //   //   empleadoseleccionado.emp_Nacimiento === 0
+  //   // ) {
+  //   //   abrircerrarModalInsertar();
+  //   //   Swal.close();
+  //   //   Swal.fire({
+  //   //     icon: "info",
+  //   //     title: "",
+  //   //     html: "Debe de llenar <b>todos</b> los campos",
+  //   //   });
+  //   // } else {
+  //   //   abrircerrarModalInsertar();
+  //   //   await axios
+  //   //     .post("https://localhost:7235/api/Empleados/registroempleados", empleadoseleccionado)
+  //   //     .then((response) => {
+  //   //       setData(data.concat(response.data));
+  //   //       Swal.close();
+  //   //       Swal.fire({
+  //   //         icon: "success",
+  //   //         title: "",
+  //   //         text: "Empleado creado exitosamente",
+  //   //         timer: 2500,
+  //   //       });
+  //   //     })
+  //   //     .catch((error) => {
+  //   //       Swal.close();
+  //   //       Swal.fire({
+  //   //         icon: "error",
+  //   //         title: "",
+  //   //         text: error.response.data,
+  //   //         timer: 2500,
+  //   //       });
+  //   //     });
+  //   // }
+  // };
 
   const peticionput = async () => {
     // setModalEditar(!modaleditar);
@@ -329,98 +364,123 @@ function CambioEstados() {
       <h2> Cambio de Estado de Activos </h2>
       <Divider sx={{ marginTop: 1 }} light={false} />
       <MDBox pb={1}>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={5}>
-            <MDBox mb={4}>
-              <h4> Seleccione Activos: </h4>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={7}>
-            <MDBox mb={4}>
-              <select name="activos" className="combo" onChange={handleChange} multiple>
-                <option key="0" value="0">
-                  Seleccione Activos
-                </option>
-                <option key="1" value="1">
-                  Activo 1
-                </option>
-                <option key="2" value="2">
-                  Activo 2
-                </option>
-                <option key="3" value="3">
-                  Activo 3
-                </option>
-                <option key="4" value="4">
-                  Activo 4
-                </option>
-                <option key="5" value="5">
-                  Activo 5
-                </option>
-                {/* {datatp.map((element) => (
+        <Formik
+          initialValues={{
+            cambio_activo: "",
+            cambio_estado: "",
+          }}
+          validationSchema={validationSchema}
+          onSubmit={validaractivo}
+        >
+          {({ handleSubmit }) => (
+            <form onSubmit={handleSubmit}>
+              <Grid container spacing={3} justifyContent="center">
+                <Grid item xs={12} md={4} lg={5}>
+                  <MDBox mb={2}>
+                    <h4> Seleccione Activos: </h4>
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} md={6} lg={7}>
+                  <MDBox>
+                    <Field
+                      as="select"
+                      name="cambio_activo"
+                      id="cambio_activo"
+                      className="form-control-lista"
+                      multiple
+                    >
+                      <option key="0" value="0">
+                        Seleccione Activos:
+                      </option>
+                      <option key="1" value="opcion1">
+                        Activo 1
+                      </option>
+                      <option key="2" value="opcion2">
+                        Activo 2
+                      </option>
+                      <option key="3" value="opcion3">
+                        Activo 3
+                      </option>
+                      <option key="4" value="opcion4">
+                        Activo 4
+                      </option>
+                      <option key="5" value="opcion5">
+                        Activo 5
+                      </option>
+                      {/* {datatp.map((element) => (
                   <option key={element.pue_Codigo} value={element.pue_Codigo}>
                     {element.pue_Nombre}
                   </option>
                 ))} */}
-              </select>
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={5}>
-            <MDBox mb={4}>
-              <h4> Nuevo Estado: </h4>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={7}>
-            <MDBox mb={4}>
-              <select name="estados" className="combo" onChange={handleChange}>
-                <option key="0" value="0">
-                  Seleccione Nuevo Estado
-                </option>
-                <option key="1" value="1">
-                  Bueno
-                </option>
-                <option key="2" value="2">
-                  Robado
-                </option>
-                <option key="3" value="3">
-                  Desaparecido
-                </option>
-                <option key="4" value="4">
-                  Perdido
-                </option>
-                {/* {datatp.map((element) => (
+                    </Field>
+                  </MDBox>
+                  <ErrorMessage name="cambio_activo" component="small" className="error" />
+                </Grid>
+              </Grid>
+              <Grid container spacing={3} justifyContent="center">
+                <Grid item xs={12} md={4} lg={5}>
+                  <MDBox mb={4} mt={1}>
+                    <h4> Nuevo Estado: </h4>
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} md={6} lg={7}>
+                  <MDBox mt={1}>
+                    <Field
+                      as="select"
+                      name="cambio_estado"
+                      id="cambio_estado"
+                      className="form-control"
+                    >
+                      <option key="0" value="0">
+                        Seleccione Nuevo Estado:
+                      </option>
+                      <option key="1" value="opcion1">
+                        Bueno
+                      </option>
+                      <option key="2" value="opcion2">
+                        Robado
+                      </option>
+                      <option key="3" value="opcion3">
+                        Desaparecido
+                      </option>
+                      <option key="4" value="opcion4">
+                        Perdido
+                      </option>
+                      {/* {datatp.map((element) => (
                   <option key={element.pue_Codigo} value={element.pue_Codigo}>
                     {element.pue_Nombre}
                   </option>
                 ))} */}
-              </select>
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center" mb={1}>
-          <Grid item xs={12} md={4} lg={4}>
-            <MDButton
-              className="aceptar"
-              endIcon={<ArrowForwardIosIcon />}
-              type="submit"
-              fullWidth
-              onClick={() => peticionpost()}
-            >
-              Siguiente
-            </MDButton>
-          </Grid>
-          <Grid item xs={12} md={4} lg={4}>
-            <MDButton
-              className="cancelar"
-              endIcon={<ClearIcon />}
-              fullWidth
-              onClick={() => abrircerrarModalInsertar()}
-            >
-              Cancelar
-            </MDButton>
-          </Grid>
-        </Grid>
+                    </Field>
+                  </MDBox>
+                  <ErrorMessage name="cambio_estado" component="small" className="error" />
+                </Grid>
+              </Grid>
+              <Grid container spacing={3} justifyContent="center" mb={1}>
+                <Grid item xs={12} md={4} lg={4}>
+                  <MDButton
+                    className="aceptar"
+                    endIcon={<ArrowForwardIosIcon />}
+                    type="submit"
+                    fullWidth
+                  >
+                    Siguiente
+                  </MDButton>
+                </Grid>
+                <Grid item xs={12} md={4} lg={4}>
+                  <MDButton
+                    className="cancelar"
+                    endIcon={<ClearIcon />}
+                    fullWidth
+                    onClick={() => abrircerrarModalInsertar()}
+                  >
+                    Cancelar
+                  </MDButton>
+                </Grid>
+              </Grid>
+            </form>
+          )}
+        </Formik>
       </MDBox>
     </div>
   );
@@ -432,11 +492,11 @@ function CambioEstados() {
       <MDBox pb={1}>
         <Formik
           initialValues={{
-            fecha: "",
-            descripcion: "",
+            cambio_fecha: "",
+            cambio_descripcion: "",
           }}
           validationSchema={valSchema}
-          onSubmit={validaractivo}
+          onSubmit={validaractivo2}
         >
           {({ handleSubmit }) => (
             <form onSubmit={handleSubmit}>
@@ -449,13 +509,13 @@ function CambioEstados() {
                 <Grid item xs={12} md={6} lg={9}>
                   <Field
                     as={OutlinedInput}
-                    name="fecha"
-                    id="fecha"
+                    name="cambio_fecha"
+                    id="cambio_fecha"
                     type="date"
-                    className="campos"
+                    className="form-control"
                   />
                   <br />
-                  <ErrorMessage name="fecha" component="small" className="error" />
+                  <ErrorMessage name="cambio_fecha" component="small" className="error" />
                 </Grid>
               </Grid>
               <Grid container spacing={3} justifyContent="center">
@@ -468,14 +528,15 @@ function CambioEstados() {
                   <MDBox mb={4}>
                     <Field
                       as={TextField}
-                      name="descripcion"
-                      id="descripcion outlined-multiline-static"
+                      name="cambio_descripcion"
+                      id="cambio_descripcion outlined-multiline-static"
                       type="text"
                       multiline
                       fullWidth
+                      rows={2}
                       placeholder="Descripcion"
                     />
-                    <ErrorMessage name="descripcion" component="small" className="error" />
+                    <ErrorMessage name="cambio_descripcion" component="small" className="error" />
                   </MDBox>
                 </Grid>
               </Grid>

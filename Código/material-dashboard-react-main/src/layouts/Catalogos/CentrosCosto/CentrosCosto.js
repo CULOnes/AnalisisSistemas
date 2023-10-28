@@ -3,14 +3,13 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
-// import axios from "axios";
+import axios from "axios";
 import MDBox from "components/MDBox";
 import "styles/styles.css";
 import MaterialTable from "material-table";
 import { Modal, OutlinedInput } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import Swal from "sweetalert2";
-import MDInput from "components/MDInput";
 import MDTypography from "components/MDTypography";
 import Divider from "@mui/material/Divider";
 import MDButton from "components/MDButton";
@@ -26,36 +25,28 @@ import TextField from "@mui/material/TextField";
 const columns = [
   {
     title: "ID",
-    field: "cc_Codigo",
+    field: "ceC_Codigo",
   },
   {
-    title: "Nombre Centro de Costo",
-    field: "cc_nombre",
+    title: "Nombre",
+    field: "ceC_Nombre",
   },
   {
-    title: "Descripción Centro de Costo",
-    field: "cc_descripcion",
-  },
-  {
-    title: "Cuenta Centro de Costo",
-    field: "cc_cuenta",
+    title: "Descripción",
+    field: "ceC_Descripcion",
   },
 ];
 
 const valSchema = Yup.object().shape({
-  cc_nombre: Yup.string()
+  ceC_Nombre: Yup.string()
     .matches(/^[a-zA-Z0-9]+$/, "Solo se permiten números y letras")
     .required("El nombre del Centro de Costo es requerido")
     .max(50, "El nombre no puede tener más de 50 caracteres"),
-  cc_descripcion: Yup.string()
+  ceC_Descripcion: Yup.string()
     .required("La descripción es requerida")
     .max(250, "La descripción no puede tener más de 250 caracteres")
     .matches(/^[a-zA-ZñÑ0-9,. -]*$/, "Caracter no permitido"),
-  cc_cuenta: Yup.number()
-    .typeError("La cuenta debe ser un número")
-    .required("La cuenta es requerida")
-    .positive("La cuenta debe ser un número positivo")
-    .integer("La cuenta debe ser un número entero"),
+  cue_Codigo: Yup.number().required("Este campo es requerido"),
 });
 
 const useStyles = makeStyles((theme) => ({
@@ -80,17 +71,17 @@ const useStyles = makeStyles((theme) => ({
 
 function CentrosCosto() {
   const styles = useStyles();
-  const [data /* , setData */] = useState([]);
-  /* const [datatp, setDatatp] = useState([]); */
+  const [data, setData] = useState([]);
+  const [datacu, setDatacu] = useState([]);
   const [modalinsertar, setModalInsertar] = useState(false);
   const [modaleditar, setModalEditar] = useState(false);
   const [showComponent, setShowComponent] = useState(false);
   const [modaleliminar, setModalEliminar] = useState(false);
-  const [CentroCostoSeleccionado, setCentroCostoSeleccionado] = useState({
-    cc_codigo: 0,
-    cc_nombre: "",
-    cc_descripcion: "",
-    cc_cuenta: "",
+  const [centroCostoSeleccionado, setCentroCostoSeleccionado] = useState({
+    ceC_Codigo: 0,
+    ceC_Nombre: "",
+    ceC_Descripcion: "",
+    cue_Codigo: 0,
   });
 
   const abrircerrarModalInsertar = () => {
@@ -130,193 +121,151 @@ function CentrosCosto() {
     }
   };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setCentroCostoSeleccionado((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
+  const peticionpost = async (values) => {
+    Swal.showLoading();
+    if (values.cue_Codigo === 0 || values.ceC_Nombre === "" || values.ceC_Descripcion === "") {
+      abrircerrarModalInsertar();
+      Swal.close();
+      Swal.fire({
+        icon: "info",
+        title: "",
+        html: "Debe de llenar <b>todos</b> los campos",
+      });
+    } else {
+      abrircerrarModalInsertar();
+      await axios
+        .post("https://localhost:7235/api/CentrosCosto/registrocentroscosto", values)
+        .then((response) => {
+          setData(data.concat(response.data));
+          Swal.close();
+          Swal.fire({
+            icon: "success",
+            title: "",
+            text: "Centro de Costo creado exitosamente",
+            timer: 2500,
+          });
+        })
+        .catch((error) => {
+          Swal.close();
+          Swal.fire({
+            icon: "error",
+            title: "",
+            text: error.response.data,
+            timer: 2500,
+          });
+        });
+    }
   };
 
-  const onSubmit = (values, { resetForm }) => {
-    // eslint-disable-next-line no-console
-    console.log("Envío de Formulario:", values);
-    resetForm();
-
-    Swal.fire({
-      icon: "success",
-      title: "Formulario Enviado",
-      text: "El formulario se ha enviado con éxito",
-      timer: 2500, // Controla cuánto tiempo se muestra el mensaje (en milisegundos)
-      timerProgressBar: true, // Muestra una barra de progreso durante el tiempo de visualización
-    });
-  };
-
-  const peticionpost = async () => {
-    //   // Swal.showLoading();
-    //   // if (
-    //   //   empleadoseleccionado.pue_Codigo === 0 ||
-    //   //   empleadoseleccionado.emp_Nombre === "" ||
-    //   //   empleadoseleccionado.emp_Apellido === "" ||
-    //   //   empleadoseleccionado.emp_Direccion === "" ||
-    //   //   empleadoseleccionado.emp_Telefono === 0 ||
-    //   //   empleadoseleccionado.emp_Dpi === "" ||
-    //   //   empleadoseleccionado.emp_Edad === 0 ||
-    //   //   empleadoseleccionado.emp_Nacimiento === 0
-    //   // ) {
-    //   //   abrircerrarModalInsertar();
-    //   //   Swal.close();
-    //   //   Swal.fire({
-    //   //     icon: "info",
-    //   //     title: "",
-    //   //     html: "Debe de llenar <b>todos</b> los campos",
-    //   //   });
-    //   // } else {
-    //   //   abrircerrarModalInsertar();
-    //   //   await axios
-    //   //     .post("https://localhost:7235/api/Empleados/registroempleados", empleadoseleccionado)
-    //   //     .then((response) => {
-    //   //       setData(data.concat(response.data));
-    //   //       Swal.close();
-    //   //       Swal.fire({
-    //   //         icon: "success",
-    //   //         title: "",
-    //   //         text: "Empleado creado exitosamente",
-    //   //         timer: 2500,
-    //   //       });
-    //   //     })
-    //   //     .catch((error) => {
-    //   //       Swal.close();
-    //   //       Swal.fire({
-    //   //         icon: "error",
-    //   //         title: "",
-    //   //         text: error.response.data,
-    //   //         timer: 2500,
-    //   //       });
-    //   //     });
-    //   // }
-  };
-
-  const peticionput = async () => {
-    // if (
-    //   empleadoseleccionado.pue_Codigo === 0 ||
-    //   empleadoseleccionado.emp_Nombre === "" ||
-    //   empleadoseleccionado.emp_Apellido === "" ||
-    //   empleadoseleccionado.emp_Direccion === "" ||
-    //   empleadoseleccionado.emp_Telefono === 0 ||
-    //   empleadoseleccionado.emp_Dpi === "" ||
-    //   empleadoseleccionado.emp_Edad === 0 ||
-    //   empleadoseleccionado.emp_Nacimiento === 0
-    // ) {
-    //   abrircerrarModalEditar();
-    //   Swal.close();
-    //   Swal.fire({
-    //     icon: "info",
-    //     title: "",
-    //     html: "Debe de llenar <b>todos</b> los campos",
-    //   });
-    // } else {
-    //   abrircerrarModalEditar();
-    //   Swal.showLoading();
-    //   await axios
-    //     .put("https://localhost:7235/api/Empleados/actualizar", empleadoseleccionado)
-    //     .then(() => {
-    //       const copiaArray = [...data];
-    //       const indice = copiaArray.findIndex(
-    //         (elemento) => elemento.emp_Codigo === empleadoseleccionado.emp_Codigo
-    //       );
-    //       if (indice !== -1) {
-    //         copiaArray[indice] = {
-    //           ...copiaArray[indice],
-    //           pue_Codigo: empleadoseleccionado.pue_Codigo,
-    //           emp_Nombre: empleadoseleccionado.emp_Nombre,
-    //           emp_Apellido: empleadoseleccionado.emp_Apellido,
-    //           emp_Direccion: empleadoseleccionado.emp_Direccion,
-    //           emp_Telefono: empleadoseleccionado.emp_Telefono,
-    //           emp_Dpi: empleadoseleccionado.emp_Dpi,
-    //           emp_Edad: empleadoseleccionado.emp_Edad,
-    //           emp_Nacimiento: empleadoseleccionado.emp_Nacimiento,
-    //           emp_Nolicencia: empleadoseleccionado.emp_Nolicencia,
-    //           emp_Tipolicencia: empleadoseleccionado.emp_Tipolicencia,
-    //         };
-    //       }
-    //       setData(copiaArray);
-    //       Swal.close();
-    //       Swal.fire({
-    //         icon: "success",
-    //         title: "",
-    //         text: "Empleado actualizado exitosamente",
-    //         timer: 2500,
-    //       });
-    //     })
-    //     .catch((error) => {
-    //       Swal.close();
-    //       Swal.fire({
-    //         icon: "error",
-    //         title: "",
-    //         text: error.response.data,
-    //         timer: 2500,
-    //       });
-    //     });
+  const peticionput = async (values) => {
+    if (values.cue_Codigo === 0 || values.ceC_Nombre === "" || values.ceC_Descripcion === "") {
+      abrircerrarModalEditar();
+      Swal.close();
+      Swal.fire({
+        icon: "info",
+        title: "",
+        html: "Debe de llenar <b>todos</b> los campos",
+      });
+    } else {
+      abrircerrarModalEditar();
+      Swal.showLoading();
+      await axios
+        .put("https://localhost:7235/api/CentrosCosto/actualizar", values)
+        .then(() => {
+          const copiaArray = [...data];
+          const indice = copiaArray.findIndex(
+            (elemento) => elemento.ceC_Codigo === values.ceC_Codigo
+          );
+          if (indice !== -1) {
+            copiaArray[indice] = {
+              ...copiaArray[indice],
+              cue_Codigo: values.cue_Codigo,
+              ceC_Nombre: values.ceC_Nombre,
+              ceC_Descripcion: values.ceC_Descripcion,
+            };
+          }
+          setData(copiaArray);
+          Swal.close();
+          Swal.fire({
+            icon: "success",
+            title: "",
+            text: "Centro de Costo actualizado exitosamente",
+            timer: 2500,
+          });
+        })
+        .catch((error) => {
+          Swal.close();
+          Swal.fire({
+            icon: "error",
+            title: "",
+            text: error.response.data,
+            timer: 2500,
+          });
+        });
+    }
   };
 
   const peticiondelete = async () => {
-    // abrircerrarModalEliminar();
-    // Swal.showLoading();
-    // await axios
-    //   .put("https://localhost:7235/api/Empleados/eliminar", empleadoseleccionado)
-    //   .then(() => {
-    //     setData(data.filter((empleado) => empleado.emp_Codigo !== empleadoseleccionado.emp_Codigo));
-    //     Swal.close();
-    //     Swal.fire({
-    //       icon: "success",
-    //       title: "",
-    //       text: "Empleado eliminado exitosamente",
-    //       timer: 2500,
-    //     });
-    //   })
-    //   .catch((error) => {
-    //     Swal.close();
-    //     Swal.fire({
-    //       icon: "error",
-    //       title: "",
-    //       text: error.response.data,
-    //       timer: 2500,
-    //     });
-    //   });
+    abrircerrarModalEliminar();
+    Swal.showLoading();
+    await axios
+      .put("https://localhost:7235/api/CentrosCosto/eliminar", centroCostoSeleccionado)
+      .then(() => {
+        setData(
+          data.filter(
+            (centrocosto) => centrocosto.ceC_Codigo !== centroCostoSeleccionado.ceC_Codigo
+          )
+        );
+        Swal.close();
+        Swal.fire({
+          icon: "success",
+          title: "",
+          text: "Centro de Costo eliminado exitosamente",
+          timer: 2500,
+        });
+      })
+      .catch((error) => {
+        Swal.close();
+        Swal.fire({
+          icon: "error",
+          title: "",
+          text: error.response.data,
+          timer: 2500,
+        });
+      });
   };
 
   const peticionget = async () => {
-    // Swal.showLoading();
-    // await axios
-    //   .get("https://localhost:7235/api/Empleados/empleados")
-    //   .then((response) => {
-    //     setData(response.data);
-    //     Swal.close();
-    //   })
-    //   .catch((error) => {
-    //     Swal.close();
-    //     Swal.fire({
-    //       icon: "error",
-    //       title: "",
-    //       text: error.response.data,
-    //       timer: 2500,
-    //     });
-    //   });
+    Swal.showLoading();
+    await axios
+      .get("https://localhost:7235/api/CentrosCosto/centroscosto")
+      .then((response) => {
+        setData(response.data);
+        Swal.close();
+      })
+      .catch((error) => {
+        Swal.close();
+        Swal.fire({
+          icon: "error",
+          title: "",
+          text: error.response.data,
+          timer: 2500,
+        });
+      });
   };
 
-  // const peticiongettp = async () => {
-  //   await axios
-  //     .get("https://localhost:7235/api/Puestos/puestos")
-  //     .then((response) => {
-  //       setDatatp(response.data);
-  //     })
-  //     .catch();
-  // };
+  const peticiongetcu = async () => {
+    await axios
+      .get("https://localhost:7235/api/Cuentas/cuentas")
+      .then((response) => {
+        setDatacu(response.data);
+      })
+      .catch();
+  };
 
   useEffect(() => {
     peticionget();
-    // peticiongettp();
+    peticiongetcu();
     setTimeout(() => {
       setShowComponent(true);
     }, 100);
@@ -331,35 +280,14 @@ function CentrosCosto() {
       <h2> Agregar Nuevo Centro de Costo </h2>
       <Divider sx={{ marginTop: 1 }} light={false} />
       <MDBox pb={3}>
-        {/* <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={1}>
-              <MDTypography variant="h6"> Nombre Centro Costo: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={1}>
-              <select name="pue_Codigo" className="form-control" onChange={handleChange}>
-                <option key="0" value="0">
-                  Seleccione el Puesto
-                </option>
-                {datatp.map((element) => (
-                  <option key={element.pue_Codigo} value={element.pue_Codigo}>
-                    {element.pue_Nombre}
-                  </option>
-                ))}
-              </select>
-            </MDBox>
-          </Grid>
-        </Grid> */}
         <Formik
           initialValues={{
-            cc_nombre: "",
-            cc_descripcion: "",
-            cc_cuenta: "",
+            ceC_Nombre: "",
+            ceC_Descripcion: "",
+            cue_Codigo: 0,
           }}
           validationSchema={valSchema}
-          onSubmit={onSubmit}
+          onSubmit={peticionpost}
         >
           {({ handleSubmit }) => (
             <form onSubmit={handleSubmit}>
@@ -373,13 +301,14 @@ function CentrosCosto() {
                   <MDBox>
                     <Field
                       as={OutlinedInput}
-                      name="cc_nombre"
-                      id="cc_nombre"
+                      name="ceC_Nombre"
+                      id="ceC_Nombre"
                       type="text"
                       placeholder="Centro Costo"
+                      className="form-control"
                     />
                   </MDBox>
-                  <ErrorMessage name="cc_nombre" component="small" className="error" />
+                  <ErrorMessage name="ceC_Nombre" component="small" className="error" />
                 </Grid>
               </Grid>
               <Grid container spacing={3} justifyContent="center">
@@ -390,15 +319,18 @@ function CentrosCosto() {
                 </Grid>
                 <Grid item xs={12} md={6} lg={7}>
                   <MDBox mt={4}>
-                    <Field
-                      as={OutlinedInput}
-                      name="cc_cuenta"
-                      id="cc_cuenta"
-                      type="number"
-                      placeholder="Cuenta"
-                    />
+                    <Field as="select" id="cue_Codigo" name="cue_Codigo" className="form-control">
+                      <option key="0" value="0">
+                        Seleccione una Cuenta:
+                      </option>
+                      {datacu.map((element) => (
+                        <option key={element.cue_Codigo} value={element.cue_Codigo}>
+                          {element.cue_Nombre}
+                        </option>
+                      ))}
+                    </Field>
                   </MDBox>
-                  <ErrorMessage name="cc_cuenta" component="small" className="error" />
+                  <ErrorMessage name="cue_Codigo" component="small" className="error" />
                 </Grid>
               </Grid>
               <Grid container spacing={3} justifyContent="center">
@@ -411,8 +343,8 @@ function CentrosCosto() {
                   <MDBox mt={2}>
                     <Field
                       as={TextField}
-                      name="cc_descripcion"
-                      id="cc_descripcion outlined-multiline-static"
+                      name="ceC_Descripcion"
+                      id="ceC_Descripcion outlined-multiline-static"
                       type="text"
                       multiline
                       fullWidth
@@ -420,23 +352,14 @@ function CentrosCosto() {
                       placeholder="Descripcion"
                     />
                   </MDBox>
-                  <ErrorMessage name="cc_descripcion" component="small" className="error" />
+                  <ErrorMessage name="ceC_Descripcion" component="small" className="error" />
                 </Grid>
               </Grid>
               <Grid container spacing={3} justifyContent="center" mt={2}>
                 <Grid item xs={12} md={4} lg={3}>
-                  <Button
-                    className="aceptar"
-                    endIcon={<SaveIcon />}
-                    type="submit"
-                    fullWidth
-                    onClick={() => peticionpost()}
-                  >
+                  <Button className="aceptar" endIcon={<SaveIcon />} type="submit" fullWidth>
                     Insertar
                   </Button>
-                  {/* <MDButton variant="gradient" color="info" fullWidth type="submit">
-                    Insertar
-                  </MDButton> */}
                 </Grid>
                 <Grid item xs={12} md={4} lg={3}>
                   <Button
@@ -448,14 +371,6 @@ function CentrosCosto() {
                   >
                     Cancelar
                   </Button>
-                  {/* <MDButton
-                    variant="gradient"
-                    color="light"
-                    fullWidth
-                    onClick={() => abrircerrarModalInsertar()}
-                  >
-                    Cancelar
-                  </MDButton> */}
                 </Grid>
               </Grid>
             </form>
@@ -467,109 +382,106 @@ function CentrosCosto() {
 
   const bodyEditar = (
     <div className={styles.modal}>
-      <MDTypography variant="h3"> Editar Centro de Costo </MDTypography>
+      <h2> Editar Centro de Costo </h2>
       <Divider sx={{ marginTop: 1 }} light={false} />
       <MDBox pb={1}>
-        {/* <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={1}>
-              <MDTypography variant="h6"> Puesto: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={1}>
-              <select
-                name="pue_Codigo"
-                className="form-control"
-                onChange={handleChange}
-                value={CentroCostoSeleccionado && CentroCostoSeleccionado.pue_Codigo}
-              >
-                <option key="0" value="0">
-                  Seleccione el Puesto
-                </option>
-                {datatp.map((element) => (
-                  <option key={element.pue_Codigo} value={element.pue_Codigo}>
-                    {element.pue_Nombre}
-                  </option>
-                ))}
-              </select>
-            </MDBox>
-          </Grid>
-        </Grid> */}
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={1}>
-              <MDTypography variant="h6"> Nombre Centro Costo: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={1}>
-              <MDInput
-                type="text"
-                label="Nombre Centro de Costo"
-                name="cc_nombre"
-                onChange={handleChange}
-                size="small"
-                value={CentroCostoSeleccionado && CentroCostoSeleccionado.cc_nombre}
-              />
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={1}>
-              <MDTypography variant="h6"> Descripción Centro Costo: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={1}>
-              <MDInput
-                label="Descripción Centro de Costo"
-                name="cc_descripcion"
-                type="text"
-                onChange={handleChange}
-                size="small"
-                value={CentroCostoSeleccionado && CentroCostoSeleccionado.cc_descripcion}
-              />
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDBox mb={1}>
-              <MDTypography variant="h6"> Cuenta Centro Costo: </MDTypography>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={9}>
-            <MDBox mb={1}>
-              <MDInput
-                label="Cuenta Centro de Costo"
-                name="cc_cuenta"
-                type="number"
-                size="small"
-                onChange={handleChange}
-                value={CentroCostoSeleccionado && CentroCostoSeleccionado.cc_cuenta}
-              />
-            </MDBox>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={4} lg={3}>
-            <MDButton variant="gradient" color="info" fullWidth onClick={() => peticionput()}>
-              Actualizar
-            </MDButton>
-          </Grid>
-          <Grid item xs={12} md={4} lg={3}>
-            <MDButton
-              variant="gradient"
-              color="light"
-              fullWidth
-              onClick={() => abrircerrarModalEditar()}
-            >
-              Cancelar
-            </MDButton>
-          </Grid>
-        </Grid>
+        <Formik
+          initialValues={{
+            ceC_Nombre: centroCostoSeleccionado && centroCostoSeleccionado.ceC_Nombre,
+            ceC_Descripcion: centroCostoSeleccionado && centroCostoSeleccionado.ceC_Descripcion,
+            cue_Codigo: centroCostoSeleccionado && centroCostoSeleccionado.cue_Codigo,
+            ceC_Codigo: centroCostoSeleccionado && centroCostoSeleccionado.ceC_Codigo,
+          }}
+          validationSchema={valSchema}
+          onSubmit={peticionput}
+        >
+          {({ handleSubmit }) => (
+            <form onSubmit={handleSubmit}>
+              <Grid container spacing={3} justifyContent="center">
+                <Grid item xs={12} md={4} lg={5}>
+                  <MDBox>
+                    <MDTypography variant="h6"> Nombre Centro Costo: </MDTypography>
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} md={6} lg={7}>
+                  <MDBox>
+                    <Field
+                      as={OutlinedInput}
+                      name="ceC_Nombre"
+                      id="ceC_Nombre"
+                      type="text"
+                      placeholder="Centro Costo"
+                      className="form-control"
+                    />
+                  </MDBox>
+                  <ErrorMessage name="ceC_Nombre" component="small" className="error" />
+                </Grid>
+              </Grid>
+              <Grid container spacing={3} justifyContent="center">
+                <Grid item xs={12} md={4} lg={5}>
+                  <MDBox mt={4} mb={2}>
+                    <MDTypography variant="h6"> Cuenta Centro Costo: </MDTypography>
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} md={6} lg={7}>
+                  <MDBox mt={4}>
+                    <Field as="select" id="cue_Codigo" name="cue_Codigo" className="form-control">
+                      <option key="0" value="0">
+                        Seleccione una Cuenta:
+                      </option>
+                      {datacu.map((element) => (
+                        <option key={element.cue_Codigo} value={element.cue_Codigo}>
+                          {element.cue_Nombre}
+                        </option>
+                      ))}
+                    </Field>
+                  </MDBox>
+                  <ErrorMessage name="cue_Codigo" component="small" className="error" />
+                </Grid>
+              </Grid>
+              <Grid container spacing={3} justifyContent="center">
+                <Grid item xs={12} md={4} lg={3}>
+                  <MDBox mt={4} mb={2}>
+                    <MDTypography variant="h6"> Descripción: </MDTypography>
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} md={6} lg={9}>
+                  <MDBox mt={2}>
+                    <Field
+                      as={TextField}
+                      name="ceC_Descripcion"
+                      id="ceC_Descripcion outlined-multiline-static"
+                      type="text"
+                      multiline
+                      fullWidth
+                      rows={2}
+                      placeholder="Descripcion"
+                    />
+                  </MDBox>
+                  <ErrorMessage name="ceC_Descripcion" component="small" className="error" />
+                </Grid>
+              </Grid>
+              <Grid container spacing={3} justifyContent="center" mt={2}>
+                <Grid item xs={12} md={4} lg={3}>
+                  <Button className="aceptar" endIcon={<SaveIcon />} type="submit" fullWidth>
+                    Actualizar
+                  </Button>
+                </Grid>
+                <Grid item xs={12} md={4} lg={3}>
+                  <Button
+                    className="cancelar"
+                    endIcon={<ClearIcon />}
+                    type="submit"
+                    fullWidth
+                    onClick={() => abrircerrarModalEditar()}
+                  >
+                    Cancelar
+                  </Button>
+                </Grid>
+              </Grid>
+            </form>
+          )}
+        </Formik>
       </MDBox>
     </div>
   );
@@ -578,7 +490,7 @@ function CentrosCosto() {
     <div className={styles.modal}>
       <p>
         ¿Deseas Eliminar el Centro de Costo
-        <b> {CentroCostoSeleccionado && CentroCostoSeleccionado.cc_nombre}</b>?
+        <b> {centroCostoSeleccionado && centroCostoSeleccionado.ceC_Nombre}</b>?
       </p>
       <div align="right">
         <MDButton color="secondary" onClick={() => peticiondelete()}>

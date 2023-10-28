@@ -295,6 +295,7 @@ function UbicacionesFisicas() {
                       id="ubF_Ubicacion"
                       type="text"
                       placeholder="Ubicacion"
+                      className="form-control"
                     />
                   </MDBox>
                   <ErrorMessage name="ubF_Ubicacion" component="small" className="error" />
